@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="lib/index.css">
     <link rel="stylesheet" href="./style/editor.css">
+    <link rel="stylesheet" href="./style/process.css">
 </head>
 
 <body>
@@ -58,11 +59,11 @@
                     </el-col>
                     <el-col :md="8">
                         <div class="step" data-title="进行">
+                            <process-info :info="data1" type="step"></process-info>
+                        </div>
+                        <div class="step" data-title="辅助进行">
                             <process-info :info="data1"></process-info>
                         </div>
-                        <!-- <div class="step" data-title="辅助进行">
-                            <process-info :info="data1"></process-info>
-                        </div> -->
                         <div class="arrow"></div>
                     </el-col>
                     <el-col :md="8">

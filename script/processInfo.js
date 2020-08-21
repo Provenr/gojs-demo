@@ -1,3 +1,289 @@
+let template = `
+        <!-- 开始、辅助进行、结束 -->
+        <div v-if="type=='common'">
+            <div class="events" v-if="innerInfo.hasEvents">
+                <el-table border @cell-click="cellClick">
+                    <el-table-column label="序号">
+                        <template slot-scope="scope">
+                            <span>{{ scope.row.Target }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="事件描述">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
+                                @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                            <span v-else>{{ scope.row.StartValue }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="用时">
+                        <template slot-scope="scope">
+                            <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
+                                @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                            <span v-else>{{ scope.row.EndValue }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <el-form class="process">
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>类型</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.ClassName" placeholder="请选择"
+                                @change="selectChange" style="width: 100%;">
+                                <el-option v-for="item in innerInfo.OptionItems" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span class="sm">方法</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.MethodName" placeholder="请选择"
+                                @change="methodSelectChange" style="width: 100%;">
+                                <el-option v-for="item in innerInfo.NewMethodName" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name target-name"><div class="icon"><span>目标</span></div></div>
+                    <div class="input target">
+                        <div class="target-item">
+                            <el-radio :label="1">单</el-radio>
+                            <el-input class="input-md"></el-input>
+                        </div>
+                        <div class="target-item">
+                            <el-radio :label="1">与</el-radio>
+                            <div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">无序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">有序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                    <span>至</span>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="target-item">
+                            <el-radio :label="1">或</el-radio>
+                            <div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">无序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">有序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                    <span>至</span>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>参数</span></div></div>
+                    <div class="input">
+                        <el-table border @cell-click="cellClick">
+                            <el-table-column label="目标">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.Target }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="起始值">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
+                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                    <span v-else>{{ scope.row.StartValue }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="结束值">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
+                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                    <span v-else>{{ scope.row.EndValue }}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>时间</span></div></div>
+                    <div class="input time">
+                        <el-input class="input-sm"></el-input><span>分</span>
+                        <el-input class="input-sm"></el-input><span>秒</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>缓动</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-input v-model="innerInfo.PlayType" @change="ctrlEventChange(1)"
+                                ></el-input>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>循环</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.LoopType" placeholder="请选择"
+                                @change="ctrlEventChange(1)"
+                                style="width:100%;">
+                                <el-option v-for="item in loopTypeOptions" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>次数</span></div></div>
+                    <div class="input time">
+                        <el-input class="input-sm"></el-input><span>次</span>
+                    </div>
+                </div>
+            </el-form>
+        </div>
+
+        <!-- 进行 -->
+        <div v-else>
+            <el-form class="process">
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>工具</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.ClassName" placeholder="请选择"
+                                @change="selectChange" style="width: 100%;">
+                                <el-option v-for="item in innerInfo.OptionItems" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name target-name1"><div class="icon"><span>目标</span></div></div>
+                    <div class="input target">
+                        <div class="target-item">
+                            <el-radio :label="1">单</el-radio>
+                            <el-input class="input-md"></el-input>
+                        </div>
+                        <div class="target-item">
+                            <el-radio :label="1">或</el-radio>
+                            <div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">无序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                                <div class="target-sub-item">
+                                    <el-radio :label="1">有序</el-radio>
+                                    <el-input class="input-md"></el-input>
+                                    <span>至</span>
+                                    <el-input class="input-md"></el-input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>排除</span></div></div>
+                    <div class="input target">
+                        <div class="target-item">
+                            <el-radio :label="1">无序</el-radio>
+                            <el-input class="input-md"></el-input>
+                        </div>
+                        <div class="target-item">
+                            <el-radio :label="1">有序</el-radio>
+                            <el-input class="input-md"></el-input>
+                            <span>至</span>
+                            <el-input class="input-md"></el-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span class="sm">方法</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.MethodName" placeholder="请选择"
+                                @change="methodSelectChange" style="width: 100%;">
+                                <el-option v-for="item in innerInfo.NewMethodName" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span>参数</span></div></div>
+                    <div class="input">
+                        <el-table border @cell-click="cellClick">
+                            <el-table-column label="序号" width="50">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.Target }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="目标" width="60">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.Target }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="磁盘类型">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
+                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                    <span v-else>{{ scope.row.StartValue }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="磁盘大小">
+                                <template slot-scope="scope">
+                                    <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
+                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                    <span v-else>{{ scope.row.EndValue }}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="name"><div class="icon"><span class="sm">触发类型</span></div></div>
+                    <div class="input">
+                        <el-form-item>
+                            <el-select v-model="innerInfo.LoopType" placeholder="请选择"
+                                @change="ctrlEventChange(1)"
+                                style="width:100%;">
+                                <el-option v-for="item in loopTypeOptions" :key="item.code"
+                                    :label="item.text" :value="item.code">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </div>
+                </div>
+            </el-form>
+        </div>
+    `
+
 Vue.component('process-info', {
     // 在 JavaScript 中是 camelCase 的
     props: {
@@ -5,10 +291,15 @@ Vue.component('process-info', {
             type: Object,
             required: true,
             default: () => {}
+        },
+        type: {
+            type: String,
+            default: 'common'
         }
     },
     computed: {
         innerInfo() {
+            console.log(this.type)
             return this.info
         }
     },
@@ -101,168 +392,6 @@ Vue.component('process-info', {
             row.seen = true;
         },
     },
-
-    template: `
-        <div>
-            <div class="events" v-if="innerInfo.hasEvents">
-                <el-table border @cell-click="cellClick">
-                    <el-table-column label="序号">
-                        <template slot-scope="scope">
-                            <span>{{ scope.row.Target }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="事件描述">
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
-                                @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                            <span v-else>{{ scope.row.StartValue }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="用时">
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
-                                @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                            <span v-else>{{ scope.row.EndValue }}</span>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <el-form class="process">
-                <div class="step-item">
-                    <div class="name"><span>类型</span></div>
-                    <div class="input">
-                        <el-form-item>
-                            <el-select v-model="innerInfo.ClassName" placeholder="请选择"
-                                @change="selectChange" style="width: 100%;">
-                                <el-option v-for="item in innerInfo.OptionItems" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>方法</span></div>
-                    <div class="input">
-                        <el-form-item>
-                            <el-select v-model="innerInfo.MethodName" placeholder="请选择"
-                                @change="methodSelectChange" style="width: 100%;">
-                                <el-option v-for="item in innerInfo.NewMethodName" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name target-name"><span>目标</span></div>
-                    <div class="input target">
-                        <div class="target-item">
-                            <el-radio :label="1">单</el-radio>
-                            <el-input class="input-md"></el-input>
-                        </div>
-                        <div class="target-item">
-                            <el-radio :label="1">与</el-radio>
-                            <div>
-                                <div class="target-sub-item">
-                                    <el-radio :label="1">无序</el-radio>
-                                    <el-input class="input-md"></el-input>
-                                </div>
-                                <div class="target-sub-item">
-                                    <el-radio :label="1">有序</el-radio>
-                                    <el-input class="input-md"></el-input>
-                                    <span>至</span>
-                                    <el-input class="input-md"></el-input>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="target-item">
-                            <el-radio :label="1">或</el-radio>
-                            <div>
-                                <div class="target-sub-item">
-                                    <el-radio :label="1">无序</el-radio>
-                                    <el-input class="input-md"></el-input>
-                                </div>
-                                <div class="target-sub-item">
-                                    <el-radio :label="1">有序</el-radio>
-                                    <el-input class="input-md"></el-input>
-                                    <span>至</span>
-                                    <el-input class="input-md"></el-input>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>参数</span></div>
-                    <div class="input">
-                        <el-table border @cell-click="cellClick">
-                            <el-table-column label="目标">
-                                <template slot-scope="scope">
-                                    <span>{{ scope.row.Target }}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="起始值">
-                                <template slot-scope="scope">
-                                    <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                                    <span v-else>{{ scope.row.StartValue }}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="结束值">
-                                <template slot-scope="scope">
-                                    <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                                    <span v-else>{{ scope.row.EndValue }}</span>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>时间</span></div>
-                    <div class="input time">
-                        <el-input class="input-sm"></el-input><span>分</span>
-                        <el-input class="input-sm"></el-input><span>秒</span>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>缓动</span></div>
-                    <div class="input">
-                        <el-form-item>
-                            <el-input v-model="innerInfo.PlayType" @change="ctrlEventChange(1)"
-                                ></el-input>
-                        </el-form-item>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>循环</span></div>
-                    <div class="input">
-                        <el-form-item>
-                            <el-select v-model="innerInfo.LoopType" placeholder="请选择"
-                                @change="ctrlEventChange(1)"
-                                style="width:100%;">
-<!--                                <el-option v-for="item in loopTypeOptions" :key="item.code"-->
-<!--                                    :label="item.text" :value="item.code">-->
-<!--                                </el-option>-->
-                            </el-select>
-                        </el-form-item>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <div class="name"><span>次数</span></div>
-                    <div class="input time">
-                        <el-input class="input-sm"></el-input><span>次</span>
-                    </div>
-                </div>
-            </el-form>
-        </div>
-    `
+    
+    template: template
 })
