@@ -1,0 +1,112 @@
+/* 流程节点样式和位置 */
+
+.circle-chart {
+    margin: 5px auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    line-height: 40px;
+    /* background-color: rgb(19, 177, 224); */
+    background-color: darkturquoise;
+}
+
+
+/* 动画片段信息 */
+
+
+/* 动画片段节点背景 */
+
+.bg-lightseagreen {
+    background-color: lightseagreen;
+}
+
+
+/* 处理节点三个字溢出问题 */
+
+.font-small {
+    font-size: 12px;
+}
+
+#clipName {
+    /* margin-top: 8px; */
+}
+
+#clipStart {
+    margin-top: 1px;
+}
+
+#clipEnd {
+    margin-top: 1px;
+}
+
+#clipSpeed {
+    margin-top: 1px;
+}
+
+#clipTrigger {
+    margin-top: 85px;
+}
+
+
+/* 
+#clipObject {
+    margin-top: 85px;
+} */
+
+
+/* 事件基本信息 */
+
+#eventFrameNo {
+    margin-top: 8px;
+    background-color: darkcyan;
+}
+
+#eventType {
+    margin-top: 15px;
+}
+
+#eventMethod {
+    margin-top: 15px;
+}
+
+#eventTarget {
+    margin-top: 105px;
+}
+
+#eventValueArray {
+    margin-top: 185px;
+}
+
+
+/* 耗时 */
+
+#eventTimeElapsed {
+    margin-top: 95px;
+}
+
+#eventSlowMotion {
+    margin-top: 15px;
+}
+
+#eventLoop {
+    margin-top: 15px;
+}
+
+#eventTimes {
+    margin-top: 15px;
+}
+
+#event-slow-motion {
+    margin-top: 22px;
+}
+
+#event-loop {
+    margin-top: 25px;
+}
+
+#event-times {
+    margin-top: 22px;
+}

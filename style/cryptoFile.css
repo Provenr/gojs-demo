@@ -1,0 +1,35 @@
+.crypto-box{
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #666;
+}
+.crypto-box_title{
+    text-align: center;
+    font-size: 30px;
+    background: #3a8ee6;
+    color: #fff;
+}
+
+.crypto-box-wrapper{
+    margin: 0 auto;
+    padding: 20px;
+}
+.crypto-box-wrapper-item{
+    margin-bottom: 20px;
+}
+.crypto-box-wrapper-item_input{
+    display: flex;
+}
+
+.crypto-box_btn-group{
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    width: 100%;
+    bottom: 40px;
+}

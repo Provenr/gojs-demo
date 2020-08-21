@@ -1,0 +1,58 @@
+/* 重定义表单边距 */
+
+.el-form-item {
+    margin: 10px 10px 0 5px;
+}
+
+.el-form-item__content {
+    line-height: 30px;
+}
+
+
+/* 重定义文本框、标签大小 */
+
+.el-input__inner,
+.el-form-item__label {
+    height: 32px;
+    line-height: 32px;
+}
+
+.el-form-item__label {
+    font-size: 16px;
+}
+
+
+/* 数字框加减号 */
+
+.el-input-number__decrease,
+.el-input-number__increase {
+    padding-top: 10px;
+    height: 28px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.el-table thead {
+    min-height: 10px;
+}
+
+.el-table th {
+    font-size: 12px;
+    text-align: center;
+    padding: 0;
+}
+
+.el-table td {
+    font-size: 12px;
+    text-align: center;
+    padding: 0;
+}
+
+.el-upload-list__item {
+    display: none;
+}
+
+
+/* .el-tree-node:focus>.el-tree-node__content {
+    background-color: thistle !important;
+} */

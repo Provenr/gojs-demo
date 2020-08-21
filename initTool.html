@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/index.css">
+    <link rel="stylesheet" href="style/layout.css">
+    <style>
+        .el-dialog__header{
+            background: #409eff;
+            text-align: center;
+        }
+        .el-dialog__title{color: #fff;}
+        .el-dialog__headerbtn .el-dialog__close{color: #666;font-size: 20px}
+        .el-dialog__headerbtn .el-dialog__close:hover{color: #333}
+
+        .el-upload-list{
+            display: none;
+        }
+        .button-group{
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .grid-content .title{
+            border-radius: 0;
+        }
+        .button-groups button{
+            width: 180px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <el-row>
+            <el-col>
+                <div class="grid-content button-groups" style="display: flex;margin-bottom: 10px;justify-content: flex-end">
+                    <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile"
+                               accept=".xml">
+                        <el-button type="success" size="medium">导入</el-button>
+                    </el-upload>
+                    <el-button type="primary" @click="exportFile" size="medium">导出</el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="12">
+                <div class="grid-content">
+                    <div class="title bg-mediumorchid">基础工具信息</div>
+                    <div class="table-wrapper">
+                        <el-table
+                                ref="baseToolTable"
+                                :data="baseToolTableData"
+                                highlight-current-row
+                                border
+                                height="600"
+                                @current-change="handleBaseToolCurrentChange"
+                                style="width: 100%">
+<!--                            <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>-->
+                            <el-table-column property="id" label="ID" width="120" align="center"></el-table-column>
+                            <el-table-column property="name" label="名称"  align="center"></el-table-column>
+                            <el-table-column label="操作" width="120" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            type="primary"
+                                            @click="handleEditBaseTool(scope.$index, scope.row)">编辑</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="button-group">
+                        <el-button type="success" @click="addItem('base')">新建</el-button>
+                        <el-button type="danger" @click="removeItem('base')">删除</el-button>
+                    </div>
+                </div>
+
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <div class="title bg-lightseagreen">组合工具配置信息</div>
+                    <div class="table-wrapper">
+                        <el-table
+                                ref="baseToolTable"
+                                :data="groupToolTableData"
+                                highlight-current-row
+                                border
+                                height="600"
+                                @current-change="handleGroupToolCurrentChange"
+                                style="width: 100%">
+<!--                            <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>-->
+                            <el-table-column property="id" label="ID" width="120" align="center"></el-table-column>
+                            <el-table-column property="name" label="名称"  align="center"></el-table-column>
+                            <el-table-column property="toolTypeZH" label="类型"  align="center">
+                                <template slot-scope="scope">
+                                    {{scope.row.toolType == '0' ? '常规' : '组合'}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" width="120" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            type="primary"
+                                            @click="handleEditGroupTool(scope.$index, scope.row)">编辑</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="button-group">
+                        <el-button type="success" @click="addItem('group')">新建</el-button>
+                        <el-button type="danger" @click="removeItem('group')">删除</el-button>
+                    </div>
+                </div>
+
+            </el-col>
+        </el-row>
+
+        <!--  基础工具-->
+        <el-dialog
+                title="基础工具配置"
+                :visible.sync="baseToolDialogVisible"
+                width="80%"
+                >
+            <div>
+                <el-form ref="form" :model.sync="singleToolInfo" label-width="100px">
+                    <el-row>
+                        <el-col :span="10">
+                            <el-form-item label="索引:">
+                                <el-input v-model="singleToolInfo.id"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10" :offset="2">
+                            <el-form-item label="工具名称:">
+                                <el-input v-model="singleToolInfo.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="10">
+                            <el-form-item label="图标名称:">
+                                <el-input v-model="singleToolInfo.ban_icon"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10" :offset="2">
+                            <el-form-item label="鼠标图标名称:">
+                                <el-input v-model="singleToolInfo.ban_mouse"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="10">
+                            <el-form-item label="模型名称:">
+                                <el-input v-model="singleToolInfo.ban_module"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="22">
+                            <el-form-item label="提示内容:">
+                                <el-input type="textarea" v-model="singleToolInfo.tips"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="baseToolConfirm">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!--  组合工具-->
+        <el-dialog
+                title="组合工具配置"
+                :visible.sync="groupToolDialogVisible"
+                width="80%"
+                >
+            <div>
+                <el-form ref="form" :model="groupToolInfo" label-width="100px">
+                    <el-row :gutter="20">
+                        <el-col :span="10">
+                            <el-form-item label="索引:">
+                                <el-input v-model="groupToolInfo.id"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10" :offset="2">
+                            <el-form-item label="工具名称:">
+                                <el-input v-model="groupToolInfo.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col >
+                            <el-form-item label="工具类型:">
+                                <el-select v-model="groupToolInfo.toolType">
+                                    <el-option label="常规" value="0"></el-option>
+                                    <el-option label="组合" value="1"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+<!--                    <el-row type="flex" justify="space-between" style="flex-wrap: wrap">-->
+<!--                        <el-col :span="12" v-for="(item, index) in groupToolInfo.toolArr" :key="index">-->
+<!--&lt;!&ndash;                            <div style="display: flex;justify-content: space-between" :offset="2">&ndash;&gt;-->
+<!--                                <el-form-item :label="`工具${index + 1}:`">-->
+<!--                                    <el-select v-model="item[`_Tool${index}`]" placeholder="请选择" @change="modifyGroupTool($event, index)">-->
+<!--                                        <el-option v-for="item in toolList" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+<!--                                    </el-select>-->
+<!--                                </el-form-item>-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                        </el-col>-->
+<!--                    </el-row>-->
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="工具1:">
+                                <el-select v-model="groupToolInfo._Tool1">
+                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="工具2:">
+                                <el-select v-model="groupToolInfo._Tool2">
+                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="工具3:">
+                                <el-select v-model="groupToolInfo._Tool3">
+                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="工具4:">
+                                <el-select v-model="groupToolInfo._Tool4">
+                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="groupToolConfirm">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</body>
+
+</html>
+<script src="lib/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="lib/index.js"></script>
+<script src="lib/xml2json.js"></script>
+<script src="lib/FileSaver.min.js"></script>
+<script src="script/common.js"></script>
+<script src="script/initTool.js"></script>
+<!--<script src="script/mock/tool.js"></script>-->
+
+<script type="text/javascript">
+    let Root = Vue.extend(Main);
+    new Root().$mount('#app');
+</script>

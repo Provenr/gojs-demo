@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="lib/index.css">
+    <link rel="stylesheet" href="./style/editor.css">
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="header">
+            <div class="btns">
+                <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile"
+                    :show-file-list="false" accept=".xml">
+                    <el-button type="success" size="medium">导入</el-button>
+                </el-upload>
+                <el-button type="primary" @click="exportFile" size="medium">导出</el-button>
+            </div>
+        </div>
+        <div class="left">
+            <div class="pannel" id="diagramPannel"></div>
+        </div>
+        <div class="main">
+            <div class="editor-area" style="width: 500px">
+                <div class="form">
+                    <div class="input-item">
+                        <div class="label">配置名称：</div>
+                        <div class="input"><el-input v-model="data._Name"></el-input></div>
+                    </div>
+                    <div class="input-item">
+                        <div class="label">号位：</div>
+                        <div class="input"><el-input v-model="data._PersonNumber"></el-input></div>
+                    </div>
+                    <div class="input-item">
+                        <div class="label">模型名称：</div>
+                        <div class="input"><el-input v-model="data._AssembleModel"></el-input></div>
+                    </div>
+                </div>
+                <div class="editor" id="diagramEditor"></div>
+            </div>
+            <div class="info-area" v-if="hasData">
+                <el-row :gutter="50">
+                    <el-col :md="8">
+                        <div class="base-info">
+                            <div class="title">基本信息</div>
+                            <div>节点ID：{{data.ProcessInfo[0]._Index}}</div>
+                            <div>节点名称：{{data.ProcessInfo[0]._Name}}</div>
+                            <div>参与人员：人员1 <label><el-radio v-model="data.ProcessInfo[0]._AutoPlay" label="1">参与执行</el-radio></label><label><el-radio v-model="data.ProcessInfo[0]._AutoPlay" label="2">自动执行</el-radio></label>
+                            </div>
+                        </div>
+                        <div class="step start" data-title="开始">
+                            <process-info :info="data1"></process-info>
+                        </div>
+                        <div class="arrow"></div>
+                    </el-col>
+                    <el-col :md="8">
+                        <div class="step" data-title="进行">
+                            <process-info :info="data1"></process-info>
+                        </div>
+                        <!-- <div class="step" data-title="辅助进行">
+                            <process-info :info="data1"></process-info>
+                        </div> -->
+                        <div class="arrow"></div>
+                    </el-col>
+                    <el-col :md="8">
+                        <div class="step end" data-title="结束">
+                            <process-info :info="data1"></process-info>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
+    </div>
+
+</body>
+<!--<script src="lib/vue.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+<!-- 引入组件库 -->
+<script src="lib/index.js"></script>
+<script src="lib/go.js"></script>
+<script src="lib/xml2json.js"></script>
+<script src="script/common.js"></script>
+<script src="script/editor.js"></script>
+<script src="script/processInfo.js"></script>
+
+<script>
+    var Ctor = Vue.extend(Editor);
+    new Ctor().$mount('#app');
+</script>
+
+</html>

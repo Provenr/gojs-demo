@@ -1,0 +1,155 @@
+/* 因form-item整体定义label占60px，在不使用label时，让input左移 */
+
+.clip-info-form-item {
+    margin-left: -65px;
+    /* width: 200px; */
+}
+
+.clip-table {
+    min-height: 100px;
+    padding: 0px;
+    overflow-y: scroll;
+    border: solid 1px lightslategray;
+    margin-bottom: 10px;
+}
+
+.clip-table .el-table {
+    height: 120px;
+    overflow-y: scroll;
+}
+
+.search-box {
+    margin-left: -75px;
+}
+
+
+/* 树 */
+
+.custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 10px;
+}
+
+.clip-tree {
+    margin-left: -75px;
+    border: 1px solid lightgray;
+    height: 745px;
+    margin-bottom: 10px;
+    /* overflow: scroll; */
+}
+
+.clip-tree el-tree {
+    overflow: auto;
+}
+
+
+/* 避免事件的lebel太长，将删除按钮挡住 
+时灵时不灵
+*/
+
+#node-label {
+    width: 90% !important;
+    overflow: hidden;
+}
+
+
+/* 片段基本信息 */
+
+#clip-start {
+    /* margin-top: 25px; */
+    margin-top: 12px;
+}
+
+#clip-end {
+    /* margin-top: 20px; */
+    margin-top: 12px;
+}
+
+#clip-speed {
+    width: 85%;
+    /* margin: 15px 15px 0 10px; */
+    margin-left: 10px;
+    float: left;
+}
+
+#clip-speed-label {
+    /* margin: 15px; */
+    margin-left: 20px;
+    float: left;
+}
+
+.clip-trigger-objects {
+    margin-left: 20px;
+    padding-bottom: 10px;
+    border-left: 3px solid lightgray;
+}
+
+.clip-trigger-objects span {
+    display: inline-block;
+}
+
+.clip-trigger-objects-sub {
+    /* margin: 10px 0 0 0px; */
+    /* padding: 0 0 5px 10px; */
+    margin: 2px 0 0 0px;
+    padding: 0 0 2px 10px;
+    border-left: 3px solid lightgray;
+}
+
+.clip-trigger-objects-sub .short-input {
+    width: 103px;
+}
+
+
+/* 事件信息 */
+
+#event-class {
+    margin-top: 25px;
+}
+
+#event-method {
+    margin-top: 20px;
+}
+
+.event-target {
+    margin-top: 25px;
+}
+
+.event-value-array {
+    margin: 10px;
+    overflow-y: scroll;
+    border: solid 1px lightslategray;
+}
+
+.event-value-array .el-table {
+    height: 180px;
+    overflow-y: scroll;
+}
+
+
+/* 耗时 */
+
+.duration {
+    margin-top: 0px;
+}
+
+.duration span {
+    display: inline-block;
+}
+
+.duration .short-input {
+    width: 100px;
+}
+
+
+/* 实体按钮 */
+
+.small-button {
+    padding: 0 20px;
+    height: 32px;
+    line-height: 32px;
+}
