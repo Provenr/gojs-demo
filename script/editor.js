@@ -6,7 +6,14 @@ let PromiseFileList = [] // 读取的文件
 
 let fileDataArr = [] // 读取的文件列表
 
-
+//播放类型选项
+var loopTypeOptions = [{
+    code: '1',
+    text: '是'
+}, {
+    code: '2',
+    text: '否'
+}];
 const Editor = {
     data() {
         return {
