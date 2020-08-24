@@ -1,4 +1,5 @@
 const $ = go.GraphObject.make;    // 创建画布
+let myDiagram = null;
 
 let processData = '' // 流程数据
 
@@ -18,6 +19,9 @@ const Editor = {
     data() {
         return {
             editorVal: '', // 可视化编辑的内容
+            currentPerson: '', // 当前人员
+            processTplName: '',
+            currentNode: '', // 当前节点
             processJson: {
 
             },
@@ -61,7 +65,7 @@ const Editor = {
     methods: {
         // 初始化
         initDiagram() {
-            let myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
+             myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
                 {
                     initialContentAlignment: go.Spot.Center, // 居中显示内容
                     "undoManager.isEnabled": true, // 启用Ctrl-Z和Ctrl-Y撤销重做功能
@@ -157,11 +161,14 @@ const Editor = {
 
             // 定义流程节点模板
             myDiagram.nodeTemplateMap.add("Process",
-                $(go.Node, "Table", this.nodeStyle(),
+                // this.nodeStyle(),
+                $(go.Node, "Vertical",
                     $(go.Panel, "Auto",
                         $(go.Shape, "Rectangle",
-                            { fill: "#00A9C9", strokeWidth: 0 },
-                            // new go.Binding("figure", "figure")
+                            {
+                                fill: "blue",
+                                stroke: "lightgray",
+                            }
                         ),
 
                         $(go.TextBlock, this.textStyle(),
@@ -179,10 +186,8 @@ const Editor = {
                                                 if (myDiagram.isReadOnly) return;
                                                 var cmd = button.data;
                                                 var nodedata = button.part.adornedPart.data;
-                                                // console.log(nodedata);
                                                 let curNode = myDiagram.findNodeForKey(nodedata.key);
                                                 options.contextMenu(curNode, cmd.text);
-                                                // console.log("On " + nodedata.text + "  " + cmd.text + ": " + cmd.action);
                                             }
                                         }
                                     )
@@ -192,6 +197,15 @@ const Editor = {
                             new go.Binding("text").makeTwoWay() // 双向绑定模型中"text"属性
                         ),
 
+                        $(go.TextBlock, this.textStyle(),
+                            {
+                                margin: 8,
+                                maxSize: new go.Size(120, NaN),
+                                wrap: go.TextBlock.WrapFit, // 尺寸自适应
+                                editable: true,  // 文字可编辑
+                            },
+                            new go.Binding("text", 'desc').makeTwoWay() // 双向绑定模型中"desc"属性
+                        )
                     ),
                     $("TreeExpanderButton", {
                         alignment: go.Spot.Right,
@@ -200,6 +214,39 @@ const Editor = {
                     })
                 )
             );
+
+            myDiagram.groupTemplate =
+                $(go.Group, "Auto",
+                    { // define the group's internal layout
+                        layout: $(go.TreeLayout,
+                            { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
+                        // the group begins unexpanded;
+                        // upon expansion, a Diagram Listener will generate contents for the group
+                        isSubGraphExpanded: false,
+                        // when a group is expanded, if it contains no parts, generate a subGraph inside of it
+                        subGraphExpandedChanged: function(group) {
+                            if (group.memberParts.count === 0) {
+                                randomGroup(group.data.key);
+                            }
+                        }
+                    },
+                    $(go.Shape, "Rectangle",
+                        { fill: null, stroke: "gray", strokeWidth: 2 }),
+                    $(go.Panel, "Vertical",
+                        { defaultAlignment: go.Spot.Left, margin: 4 },
+                        $(go.Panel, "Horizontal",
+                            { defaultAlignment: go.Spot.Top },
+                            // the SubGraphExpanderButton is a panel that functions as a button to expand or collapse the subGraph
+                            $("SubGraphExpanderButton"),
+                            $(go.TextBlock,
+                                { font: "Bold 18px Sans-Serif", margin: 4 },
+                                new go.Binding("text", "key"))
+                        ),
+                        // 设置 go.Placeholder 对象的目的是, 让组自适应内部节点的大小;
+                        $(go.Placeholder,
+                            { padding: new go.Margin(0, 10) })
+                    )  // end Vertical Panel
+                );  // end Group
 
 
             // 初始化连接线的模板
@@ -270,35 +317,35 @@ const Editor = {
             );
 
             // 初始化模型范例
-            myDiagram.model = go.Model.fromJson(
-                {
-                    "class": "go.GraphLinksModel",
-                    "linkFromPortIdProperty": "fromPort",
-                    "linkToPortIdProperty": "toPort",
-                    "nodeDataArray": [
-                        { "category": "Start", "text": "开始", "key": 1, "loc": "88 37" },
-                        { "category": "Process", "text": "拆车轮", "key": 2, "loc": "88 114" },
-                        { "category": "Process", "text": "拆车灯", "key": 3, "loc": "88 210" },
-                        { "category": "Process", "text": "放下工具", "key": 4, "loc": "87 307" },
-                        { "category": "Process", "text": "放下工具", "key": 5, "loc": "87 375" },
-                        { "category": "End", "text": "结束", "key": 6, "loc": "87 445" }
-                    ],
-                    "linkDataArray": [
-                        { "from": 2, "to": 3, "fromPort": "B", "toPort": "T" },
-                        { "from": 1, "to": 2, "fromPort": "B", "toPort": "T" },
-                        { "from": 3, "to": 4, "fromPort": "B", "toPort": "T" },
-                        { "from": 4, "to": 5, "fromPort": "B", "toPort": "T" },
-                        { "from": 5, "to": 6, "fromPort": "B", "toPort": "T" }
-                    ]
-                }
-            );
-            this.editorVal = myDiagram.model.toJson()
+            // myDiagram.model = go.Model.fromJson(
+            //     {
+            //         "class": "go.GraphLinksModel",
+            //         "linkFromPortIdProperty": "fromPort",
+            //         "linkToPortIdProperty": "toPort",
+            //         "nodeDataArray": [
+            //             { "category": "Start", "text": "开始", "key": 1, "loc": "88 37" },
+            //             { "category": "Process", "text": "拆车轮", "desc": 'sdsfs', "key": 2, "loc": "88 114" },
+            //             { "category": "Process", "text": "拆车灯", "key": 3, "loc": "88 210" },
+            //             { "category": "Process", "text": "放下工具", "key": 4, "loc": "87 307" },
+            //             { "category": "Process", "text": "放下工具", "key": 5, "loc": "87 375" },
+            //             { "category": "End", "text": "结束", "key": 6, "loc": "87 445" }
+            //         ],
+            //         "linkDataArray": [
+            //             { "from": 2, "to": 3, "fromPort": "B", "toPort": "T" },
+            //             { "from": 1, "to": 2, "fromPort": "B", "toPort": "T" },
+            //             { "from": 3, "to": 4, "fromPort": "B", "toPort": "T" },
+            //             { "from": 4, "to": 5, "fromPort": "B", "toPort": "T" },
+            //             { "from": 5, "to": 6, "fromPort": "B", "toPort": "T" }
+            //         ]
+            //     }
+            // );
+            // this.editorVal = myDiagram.model.toJson()
         },
 
         // 此事件方法由整个画板的LinkDrawn和LinkRelinked事件触发
         // 如果连线是从”conditional"条件节点出发，则将连线上的标签显示出来
         showLinkLabel(e) {
-            var label = e.subject.findObject("LABEL");
+            let label = e.subject.findObject("LABEL");
             if (label !== null) {
                 label.visible = (e.subject.fromNode.data.category === "Conditional");
             }
@@ -315,6 +362,7 @@ const Editor = {
                     // 节点位置 Node.location 定位在节点的中心
                     locationSpot: go.Spot.Center
                 }
+
             ];
         },
 
@@ -358,15 +406,13 @@ const Editor = {
             }
         },
 
-
-
         // xml 导入
         loadJsonFile(file, fileList) {
             if (fileList) {
                 for (let i = 0; i < fileList.length; i++) {
                     let file = fileList[i]
                     if (!file) continue
-                    let impFileName = file.name; // 导入文件名称
+                    // let impFileName = file.name; // 导入文件名称
                     // if (/(AssembledConfig_)\d/g.test(impFileName)) {
                     //     // 人员信息
                     // }
@@ -415,27 +461,128 @@ const Editor = {
                 if (/(AssembledConfig_)\d/g.test(impFileName)) {
                     // 人员信息
                     console.log('人员信息', file.json)
-                    this.data = file.json.ProcessConfigure
+                    this.data = file.json.ProcessConfigure;
+                    // TODO: 获取当前导入文件的人员ID
+                    this.currentPerson = '2'
                     this.personParseData(file.json)
                 } else {
                     // 流程信息
                     this.processParseData(file.json)
-                    console.log('流程信息', file.json)
+                    this.processTplName = impFileName
                 }
             }
         },
 
         // 流程信息数据 解析
         processParseData(json) {
+            console.log('流程信息', json);
             //xml转换为json后，当只有一个元素时，格式为对象，非对象数组，强制将它们转为对象数组，以便使用forEach
+
+            // 节点组
+            if(json.ProcessConfigure.BigProcessConfigure) {
+                let BigProcessConfigure = json.ProcessConfigure.BigProcessConfigure; // 大流程 => 流程图中的组
+                let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
+
+                // _Index: "1", _ProcessSection: "1,1-1,1-2", _Name: "拆前置喷头"
+            }
+
+            // 基础节点
+            let nodeDataArray = []  // 节点
+            let linkDataArray = [] // 链接
+
+            if(json.ProcessConfigure.ProcessInfo) {
+                let ProcessInfo = json.ProcessConfigure.ProcessInfo; // 流程节点信息
+                ProcessInfo = forceArr(ProcessInfo);
+
+                let start = { category: "Start", text: "开始", key: 'start', loc: "88 37" };
+                nodeDataArray.push(start);
+                ProcessInfo.forEach((item, index) => {
+                    let node = { category: "Process", text: item._Name, key: item._Index, loc: `88 ${37 + 80 * (index + 1)}`};
+                    nodeDataArray.push(node);
+                    item.ProcessBranch = item.ProcessBranch ? forceArr(item.ProcessBranch) : []
+                    console.log( item.ProcessBranch)
+                    if (item.ProcessBranch.length > 0) {
+                        item.ProcessBranch.forEach(branch => {
+                            let link =  { from: item._Index, to: branch._Index, fromPort: "B", toPort: "T" }
+                            linkDataArray.push(link)
+                        })
+                    }
+                })
+                let end = { category: "End", text: "结束", key: 'end', loc: `88 ${37 + 80 * (ProcessInfo.length + 1) }` };
+                nodeDataArray.push(end);
+                console.log(nodeDataArray)
+                console.log(linkDataArray)
+
+                myDiagram.model = go.Model.fromJson(
+                    {
+                        nodeDataArray,
+                        linkDataArray
+                    }
+                )
+                // 转json
+                // this.editorVal = myDiagram.model.toJson()
+            }
+
         },
 
         // 人员信息数据 解析
         personParseData(json) {
-            //xml转换为json后，当只有一个元素时，格式为对象，非对象数组，强制将它们转为对象数组，以便使用forEach
+            //xml转换为json后，当只有一个元素时，格式为对象，forceArr 非对象数组，强制将它们转为对象数组，以便使用forEach
         },
 
-        exportFile() {
+        exportFile(type) {
+            if (type === 1) {
+                // 流程导出
+                this.exportProceeXML();
+            } else {
+                // 人员信息导出
+                this.exportPersonXML();
+            }
+        },
+
+        // 人员信息导出
+        exportPersonXML() {
+            this.editorVal = myDiagram.model.toJson()
+            let { nodeDataArray, linkDataArray } = this.editorVal
+            // TODO: XML 模板修改
+            let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
+                '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
+                '  <ToolPartsList>\r\n';
+            // tmp
+
+            // 人员信息模板
+
+
+
+            let currTime = getCurrTime();
+            let xmlfile = 'AssembledConfig_' + this.currentPerson + currTime + '.xml';
+            this.exportData(xmlDoc, xmlfile);
+        },
+
+        // 流程信息导出
+        exportProceeXML () {
+            this.editorVal = myDiagram.model.toJson()
+            let { nodeDataArray, linkDataArray } = this.editorVal
+            let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
+                '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
+                '  <ToolPartsList>\r\n';
+            // tmp
+            // <ProcessInfo Index="3" Name="前臂左侧螺丝" BackIndex="">
+            //     <ProcessBranch Index="3-1"/>
+            // </ProcessInfo>
+            // nodeDataArray.
+
+
+            let currTime = getCurrTime();
+            let xmlFile = '';
+            if (impFileName != '') {
+                let len = impFileName.length;
+                xmlfile = impFileName.substring(0, len - 4) + '_' + currTime + '.xml';
+            } else {
+                xmlfile = 'ProcessConfig_' + currTime + '.xml';
+            }
+
+            this.exportData(xmlDoc, xmlfile);
 
         },
 
@@ -445,7 +592,5 @@ const Editor = {
             var blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
             saveAs(blob, file);
         },
-
-
     }
 }
