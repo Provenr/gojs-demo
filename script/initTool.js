@@ -105,7 +105,7 @@ const Main = {
 
             console.log(validate);
             if (validate) {
-                this.$alert('不能创建重复的工具');
+                this.$alert(`索引为 ${this.singleToolInfo.id} 的工具已经存在`);
                 return false;
             }
             this.$set(this.baseToolTableData, index, this.singleToolInfo);
