@@ -36,7 +36,14 @@
 <body>
     <div id="app">
         <el-row>
-            <el-col>
+            <el-col :span="12">
+                <span>工具模式:</span>
+                <el-select v-model="ToolMode">
+                    <el-option label="鼠标模式" value="0"></el-option>
+                    <el-option label="模型模式" value="1"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="12">
                 <div class="grid-content button-groups" style="display: flex;margin-bottom: 10px;justify-content: flex-end">
                     <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile"
                                accept=".xml">
@@ -216,14 +223,14 @@
                         <el-col :span="12">
                             <el-form-item label="工具1:">
                                 <el-select v-model="groupToolInfo._Tool1">
-                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                    <el-option v-for="item in toolList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="工具2:">
                                 <el-select v-model="groupToolInfo._Tool2">
-                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                    <el-option v-for="item in toolList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -232,14 +239,14 @@
                         <el-col :span="12">
                             <el-form-item label="工具3:">
                                 <el-select v-model="groupToolInfo._Tool3">
-                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                    <el-option v-for="item in toolList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="工具4:">
                                 <el-select v-model="groupToolInfo._Tool4">
-                                    <el-option v-for="item in baseToolTableData" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                    <el-option v-for="item in toolList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -254,7 +261,7 @@
 </body>
 
 </html>
-<script src="lib/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
 <!-- 引入组件库 -->
 <script src="lib/index.js"></script>
 <script src="lib/xml2json.js"></script>

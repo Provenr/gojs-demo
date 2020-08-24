@@ -184,10 +184,12 @@ const Editor = {
                                         {
                                             click: function(e, button) {
                                                 if (myDiagram.isReadOnly) return;
-                                                var cmd = button.data;
-                                                var nodedata = button.part.adornedPart.data;
-                                                let curNode = myDiagram.findNodeForKey(nodedata.key);
-                                                options.contextMenu(curNode, cmd.text);
+                                                let cmd = button.data;
+                                                console.log(button.part.adornedPart)
+                                                let nodeData = button.part.adornedPart.data;
+                                                console.log(nodeData)
+                                                let curNode = myDiagram.findNodeForKey(nodeData.key);
+                                                // options.contextMenu(curNode, cmd.text);
                                             }
                                         }
                                     )
@@ -302,12 +304,11 @@ const Editor = {
                     nodeTemplateMap: myDiagram.nodeTemplateMap,  // 同myDiagram公用一种node节点模板
                     model: new go.GraphLinksModel([  // 初始化Palette面板里的内容
                         { category: "Start", text: "开始" },
-                        { category: 'Process',
+                        {
+                            category: 'Process',
                             text: "流程",
                             fill: "#FEF7E7",
                             stroke: '#FDCF90',
-                            info: "",
-                            type: "start",
                             commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }],
                         },
 
@@ -463,7 +464,7 @@ const Editor = {
                     console.log('人员信息', file.json)
                     this.data = file.json.ProcessConfigure;
                     // TODO: 获取当前导入文件的人员ID
-                    this.currentPerson = '2'
+                    this.currentPerson = impFileName.match(/(?<=AssembledConfig_)\d+/g)[0];
                     this.personParseData(file.json)
                 } else {
                     // 流程信息
@@ -496,11 +497,20 @@ const Editor = {
 
                 let start = { category: "Start", text: "开始", key: 'start', loc: "88 37" };
                 nodeDataArray.push(start);
+                // 添加开始节点link
+                let startKey = ProcessInfo[0]._Index
+                linkDataArray.push({ from: 'start', to: startKey, fromPort: "B", toPort: "T" })
                 ProcessInfo.forEach((item, index) => {
-                    let node = { category: "Process", text: item._Name, key: item._Index, loc: `88 ${37 + 80 * (index + 1)}`};
+                    let node = {
+                        category: "Process",
+                        text: item._Name,
+                        key: item._Index,
+                        loc: `88 ${37 + 80 * (index + 1)}`,
+                        commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]
+                    };
                     nodeDataArray.push(node);
                     item.ProcessBranch = item.ProcessBranch ? forceArr(item.ProcessBranch) : []
-                    console.log( item.ProcessBranch)
+                    // console.log( item.ProcessBranch)
                     if (item.ProcessBranch.length > 0) {
                         item.ProcessBranch.forEach(branch => {
                             let link =  { from: item._Index, to: branch._Index, fromPort: "B", toPort: "T" }
@@ -508,8 +518,13 @@ const Editor = {
                         })
                     }
                 })
+
                 let end = { category: "End", text: "结束", key: 'end', loc: `88 ${37 + 80 * (ProcessInfo.length + 1) }` };
                 nodeDataArray.push(end);
+
+                let endKey = ProcessInfo.slice(-1)[0]._Index
+                // 添加结束节点link
+                linkDataArray.push({ from: endKey, to: 'end', fromPort: "B", toPort: "T" })
                 console.log(nodeDataArray)
                 console.log(linkDataArray)
 

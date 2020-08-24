@@ -91,7 +91,7 @@ function forceArr(node) {
 /* -----------------------------加密解密------------------------------------ Start */
 
 // AES加密
-function encryptAES (data, keys="dxhy2020", ivs="dxhy!@#") { // 加密
+function encryptAES (data, keys="dxhy2020", ivs="") { // 加密
     console.log('加密',keys,ivs)
     const key = CryptoJS.enc.Utf8.parse(keys)
     const iv = CryptoJS.enc.Utf8.parse(ivs)
@@ -99,20 +99,20 @@ function encryptAES (data, keys="dxhy2020", ivs="dxhy!@#") { // 加密
     const encrypted = CryptoJS.AES.encrypt(data, key,
         {
             iv: iv,
-            mode: CryptoJS.mode.CBC,
+            mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
         })
     return encrypted.toString()
 }
 // AES解密
-function decryptAES (data, keys="dxhy2020", ivs="dxhy!@#") { // 解密
+function decryptAES (data, keys="dxhy2020", ivs="") { // 解密
     console.log('解密',keys,ivs)
     const key = CryptoJS.enc.Utf8.parse(keys)
     const iv = CryptoJS.enc.Utf8.parse(ivs)
     const decrypted = CryptoJS.AES.decrypt(data.toString(), key,
         {
             iv: iv,
-            mode: CryptoJS.mode.CBC,
+            mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
         })
     return decrypted.toString(CryptoJS.enc.Utf8)

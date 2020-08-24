@@ -99,9 +99,19 @@ const Main = {
             }
             let tmp = [];
             // this.baseToolTableData = []
+
+            console.log(this.baseToolTableData)
+            let validate = this.baseToolTableData.some(item => item.id === this.singleToolInfo.id)
+
+            console.log(validate);
+            if (validate) {
+                this.$alert('不能创建重复的工具');
+                return false;
+            }
             this.$set(this.baseToolTableData, index, this.singleToolInfo);
             this.baseToolDialogVisible = false;
             this.toolList = this.baseToolTableData.slice();
+            this.toolList.unshift({id: '', name: ''})
             console.log('baseTabe', this.baseToolTableData)
         },
 
