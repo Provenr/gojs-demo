@@ -1,7 +1,7 @@
 let template = `
         <!-- 开始、辅助进行、结束 -->
         <div v-if="type=='common'">
-            <div class="events" v-if="innerInfo.hasEvents">
+            <div class="events">
                 <el-table border @cell-click="cellClick">
                     <el-table-column label="序号">
                         <template slot-scope="scope">
