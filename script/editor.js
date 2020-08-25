@@ -19,15 +19,18 @@ const Editor = {
     data() {
         return {
             editorVal: '', // 可视化编辑的内容
+            oldPerson: '',
             currentPerson: '', // 当前人员
             processTplName: '',
             currentNode: '', // 当前节点
+            fileList: [],
             processJson: {
-
+                _ID: "",
+                _Name: ""
             },
-            currentPersonJson: {
-
-            },
+            // oldPersonJson: {},
+            currentPersonJson: {},
+            personOptions: [],
             hasData: false,
             data: {}, // 导入进来的信息
             data1: { //片段信息
@@ -59,6 +62,31 @@ const Editor = {
         }
     },
 
+    watch: {
+        currentPerson(newData, oldData){
+            if (oldData === '') {
+                this.oldPerson = newData;
+            } else {
+                this.oldPerson = oldData;
+            }
+            console.log(this.currentPerson, this.oldPerson)
+            let newPersonJson = null;
+            let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
+            this.currentPersonJson = null;
+            console.log(`old${this.oldPerson}`, oldPersonJson)
+            // FIXME: 可能需要深拷贝
+            fileDataArr.forEach(item => {
+                if (item.personId && item.personId === this.oldPerson) {
+                    item.json.ProcessConfigure = oldPersonJson;
+                }
+                if (item.personId && item.personId === newData) {
+                    newPersonJson = JSON.parse(JSON.stringify(item.json));
+                }
+            })
+            console.log(`new${newData}`, newPersonJson.ProcessConfigure)
+            this.personParseData(newPersonJson, newData);
+        }
+    },
     mounted() {
         this.initDiagram()
     },
@@ -87,6 +115,7 @@ const Editor = {
                 }
                 // TODO: 绑定作用域 ???
             }.bind(this));
+
             // 定义步骤（默认类型）节点的模板
             myDiagram.nodeTemplateMap.add("Process1",  // 默认类型
                 $(go.Node, "Table", this.nodeStyle(),
@@ -161,20 +190,23 @@ const Editor = {
 
             // 定义流程节点模板
             myDiagram.nodeTemplateMap.add("Process",
-                // this.nodeStyle(),
-                $(go.Node, "Vertical",
-                    $(go.Panel, "Auto",
-                        $(go.Shape, "Rectangle",
-                            {
-                                fill: "blue",
-                                stroke: "lightgray",
-                            }
-                        ),
+                $(go.Node, "Auto", this.nodeStyle(),
 
+                    $(go.Shape, "RoundedRectangle",
+                        {
+                            // fill: "blue",
+                            stroke: "lightgray",
+                        }
+                    ),
+
+                    $(go.Panel, "Table",
+                        { defaultAlignment: go.Spot.Left, margin: 4 },
+                        $(go.RowColumnDefinition, { column: 1, width: 4 }),
                         $(go.TextBlock, this.textStyle(),
                             {
-                                margin: 8,
-                                maxSize: new go.Size(120, NaN),
+                                row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center,
+                                margin: 5,
+                                maxSize: new go.Size(150, NaN),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                                 contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", "commands"), {
@@ -196,24 +228,24 @@ const Editor = {
                                 })
 
                             },
-                            new go.Binding("text").makeTwoWay() // 双向绑定模型中"text"属性
+                            new go.Binding("text", "key").makeTwoWay() // 双向绑定模型中"text"属性
                         ),
 
                         $(go.TextBlock, this.textStyle(),
                             {
-                                margin: 8,
-                                maxSize: new go.Size(120, NaN),
+                                row: 1, column: 0, columnSpan: 3, alignment: go.Spot.Center,
+                                maxSize: new go.Size(150, NaN),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                             },
-                            new go.Binding("text", 'desc').makeTwoWay() // 双向绑定模型中"desc"属性
+                            new go.Binding("text", "text").makeTwoWay() // 双向绑定模型中"text"属性
                         )
                     ),
-                    $("TreeExpanderButton", {
-                        alignment: go.Spot.Right,
-                        alignmentFocus: go.Spot.Left,
-                        "ButtonBorder.figure": "Rectangle"
-                    })
+                    // $("TreeExpanderButton", {
+                    //     alignment: go.Spot.Right,
+                    //     alignmentFocus: go.Spot.Left,
+                    //     "ButtonBorder.figure": "Rectangle"
+                    // })
                 )
             );
 
@@ -306,6 +338,7 @@ const Editor = {
                         { category: "Start", text: "开始" },
                         {
                             category: 'Process',
+                            key: '1',
                             text: "流程",
                             fill: "#FEF7E7",
                             stroke: '#FDCF90',
@@ -325,7 +358,7 @@ const Editor = {
             //         "linkToPortIdProperty": "toPort",
             //         "nodeDataArray": [
             //             { "category": "Start", "text": "开始", "key": 1, "loc": "88 37" },
-            //             { "category": "Process", "text": "拆车轮", "desc": 'sdsfs', "key": 2, "loc": "88 114" },
+            //             { "category": "Process", "text": "拆车轮", "key": 2, "loc": "88 114" },
             //             { "category": "Process", "text": "拆车灯", "key": 3, "loc": "88 210" },
             //             { "category": "Process", "text": "放下工具", "key": 4, "loc": "87 307" },
             //             { "category": "Process", "text": "放下工具", "key": 5, "loc": "87 375" },
@@ -403,20 +436,20 @@ const Editor = {
         textStyle() {
             return {
                 font: "11pt Helvetica, Arial, sans-serif",
-                stroke: "whitesmoke"
+                stroke: "#fff",
+                textAlign: "center",
             }
         },
 
         // xml 导入
         loadJsonFile(file, fileList) {
+            let self = this;
+            this.fileList = fileList;
+            console.log(this.fileList)
             if (fileList) {
                 for (let i = 0; i < fileList.length; i++) {
                     let file = fileList[i]
                     if (!file) continue
-                    // let impFileName = file.name; // 导入文件名称
-                    // if (/(AssembledConfig_)\d/g.test(impFileName)) {
-                    //     // 人员信息
-                    // }
                     PromiseFileList.push(this.asyncReadFile(file));
                 }
                 //  TODO:读取多文件 start
@@ -427,24 +460,42 @@ const Editor = {
                         obj[next.name] ? '' : obj[next.name] = true && item.push(next);
                         return item;
                     }, []);
-                    // console.log(fileDataArr)
-                    this.json2Tree()
-                    this.hasData = true
+                    // console.log('Promise then1', fileDataArr)
+                    self.personOptions = fileDataArr.map(item => {
+                        if (/(AssembledConfig_)\d+/g.test(item.name)) {
+                            let id = item.name.match(/(?<=AssembledConfig_)\d+/g)[0];
+                            return {
+                                name: `人员${id}`,
+                                id: id
+                            }
+                        }
+                    }).filter(item => item)
+                    // console.log(self.personOptions)
+                    // self.json2Tree()
+                    // this.hasData = true
                 }, err => {
                     this.$alert(err)
                 })
+
+
                 // TODO:读取多文件 end
+
             }
         },
 
-        asyncReadFile(file) {
+        async asyncReadFile(file) {
             return new Promise((resolve, reject) => {
                 let reader = new FileReader()
                 reader.onload = function (e) {
                     let content = e.target.result;
                     //读取xml并转为tree
                     let jsonObj = xml2Json(content);
-                    resolve({ name: file.name, json: jsonObj })
+                    let result = {name: file.name, json: jsonObj}
+                    if (/(AssembledConfig_)\d+/g.test(file.name)) {
+                        let PersonID = file.name.match(/(?<=AssembledConfig_)\d+/g)[0];
+                        result.personId = PersonID
+                    }
+                    resolve(result)
                 }
                 reader.onerror = function (error) {
                     reject(error);
@@ -456,22 +507,45 @@ const Editor = {
 
         json2Tree() {
             for (let i = 0; i < fileDataArr.length; i++) {
-                let file = fileDataArr[i]
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
                 if (!file) continue
                 let impFileName = file.name; // 导入文件名称
-                if (/(AssembledConfig_)\d/g.test(impFileName)) {
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
                     // 人员信息
-                    console.log('人员信息', file.json)
-                    this.data = file.json.ProcessConfigure;
                     // TODO: 获取当前导入文件的人员ID
                     this.currentPerson = impFileName.match(/(?<=AssembledConfig_)\d+/g)[0];
-                    this.personParseData(file.json)
+                    this.personParseData(file.json, i)
                 } else {
                     // 流程信息
+                    // processData = file.json;
                     this.processParseData(file.json)
                     this.processTplName = impFileName
                 }
             }
+            this.hasData = true
+        },
+
+        // 人员变化
+        modifyPerson(val) {
+            //  每次改变前 保存当前编辑人员信息
+            // console.log('new', val)
+            // console.log('old', this.oldPerson)
+            //
+            // let newPersonJson = null;
+            // let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
+            // this.currentPersonJson = null;
+            // console.log(`old${this.oldPerson}`, oldPersonJson)
+            // // FIXME: 可能需要深拷贝
+            // fileDataArr.forEach(item => {
+            //     if (item.personId && item.personId === this.oldPerson) {
+            //         item.json.ProcessConfigure = oldPersonJson;
+            //     }
+            //     if (item.personId && item.personId === val) {
+            //         newPersonJson = JSON.parse(JSON.stringify(item.json));
+            //     }
+            // })
+            // console.log(`new${val}`, newPersonJson.ProcessConfigure)
+            // this.personParseData(newPersonJson, val);
         },
 
         // 流程信息数据 解析
@@ -479,6 +553,8 @@ const Editor = {
             console.log('流程信息', json);
             //xml转换为json后，当只有一个元素时，格式为对象，非对象数组，强制将它们转为对象数组，以便使用forEach
 
+            this.processJson._ID = json.ProcessConfigure._ID;
+            this.processJson._Name = json.ProcessConfigure._Name;
             // 节点组
             if(json.ProcessConfigure.BigProcessConfigure) {
                 let BigProcessConfigure = json.ProcessConfigure.BigProcessConfigure; // 大流程 => 流程图中的组
@@ -525,8 +601,8 @@ const Editor = {
                 let endKey = ProcessInfo.slice(-1)[0]._Index
                 // 添加结束节点link
                 linkDataArray.push({ from: endKey, to: 'end', fromPort: "B", toPort: "T" })
-                console.log(nodeDataArray)
-                console.log(linkDataArray)
+                // console.log(nodeDataArray)
+                // console.log(linkDataArray)
 
                 myDiagram.model = go.Model.fromJson(
                     {
@@ -541,8 +617,9 @@ const Editor = {
         },
 
         // 人员信息数据 解析
-        personParseData(json) {
-            //xml转换为json后，当只有一个元素时，格式为对象，forceArr 非对象数组，强制将它们转为对象数组，以便使用forEach
+        personParseData(json, i) {
+                //xml转换为json后，当只有一个元素时，格式为对象，forceArr 非对象数组，强制将它们转为对象数组，以便使用forEach
+            this.currentPersonJson = json.ProcessConfigure;
         },
 
         exportFile(type) {
@@ -579,9 +656,10 @@ const Editor = {
             this.editorVal = myDiagram.model.toJson()
             let { nodeDataArray, linkDataArray } = this.editorVal
             let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
-                '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
-                '  <ToolPartsList>\r\n';
+                '<ProcessConfigure' + ' ID="' + this.ToolMode + '"' + 'Name="' +  +'">\r\n' +
+                '  <ProcessConfigure>\r\n';
             // tmp
+
             // <ProcessInfo Index="3" Name="前臂左侧螺丝" BackIndex="">
             //     <ProcessBranch Index="3-1"/>
             // </ProcessInfo>

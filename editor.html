@@ -13,12 +13,17 @@
 <body>
     <div id="app" v-cloak>
         <div class="header">
+
             <div class="btns">
-                <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile"
+                <el-select v-model="currentPerson" @change="modifyPerson" v-if="personOptions.length > 0">
+                    <el-option v-for="item in personOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+                <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile" multiple="true" :file-list="fileList"
                     :show-file-list="false" accept=".xml">
-                    <el-button type="success" size="medium">导入</el-button>
+                    <el-button slot="trigger"  type="primary">选取文件</el-button>
+                    <el-button style="margin-left: 10px;" type="success" @click="json2Tree">解析配置文件</el-button>
                 </el-upload>
-                <el-button type="primary" @click="exportFile" size="medium">导出</el-button>
+                <el-button type="primary" @click="exportFile" >导出</el-button>
             </div>
         </div>
         <div class="left">
@@ -29,15 +34,15 @@
                 <div class="form">
                     <div class="input-item">
                         <div class="label">配置名称：</div>
-                        <div class="input"><el-input v-model="data._Name"></el-input></div>
+                        <div class="input"><el-input v-model="currentPersonJson._Name"></el-input></div>
                     </div>
                     <div class="input-item">
                         <div class="label">号位：</div>
-                        <div class="input"><el-input v-model="data._PersonNumber"></el-input></div>
+                        <div class="input"><el-input v-model="currentPersonJson._PersonNumber"></el-input></div>
                     </div>
                     <div class="input-item">
                         <div class="label">模型名称：</div>
-                        <div class="input"><el-input v-model="data._AssembleModel"></el-input></div>
+                        <div class="input"><el-input v-model="currentPersonJson._AssembleModel"></el-input></div>
                     </div>
                 </div>
                 <div class="editor" id="diagramEditor"></div>
@@ -48,9 +53,15 @@
                     <el-col :md="8">
                         <div class="base-info">
                             <div class="title">基本信息</div>
-                            <div>节点ID：{{data.ProcessInfo[0]._Index}}</div>
-                            <div>节点名称：{{data.ProcessInfo[0]._Name}}</div>
-                            <div>参与人员：人员1 <label><el-radio v-model="data.ProcessInfo[0]._AutoPlay" label="1">参与执行</el-radio></label><label><el-radio v-model="data.ProcessInfo[0]._AutoPlay" label="2">自动执行</el-radio></label>
+                            <div>节点ID：{{currentPersonJson.ProcessInfo[0]._Index}}</div>
+                            <div>节点名称：{{currentPersonJson.ProcessInfo[0]._Name}}</div>
+                            <div>参与人员：人员1
+                                <label>
+                                    <el-radio v-model="currentPersonJson.ProcessInfo[0]._AutoPlay" label="1">参与执行</el-radio>
+                                </label>
+                                <label>
+                                    <el-radio v-model="currentPersonJson.ProcessInfo[0]._AutoPlay" label="2">自动执行</el-radio>
+                                </label>
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
