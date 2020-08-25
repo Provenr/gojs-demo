@@ -93,7 +93,8 @@ const Editor = {
     methods: {
         // 初始化
         initDiagram() {
-             myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
+            let self = this;
+            myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
                 {
                     initialContentAlignment: go.Spot.Center, // 居中显示内容
                     "undoManager.isEnabled": true, // 启用Ctrl-Z和Ctrl-Y撤销重做功能
@@ -115,6 +116,13 @@ const Editor = {
                 }
                 // TODO: 绑定作用域 ???
             }.bind(this));
+
+            myDiagram.addDiagramListener("ChangedSelection", function () {
+
+            }.bind(this));
+
+
+
 
             // 定义步骤（默认类型）节点的模板
             myDiagram.nodeTemplateMap.add("Process1",  // 默认类型
@@ -192,9 +200,16 @@ const Editor = {
             myDiagram.nodeTemplateMap.add("Process",
                 $(go.Node, "Auto", this.nodeStyle(),
 
+                    {
+                        click: function(e, obj) { console.log("Clicked on " + obj.part.data.key); },
+                        selectionChanged: function(part) {
+                            var shape = part.elt(0);
+                            shape.fill = part.isSelected ? "red" : "#409EFF";
+                        }
+                    },
                     $(go.Shape, "RoundedRectangle",
                         {
-                            // fill: "blue",
+                            fill: "#409EFF",
                             stroke: "lightgray",
                         }
                     ),
@@ -207,7 +222,7 @@ const Editor = {
                                 row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center,
                                 margin: 5,
                                 maxSize: new go.Size(150, NaN),
-                                wrap: go.TextBlock.WrapFit, // 尺寸自适应
+                                // wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                                 contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", "commands"), {
                                     itemTemplate: $("ContextMenuButton",
@@ -219,8 +234,10 @@ const Editor = {
                                                 let cmd = button.data;
                                                 console.log(button.part.adornedPart)
                                                 let nodeData = button.part.adornedPart.data;
-                                                console.log(nodeData)
-                                                let curNode = myDiagram.findNodeForKey(nodeData.key);
+
+                                                // let curNode = myDiagram.findNodeForKey(nodeData.key);
+                                                self.currentNode = myDiagram.findNodeForKey(nodeData.key);
+                                                console.log('当前节点', self.currentNode)
                                                 // options.contextMenu(curNode, cmd.text);
                                             }
                                         }
@@ -515,6 +532,7 @@ const Editor = {
                     // TODO: 获取当前导入文件的人员ID
                     this.currentPerson = impFileName.match(/(?<=AssembledConfig_)\d+/g)[0];
                     this.personParseData(file.json, i)
+                    this.hasData = true;
                 } else {
                     // 流程信息
                     // processData = file.json;
@@ -522,30 +540,7 @@ const Editor = {
                     this.processTplName = impFileName
                 }
             }
-            this.hasData = true
-        },
 
-        // 人员变化
-        modifyPerson(val) {
-            //  每次改变前 保存当前编辑人员信息
-            // console.log('new', val)
-            // console.log('old', this.oldPerson)
-            //
-            // let newPersonJson = null;
-            // let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
-            // this.currentPersonJson = null;
-            // console.log(`old${this.oldPerson}`, oldPersonJson)
-            // // FIXME: 可能需要深拷贝
-            // fileDataArr.forEach(item => {
-            //     if (item.personId && item.personId === this.oldPerson) {
-            //         item.json.ProcessConfigure = oldPersonJson;
-            //     }
-            //     if (item.personId && item.personId === val) {
-            //         newPersonJson = JSON.parse(JSON.stringify(item.json));
-            //     }
-            // })
-            // console.log(`new${val}`, newPersonJson.ProcessConfigure)
-            // this.personParseData(newPersonJson, val);
         },
 
         // 流程信息数据 解析

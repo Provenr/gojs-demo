@@ -15,7 +15,7 @@
         <div class="header">
 
             <div class="btns">
-                <el-select v-model="currentPerson" @change="modifyPerson" v-if="personOptions.length > 0">
+                <el-select v-model="currentPerson" v-if="personOptions.length > 0">
                     <el-option v-for="item in personOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
                 <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile" multiple="true" :file-list="fileList"
