@@ -55,7 +55,7 @@
                             <div class="title">基本信息</div>
                             <div>节点ID：{{currentPersonJson.ProcessInfo[0]._Index}}</div>
                             <div>节点名称：{{currentPersonJson.ProcessInfo[0]._Name}}</div>
-                            <div>参与人员：人员1
+                            <div>参与人员：人员{{currentPerson}}
                                 <label>
                                     <el-radio v-model="currentPersonJson.ProcessInfo[0]._AutoPlay" label="1">参与执行</el-radio>
                                 </label>
@@ -65,22 +65,22 @@
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
-                            <process-info :info="data1"></process-info>
+                            <process-info :info="currentPersonJson.ProcessInfo[0].StartEventInfo"></process-info>
                         </div>
-                        <div class="arrow"></div>
+                        <div class="arrow arrow1"></div>
                     </el-col>
                     <el-col :md="8">
                         <div class="step" data-title="进行">
-                            <process-info :info="data1" type="step"></process-info>
+                            <process-info :info="currentPersonJson.ProcessInfo[0].StepEventInfo" type="step"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
-                            <process-info :info="data1"></process-info>
+                            <process-info :info="currentPersonJson.ProcessInfo[0].StepEventInfo"></process-info>
                         </div>
-                        <div class="arrow"></div>
+                        <div class="arrow arrow2"></div>
                     </el-col>
                     <el-col :md="8">
                         <div class="step end" data-title="结束">
-                            <process-info :info="data1"></process-info>
+                            <process-info :info="currentPersonJson.ProcessInfo[0].EndEventInfo"></process-info>
                         </div>
                     </el-col>
                 </el-row>
@@ -96,7 +96,15 @@
 <script src="lib/go.js"></script>
 <script src="lib/xml2json.js"></script>
 <script src="script/common.js"></script>
+
+<!-- 数据 -->
+<script src="script/classmethod.js"></script>
+<script src="script/datas.js"></script>
+
+<!-- 整体编辑器 -->
 <script src="script/editor.js"></script>
+
+<!-- 人员流程组件 -->
 <script src="script/processInfo.js"></script>
 
 <script>

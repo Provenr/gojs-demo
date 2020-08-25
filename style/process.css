@@ -146,3 +146,13 @@
 .step-item .el-input__inner {
     padding: 0 5px;
 }
+.el-table td, .el-table th {
+    padding: 5px 0;
+}
+.process-btns {
+    text-align: center;
+    margin: 20px auto;
+}
+.process-btns .el-button {
+    padding: 8px 16px;
+}
