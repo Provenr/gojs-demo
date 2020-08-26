@@ -5,6 +5,7 @@
     background-color: #EADADC;
     padding: 20px;
     line-height: 1.5;
+    margin-bottom: 60px;
 }
 .base-info .title {
     font-size: 32px;
@@ -42,6 +43,9 @@
 }
 .end {
     background-color: #DADAF3;
+}
+.step-event {
+    margin-bottom: 60px;
 }
 .events {
     padding: 10px;
@@ -145,4 +149,44 @@
 }
 .step-item .el-input__inner {
     padding: 0 5px;
+}
+.step-item .el-input__icon {
+    height: auto;
+    line-height: 30px;
+}
+.step-item .el-input__suffix {
+    right: 0;
+}
+.el-table td, .el-table th {
+    padding: 5px 0;
+    text-align: center;
+}
+.process-btns {
+    text-align: center;
+    margin: 20px auto;
+}
+.process-btns .el-button {
+    padding: 8px 16px;
+}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+.info-area ::-webkit-scrollbar
+{
+	width: 8px;
+    height: 8px;
+    border-radius: 5px;
+	background-color: #F5F5F5;
+}
+ 
+/*定义滚动条轨道 内阴影+圆角*/
+.info-area ::-webkit-scrollbar-track
+{
+    border-radius: 5px;
+	background-color: #F5F5F5;
+}
+ 
+/*定义滑块 内阴影+圆角*/
+.info-area ::-webkit-scrollbar-thumb
+{
+	border-radius: 5px;
+	background-color: #81D3F8;
 }
