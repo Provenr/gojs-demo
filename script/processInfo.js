@@ -14,9 +14,9 @@ let template = `
         <div v-if="type=='common'">
             <div class="events">
                 <el-table
-                    :data="info.EventList.Event"
+                    :data="eventList"
                     border
-                    @cell-click="cellClick"
+                    @row-click="eventClick"
                     max-height="200"
                     :summary-method="getSummaries"
                     show-summary>
@@ -25,7 +25,7 @@ let template = `
                     </el-table-column>
                     <el-table-column label="事件描述">
                         <template slot-scope="scope">
-                            {{scope.row._Content}}
+                            {{scope.row.text}}
                         </template>
                     </el-table-column>
                     <el-table-column label="用时" width="60" aligin="center">
@@ -42,7 +42,7 @@ let template = `
                     <div class="input">
                         <el-form-item>
                             <el-select v-model="AnimationEvent.ClassName" placeholder="请选择"
-                                @change="selectChange" style="width: 100%;">
+                                @change="selectChange" :disabled="eventCtrlDisable.selectCtrl">
                                 <el-option v-for="item in classList" :key="item.code"
                                     :label="item.text" :value="item.code">
                                 </el-option>
@@ -56,7 +56,7 @@ let template = `
                     <div class="input">
                         <el-form-item>
                             <el-select v-model="AnimationEvent.MethodName" placeholder="请选择"
-                                @change="methodSelectChange" style="width: 100%;">
+                                @change="methodSelectChange" :disabled="eventCtrlDisable.selectCtrl">
                                 <el-option v-for="item in NewMethodName" :key="item.code"
                                     :label="item.text" :value="item.code">
                                 </el-option>
@@ -172,14 +172,14 @@ let template = `
                             <el-table-column label="起始值">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                        @blur="loseFcous(scope.$index, scope.row)" :disabled="eventCtrlDisable.par"></el-input>
                                     <span v-else>{{ scope.row.StartValue }}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="结束值">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
+                                        @blur="loseFcous(scope.$index, scope.row)" :disabled="eventCtrlDisable.par"></el-input>
                                     <span v-else>{{ scope.row.EndValue }}</span>
                                 </template>
                             </el-table-column>
@@ -205,10 +205,13 @@ let template = `
                     <div class="name"><div class="icon"><span>缓动</span></div></div>
                     <div class="input">
                         <el-form-item>
-                            <el-input
+                            <el-select
                                 v-model="AnimationEvent.PlayType"
-                                @change="ctrlEventChange(1)"
-                                :disabled="eventCtrlDisable.dotw"></el-input>
+                                placeholder="请选择"
+                                :disabled="eventCtrlDisable.dotw">
+                                <el-option label="无" value="0"></el-option>
+                                <el-option label="直线" value="1"></el-option>
+                            </el-select>
                         </el-form-item>
                     </div>
                 </div>
@@ -220,11 +223,9 @@ let template = `
                             <el-select
                                 v-model="AnimationEvent.LoopType"
                                 placeholder="请选择"
-                                @change="ctrlEventChange(1)"
-                                style="width:100%;">
-                                <el-option v-for="item in loopTypeOptions" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
+                                :disabled="eventCtrlDisable.dotw">
+                                <el-option label="否" value="0"></el-option>
+                                <el-option label="是" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -385,14 +386,8 @@ Vue.component('process-info', {
     },
     data() {
         return {
-            loopTypeOptions: [{ // 循环
-                code: '1',
-                text: '是'
-            }, {
-                code: '2',
-                text: '否'
-            }],
             classList: JSON.parse(JSON.stringify(classmethod)), // 类型选项，从classmethod.js里获取
+            eventList: [], // 事件列表
             NewMethodName: [], // 方法
             //控件禁用状态：初始均不可用
             eventCtrlDisable: {
@@ -425,9 +420,9 @@ Vue.component('process-info', {
                 TargetData: [],
                 DurationMinute: 0, //时长分
                 DurationSecond: 0, //时长秒
-                PlayType: '', // 缓动，播放类型
-                LoopType: '', //循环类型
-                LoopTimes: '', //循环次数
+                PlayType: '0', // 缓动，播放类型
+                LoopType: '0', //循环类型
+                LoopTimes: '0', //循环次数
             },
             StepEvent: { // 进行信息
                 ToolType: '', //工具名
@@ -456,29 +451,60 @@ Vue.component('process-info', {
                 TriggerMode: '', // 触发模型
             },
             // 事件对象信息表数据
-            targetData: [{ // 数值表格
-                'seen': false, //可见性
-                'Target': '', //目标
-                "StartValue": '默认', //起始值
-                'EndValue': '' //结束值
-            }],
+            targetData: [],
         }
     },
     created() {
+        console.log(this.info)
         // 进行步骤
         if (this.type === 'step') {
             this.formateStepEvent()
+        } else {
+            this.formateEventList()
         }
     },
     watch: {
         info() {
+            console.log(this.info)
             // 进行步骤
             if (this.type === 'step') {
                 this.formateStepEvent()
+            } else {
+                this.formateEventList()
             }
         }
     },
     methods: {
+        // 解析通用事件列表
+        formateEventList() {
+            console.log(this.classList)
+            this.eventList = this.info.EventList.Event.map(item => {
+                let classAndMethod = item._Content.split('#')[0].slice(0, -1).split('_')
+                return this.code2text(item._Content)
+            })
+        },
+        // 根据code获取text
+        code2text(code) {
+            let [classCode, methodCode] = code.split('#')[0].slice(0, -1).split('_')
+            let className = '', methodName = '', classList = this.classList
+            for (let i = 0, length = classList.length; i < length; i++) {
+                if (classCode == classList[i].code) {
+                    className = classList[i].text
+                    let methodList = classList[i].children, len = methodList.length
+                    for (let j = 0; j < len; j++) {
+                        if (methodCode == methodList[j].code) {
+                            methodName = methodList[j].text
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+            return {
+                text: (className || classCode) + '_' + (methodName || methodCode),
+                code: code
+            }
+        },
         // 组装格式化进行步骤数据
         formateStepEvent() {
             let stepInfo = this.info
@@ -520,6 +546,74 @@ Vue.component('process-info', {
             });
 
             return sums;
+        },
+        // 点击事件列表某一行
+        eventClick(row) {
+            console.log(row)
+            this.parseEventData(row.code)
+            this.eventCtrlDisable.selectCtrl = true
+        },
+        // 解析事件数据
+        parseEventData(str) {
+            let classAndMethod = str.split('#')[0].slice(0, -1).split('_')
+            // 类型、方法处理
+            this.AnimationEvent.ClassName = classAndMethod[0]
+            this.AnimationEvent.MethodName = classAndMethod[1]
+            // 参数处理
+            let param = str.substr(str.indexOf('#'))
+            let obj = '', par = '', dotw = ''
+            if (param.includes('#obj')) {
+                obj = param.slice(param.indexOf('#obj') + 4, param.lastIndexOf('#obj'))
+            }
+            if (param.includes('#par')) {
+                par = param.slice(param.indexOf('#par') + 4, param.lastIndexOf('#par'))
+            }
+            if (param.includes('#dotw')) {
+                dotw = param.slice(param.indexOf('#dotw') + 5, param.lastIndexOf('#dotw'))
+            }
+            if (obj) {
+                if (/[\|\+]/.test(obj)) { // 说明是有多个对象
+                    if (/\|/.test(obj)) { // 或
+                        this.AnimationEvent.TargetObject.TypeRadio = 3
+                        this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 或中无序
+                        this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.repeat(/\|/g, ',')
+                    } else { // 与
+                        this.AnimationEvent.TargetObject.TypeRadio = 2
+                        this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 与中无序
+                        this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.repeat(/\+/g, ',')
+                    }
+                } else {
+                    this.AnimationEvent.TargetObject.TypeRadio = 1
+                    this.AnimationEvent.TargetObject.SingleObject = obj
+                }
+            }
+            if (par) {
+                let pars = par.split('|')
+                let objs = obj.split('|')
+                this.targetData = pars.map((item, index) => {
+                    return {
+                        'seen': false, //可见性
+                        'Target': objs[index], //目标
+                        "StartValue": item.includes('+') ? item.split('+')[0] : '', //起始值
+                        'EndValue': item.includes('+') ? item.split('+')[1] : item //结束值
+                    }
+                })
+            }
+            if (dotw) {
+                let [duration, PlayType, LoopType, LoopTimes ] = dotw.split('#')
+                this.AnimationEvent.DurationMinute = parseInt(duration / 60)
+                this.AnimationEvent.DurationSecond = duration % 60
+                this.AnimationEvent.PlayType = PlayType
+                this.AnimationEvent.LoopType = LoopType
+                this.AnimationEvent.LoopTimes = LoopTimes
+            }
+            // 是否可操作
+            this.eventCtrlDisable.radioMain = !obj
+            this.eventCtrlDisable.singleObj = !obj
+            this.eventCtrlDisable.nonSingleObj = !obj
+            this.eventCtrlDisable.par = !par
+            this.eventCtrlDisable.dotw = !dotw
+            console.log(this.eventCtrlDisable)
         },
         //保存提交按钮
         //目前存在问题：使用\n换行，发现与原始文件换行符号不一致，换成\r\n，表面看起来一致，但有时候保存后文件与导入的文件有看不见差异（SVN的文件比较功能）
