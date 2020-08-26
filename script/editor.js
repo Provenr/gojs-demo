@@ -74,7 +74,7 @@ const Editor = {
             let newPersonJson = null;
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
             this.currentPersonJson = null;
-            this.currentNode = ''; // 人员改变 清空当前节点
+            // this.currentNode = ''; // 人员改变 清空当前节点
             console.log(`old${this.oldPerson}`, oldPersonJson)
             // FIXME: 可能需要深拷贝
             fileDataArr.forEach(item => {
