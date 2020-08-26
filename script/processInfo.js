@@ -327,7 +327,7 @@ let template = `
                 <div class="step-item">
                     <div class="name"><div class="icon"><span>参数</span></div></div>
                     <div class="input">
-                        <el-table :data="StepEvent.StepParam" border @cell-click="cellClick">
+                        <el-table :data="StepEvent.StepParam" border max-height="200" @cell-click="cellClick">
                             <el-table-column label="序号" width="50">
                                 <template slot-scope="scope">
                                     <span>{{ scope.$index + 1 }}</span>
@@ -2198,6 +2198,6 @@ Vue.component('process-info', {
             }
         },
     },
-    
+
     template: template
 })

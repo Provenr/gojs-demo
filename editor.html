@@ -53,34 +53,34 @@
                     <el-col :md="8">
                         <div class="base-info">
                             <div class="title">基本信息</div>
-                            <div>节点ID：{{currentPersonJson.ProcessInfo[0]._Index}}</div>
-                            <div>节点名称：{{currentPersonJson.ProcessInfo[0]._Name}}</div>
+                            <div>节点ID：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Index}}</div>
+                            <div>节点名称：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Name}}</div>
                             <div>参与人员：人员{{currentPerson}}
                                 <label>
-                                    <el-radio v-model="currentPersonJson.ProcessInfo[0]._AutoPlay" label="1">参与执行</el-radio>
+                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="1">参与执行</el-radio>
                                 </label>
                                 <label>
-                                    <el-radio v-model="currentPersonJson.ProcessInfo[0]._AutoPlay" label="2">自动执行</el-radio>
+                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="2">自动执行</el-radio>
                                 </label>
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
-                            <process-info v-if="currentPersonJson.ProcessInfo[0].StartEventInfo" :info="currentPersonJson.ProcessInfo[0].StartEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo"></process-info>
                         </div>
                         <div class="arrow arrow1"></div>
                     </el-col>
                     <el-col :md="8">
                         <div class="step step-event" data-title="进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[0].StepEventInfo" :info="currentPersonJson.ProcessInfo[0].StepEventInfo" type="step"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" type="step"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[0].StepEventInfo" :info="currentPersonJson.ProcessInfo[0].StepEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo"></process-info>
                         </div>
                         <div class="arrow arrow2"></div>
                     </el-col>
                     <el-col :md="8">
                         <div class="step end" data-title="结束">
-                            <process-info v-if="currentPersonJson.ProcessInfo[0].EndEventInfo" :info="currentPersonJson.ProcessInfo[0].EndEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo"></process-info>
                         </div>
                     </el-col>
                 </el-row>
@@ -109,7 +109,7 @@
 
 <script>
     var Ctor = Vue.extend(Editor);
-    new Ctor().$mount('#app');
+   let VM =  new Ctor().$mount('#app');
 </script>
 
 </html>

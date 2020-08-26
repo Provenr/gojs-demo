@@ -23,6 +23,7 @@ const Editor = {
             currentPerson: '', // 当前人员
             processTplName: '',
             currentNode: '', // 当前节点
+            currentNodeIndex: 0, // 当前节点索引
             fileList: [],
             processJson: {
                 _ID: "",
@@ -73,6 +74,7 @@ const Editor = {
             let newPersonJson = null;
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
             this.currentPersonJson = null;
+            this.currentNode = ''; // 人员改变 清空当前节点
             console.log(`old${this.oldPerson}`, oldPersonJson)
             // FIXME: 可能需要深拷贝
             fileDataArr.forEach(item => {
@@ -85,6 +87,19 @@ const Editor = {
             })
             console.log(`new${newData}`, newPersonJson.ProcessConfigure)
             this.personParseData(newPersonJson, newData);
+        },
+        currentNode(newNode, oldNode) {
+            let index = 0;
+            let length = this.currentPersonJson.ProcessInfo.length;
+            let nodeArr = this.currentPersonJson.ProcessInfo;
+            for (let i = 0; i < length; i++) {
+                if (nodeArr[i]._Index === newNode) {
+                    index = i;
+                    break;
+                }
+            }
+            this.currentNodeIndex = index;
+            console.log(this.currentNodeIndex)
         }
     },
     mounted() {
@@ -94,6 +109,7 @@ const Editor = {
         // 初始化
         initDiagram() {
             let self = this;
+            console.log(this.currentNode)
             myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
                 {
                     initialContentAlignment: go.Spot.Center, // 居中显示内容
@@ -143,7 +159,6 @@ const Editor = {
                             },
                             new go.Binding("text").makeTwoWay() // 双向绑定模型中"text"属性
                         ),
-
                     ),
 
                     // 上、左、右可以入，左、右、下可以出
@@ -182,7 +197,6 @@ const Editor = {
                             { minSize: new go.Size(40, 40),
                                 fill: "#DC3C00",
                                 strokeWidth: 0,
-
                             }
                         ),
                         $(go.TextBlock, "End", this.textStyle(),
@@ -201,7 +215,11 @@ const Editor = {
                 $(go.Node, "Auto", this.nodeStyle(),
 
                     {
-                        click: function(e, obj) { console.log("Clicked on " + obj.part.data.key); },
+                        click: function(e, obj) {
+                            let nodeKey = obj.part.data.key;
+                            self.currentNode = nodeKey;
+                            console.log("Clicked on " + obj.part.data.key);
+                        },
                         selectionChanged: function(part) {
                             var shape = part.elt(0);
                             shape.fill = part.isSelected ? "red" : "#409EFF";
@@ -235,9 +253,9 @@ const Editor = {
                                                 console.log(button.part.adornedPart)
                                                 let nodeData = button.part.adornedPart.data;
 
-                                                // let curNode = myDiagram.findNodeForKey(nodeData.key);
-                                                self.currentNode = myDiagram.findNodeForKey(nodeData.key);
-                                                console.log('当前节点', self.currentNode)
+                                                let curNode = myDiagram.findNodeForKey(nodeData.key);
+                                                // self.currentNode = myDiagram.findNodeForKey(nodeData.key);
+                                                console.log('当前节点', nodeData)
                                                 // options.contextMenu(curNode, cmd.text);
                                             }
                                         }
