@@ -65,22 +65,22 @@
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
-                            <process-info :info="currentPersonJson.ProcessInfo[0].StartEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[0].StartEventInfo" :info="currentPersonJson.ProcessInfo[0].StartEventInfo"></process-info>
                         </div>
                         <div class="arrow arrow1"></div>
                     </el-col>
                     <el-col :md="8">
-                        <div class="step" data-title="进行">
-                            <process-info :info="currentPersonJson.ProcessInfo[0].StepEventInfo" type="step"></process-info>
+                        <div class="step step-event" data-title="进行">
+                            <process-info v-if="currentPersonJson.ProcessInfo[0].StepEventInfo" :info="currentPersonJson.ProcessInfo[0].StepEventInfo" type="step"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
-                            <process-info :info="currentPersonJson.ProcessInfo[0].StepEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[0].StepEventInfo" :info="currentPersonJson.ProcessInfo[0].StepEventInfo"></process-info>
                         </div>
                         <div class="arrow arrow2"></div>
                     </el-col>
                     <el-col :md="8">
                         <div class="step end" data-title="结束">
-                            <process-info :info="currentPersonJson.ProcessInfo[0].EndEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[0].EndEventInfo" :info="currentPersonJson.ProcessInfo[0].EndEventInfo"></process-info>
                         </div>
                     </el-col>
                 </el-row>

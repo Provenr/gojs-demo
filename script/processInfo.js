@@ -249,20 +249,19 @@ let template = `
         <!-- 进行 -->
         <div v-else>
             <el-form class="process">
+                <!-- 工具 -->
                 <div class="step-item">
                     <div class="name"><div class="icon"><span>工具</span></div></div>
                     <div class="input">
                         <el-form-item>
-                            <el-select v-model="AnimationEvent.ClassName" placeholder="请选择"
-                                @change="selectChange" style="width: 100%;">
-                                <el-option v-for="item in AnimationEvent.OptionItems" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
+                            <el-select v-model="StepEvent.ToolType" placeholder="请选择">
+                                <el-option label="常用工具" value="1"></el-option>
+                                <el-option label="组合工具" value="2"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
                 </div>
-
+                <!-- 目标 -->
                 <div class="step-item">
                     <div class="name target-name1"><div class="icon"><span>目标</span></div></div>
                     <div class="input target">
@@ -287,7 +286,7 @@ let template = `
                         </div>
                     </div>
                 </div>
-
+                <!-- 排除 -->
                 <div class="step-item">
                     <div class="name target-name1"><div class="icon"><span>排除</span></div></div>
                     <div class="input target">
@@ -312,63 +311,57 @@ let template = `
                         </div>
                     </div>
                 </div>
-
+                <!-- 展示模式 -->
                 <div class="step-item">
-                    <div class="name"><div class="icon"><span class="sm">方法</span></div></div>
+                    <div class="name"><div class="icon"><span class="sm">展示模式</span></div></div>
                     <div class="input">
                         <el-form-item>
-                            <el-select v-model="AnimationEvent.MethodName" placeholder="请选择"
-                                @change="methodSelectChange" style="width: 100%;">
-                                <el-option v-for="item in AnimationEvent.NewMethodName" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
+                            <el-select v-model="StepEvent.ShowMode" placeholder="请选择">
+                                <el-option label="animation" value="animation"></el-option>
+                                <el-option label="dotween" value="dotween"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
                 </div>
-
+                <!-- 参数 -->
                 <div class="step-item">
                     <div class="name"><div class="icon"><span>参数</span></div></div>
                     <div class="input">
-                        <el-table border @cell-click="cellClick">
+                        <el-table :data="StepEvent.StepParam" border @cell-click="cellClick">
                             <el-table-column label="序号" width="50">
                                 <template slot-scope="scope">
-                                    <span>{{ scope.row.Target }}</span>
+                                    <span>{{ scope.$index + 1 }}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="目标" width="60">
                                 <template slot-scope="scope">
-                                    <span>{{ scope.row.Target }}</span>
+                                    <span>{{ scope.row.ObjectName }}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column label="磁盘类型">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                                    <span v-else>{{ scope.row.StartValue }}</span>
+                                    <el-select v-model="scope.row.ColliderMode" placeholder="请选择">
+                                        <el-option label="mesh" value="mesh"></el-option>
+                                        <el-option label="box" value="box"></el-option>
+                                    </el-select>
                                 </template>
                             </el-table-column>
                             <el-table-column label="磁盘大小">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
-                                        @blur="loseFcous(scope.$index, scope.row)"> </el-input>
-                                    <span v-else>{{ scope.row.EndValue }}</span>
+                                    <el-input v-model="scope.row.ColliderScale"></el-input>
                                 </template>
                             </el-table-column>
                         </el-table>
                     </div>
                 </div>
-
+                <!-- 触发类型 -->
                 <div class="step-item">
                     <div class="name"><div class="icon"><span class="sm">触发类型</span></div></div>
                     <div class="input">
                         <el-form-item>
-                            <el-select v-model="AnimationEvent.LoopType" placeholder="请选择"
-                                @change="ctrlEventChange(1)"
-                                style="width:100%;">
-                                <el-option v-for="item in loopTypeOptions" :key="item.code"
-                                    :label="item.text" :value="item.code">
-                                </el-option>
+                            <el-select v-model="StepEvent.TriggerMode" placeholder="请选择">
+                                <el-option label="PC" value="0"></el-option>
+                                <el-option label="VR" value="1"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -436,6 +429,32 @@ Vue.component('process-info', {
                 LoopType: '', //循环类型
                 LoopTimes: '', //循环次数
             },
+            StepEvent: { // 进行信息
+                ToolType: '', //工具名
+                TargetObject: { //目标物体
+                    TypeRadio: '', //主单选按钮
+                    SingleObject: '', //单物体
+                    OrObjects: {
+                        OrRadio: '', //或单选按钮
+                        NoSqcObjects: '', //无序
+                        SqcObject1: '', //有序1
+                        SqcObject2: '' //有序2
+                    }
+                },
+                MaskObject: { //排除物体
+                    TypeRadio: '', //主单选按钮
+                    SingleObject: '', //单物体
+                    OrObjects: {
+                        OrRadio: '', //或单选按钮
+                        NoSqcObjects: '', //无序
+                        SqcObject1: '', //有序1
+                        SqcObject2: '' //有序2
+                    }
+                },
+                StepParam: [], // 参数
+                ShowMode: '', // 展示模式
+                TriggerMode: '', // 触发模型
+            },
             // 事件对象信息表数据
             targetData: [{ // 数值表格
                 'seen': false, //可见性
@@ -445,7 +464,42 @@ Vue.component('process-info', {
             }],
         }
     },
+    created() {
+        // 进行步骤
+        if (this.type === 'step') {
+            this.formateStepEvent()
+        }
+    },
+    watch: {
+        info() {
+            // 进行步骤
+            if (this.type === 'step') {
+                this.formateStepEvent()
+            }
+        }
+    },
     methods: {
+        // 组装格式化进行步骤数据
+        formateStepEvent() {
+            let stepInfo = this.info
+            let [ToolType] = stepInfo._TriggerObject.split('|')
+            let ObjectName = stepInfo._ObjectName.split('|')
+            let ColliderMode = stepInfo._ColliderMode.split('|')
+            let ColliderScale = stepInfo._ColliderScale.split('|')
+            let TriggerMode = stepInfo._TriggerMode
+            let ShowMode = stepInfo._ShowMode
+            let StepParam = ObjectName.map((item, index) => {
+                return {
+                    ObjectName: item,
+                    ColliderMode: ColliderMode[index],
+                    ColliderScale: ColliderScale[index]
+                }
+            })
+            this.StepEvent.ToolType = ToolType
+            this.StepEvent.StepParam = StepParam
+            this.StepEvent.TriggerMode = TriggerMode
+            this.StepEvent.ShowMode = ShowMode
+        },
         // 事件列表最后一行合并
         getSummaries(param) {
             const { columns } = param;
