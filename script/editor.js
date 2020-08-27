@@ -94,6 +94,9 @@ const Editor = {
             this.personParseData(newPersonJson, newData);
         },
         currentNode(newNode, oldNode) {
+            if (!this.currentPersonJson) {
+                return false;
+            }
             let index = 0;
             let length = this.currentPersonJson.ProcessInfo.length;
             let nodeArr = this.currentPersonJson.ProcessInfo;
@@ -139,7 +142,7 @@ const Editor = {
             }
             // enable or disable all command buttons
             function enableAll() {
-                let cmdhnd = diagram.commandHandler;
+                let cmdhnd = myDiagram.commandHandler;
                 enable("SelectAll", cmdhnd.canSelectAll());
                 enable("Cut", cmdhnd.canCutSelection());
                 enable("Copy", cmdhnd.canCopySelection());
