@@ -15,6 +15,11 @@ var loopTypeOptions = [{
     code: '2',
     text: '否'
 }];
+
+
+// 工具类型选项
+let ToolListOptions = [];
+
 const Editor = {
     data() {
         return {
@@ -121,7 +126,32 @@ const Editor = {
                 }
             );
 
+            // allow the group command to execute
+            myDiagram.commandHandler.archetypeGroupData =
+                { key: "Group", isGroup: true, color: "blue" };
+            // modify the default group template to allow ungrouping
+            myDiagram.groupTemplate.ungroupable = true;
 
+            // enable or disable a particular button
+            function enable(name, ok) {
+                let button = document.getElementById(name);
+                if (button) button.disabled = !ok;
+            }
+            // enable or disable all command buttons
+            function enableAll() {
+                let cmdhnd = diagram.commandHandler;
+                enable("SelectAll", cmdhnd.canSelectAll());
+                enable("Cut", cmdhnd.canCutSelection());
+                enable("Copy", cmdhnd.canCopySelection());
+                enable("Paste", cmdhnd.canPasteSelection());
+                enable("Delete", cmdhnd.canDeleteSelection());
+                enable("Group", cmdhnd.canGroupSelection());
+                enable("Ungroup", cmdhnd.canUngroupSelection());
+                enable("Undo", cmdhnd.canUndo());
+                enable("Redo", cmdhnd.canRedo());
+            }
+
+            // 事件监听
             // 当图有改动时，在页面标题后加*
             myDiagram.addDiagramListener("Modified", function () {
                 var idx = document.title.indexOf("*");
@@ -134,9 +164,30 @@ const Editor = {
             }.bind(this));
 
             myDiagram.addDiagramListener("ChangedSelection", function () {
-
+                enableAll();
             }.bind(this));
 
+            myDiagram.addDiagramListener("BackgroundContextClicked", function () {
+                $(go.Adornment, "Vertical", new go.Binding("itemArray", "commands"), {
+                    itemTemplate: $("ContextMenuButton",
+                        $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
+                        $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 0, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
+                        {
+                            click: function(e, button) {
+                                if (myDiagram.isReadOnly) return;
+                                let cmd = button.data;
+                                console.log(button.part.adornedPart)
+                                let nodeData = button.part.adornedPart.data;
+
+                                let curNode = myDiagram.findNodeForKey(nodeData.key);
+                                // self.currentNode = myDiagram.findNodeForKey(nodeData.key);
+                                console.log('当前节点', nodeData)
+                                // options.contextMenu(curNode, cmd.text);
+                            }
+                        }
+                    )
+                })
+            }.bind(this));
 
 
 
@@ -242,7 +293,7 @@ const Editor = {
                                 maxSize: new go.Size(150, NaN),
                                 // wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
-                                contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", "commands"), {
+                                contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]), {
                                     itemTemplate: $("ContextMenuButton",
                                         $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
                                         $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 0, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
@@ -286,21 +337,21 @@ const Editor = {
 
             myDiagram.groupTemplate =
                 $(go.Group, "Auto",
-                    { // define the group's internal layout
-                        layout: $(go.TreeLayout,
-                            { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
-                        // the group begins unexpanded;
-                        // upon expansion, a Diagram Listener will generate contents for the group
-                        isSubGraphExpanded: false,
-                        // when a group is expanded, if it contains no parts, generate a subGraph inside of it
-                        subGraphExpandedChanged: function(group) {
-                            if (group.memberParts.count === 0) {
-                                randomGroup(group.data.key);
-                            }
-                        }
-                    },
+                    // { // define the group's internal layout
+                    //     layout: $(go.TreeLayout,
+                    //         { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
+                    //     // the group begins unexpanded;
+                    //     // upon expansion, a Diagram Listener will generate contents for the group
+                    //     isSubGraphExpanded: false,
+                    //     // when a group is expanded, if it contains no parts, generate a subGraph inside of it
+                    //     subGraphExpandedChanged: function(group) {
+                    //         if (group.memberParts.count === 0) {
+                    //             randomGroup(group.data.key);
+                    //         }
+                    //     }
+                    // },
                     $(go.Shape, "Rectangle",
-                        { fill: null, stroke: "gray", strokeWidth: 2 }),
+                        { fill: 'gray', stroke: "#666", strokeWidth: 1 }),
                     $(go.Panel, "Vertical",
                         { defaultAlignment: go.Spot.Left, margin: 4 },
                         $(go.Panel, "Horizontal",
@@ -309,7 +360,11 @@ const Editor = {
                             $("SubGraphExpanderButton"),
                             $(go.TextBlock,
                                 { font: "Bold 18px Sans-Serif", margin: 4 },
-                                new go.Binding("text", "key"))
+                                new go.Binding("text", "key")),
+                            $(go.TextBlock,
+                                { font: "Bold 18px Sans-Serif", margin: 4 },
+                                new go.Binding("text"))
+
                         ),
                         // 设置 go.Placeholder 对象的目的是, 让组自适应内部节点的大小;
                         $(go.Placeholder,
@@ -385,30 +440,6 @@ const Editor = {
                 }
             );
 
-            // 初始化模型范例
-            // myDiagram.model = go.Model.fromJson(
-            //     {
-            //         "class": "go.GraphLinksModel",
-            //         "linkFromPortIdProperty": "fromPort",
-            //         "linkToPortIdProperty": "toPort",
-            //         "nodeDataArray": [
-            //             { "category": "Start", "text": "开始", "key": 1, "loc": "88 37" },
-            //             { "category": "Process", "text": "拆车轮", "key": 2, "loc": "88 114" },
-            //             { "category": "Process", "text": "拆车灯", "key": 3, "loc": "88 210" },
-            //             { "category": "Process", "text": "放下工具", "key": 4, "loc": "87 307" },
-            //             { "category": "Process", "text": "放下工具", "key": 5, "loc": "87 375" },
-            //             { "category": "End", "text": "结束", "key": 6, "loc": "87 445" }
-            //         ],
-            //         "linkDataArray": [
-            //             { "from": 2, "to": 3, "fromPort": "B", "toPort": "T" },
-            //             { "from": 1, "to": 2, "fromPort": "B", "toPort": "T" },
-            //             { "from": 3, "to": 4, "fromPort": "B", "toPort": "T" },
-            //             { "from": 4, "to": 5, "fromPort": "B", "toPort": "T" },
-            //             { "from": 5, "to": 6, "fromPort": "B", "toPort": "T" }
-            //         ]
-            //     }
-            // );
-            // this.editorVal = myDiagram.model.toJson()
         },
 
         // 此事件方法由整个画板的LinkDrawn和LinkRelinked事件触发
@@ -551,6 +582,8 @@ const Editor = {
                     this.currentPerson = impFileName.match(/(?<=AssembledConfig_)\d+/g)[0];
                     this.personParseData(file.json, i)
                     this.hasData = true;
+                } else if (/ToolsConfig/g.test(impFileName)) {
+                    this.handleTools(file.json, i);
                 } else {
                     // 流程信息
                     // processData = file.json;
@@ -558,9 +591,24 @@ const Editor = {
                     this.processTplName = impFileName
                 }
             }
-
         },
 
+        // 工具下拉列表
+        handleTools(json) {
+            console.log('工具信息', json);
+            let toolInfoList = json.ToolsConfigure.ToolInfoList.ToolInfo; // 基础工具
+            toolInfoList = forceArr(toolInfoList);
+            ToolListOptions = this.handleBaseTool(toolInfoList);
+        },
+
+        handleBaseTool(arr) {
+            return arr.map(item => {
+                return {
+                    id: item._ID,
+                    name: item._Name
+                }
+            })
+        },
         // 流程信息数据 解析
         processParseData(json) {
             console.log('流程信息', json);
