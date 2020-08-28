@@ -103,7 +103,7 @@
 }
 .step-item .name span {
     display: inline-block;
-    width: 2em;
+    width: 28px;
     line-height: 1;
 }
 .step-item .name .sm {
@@ -124,6 +124,9 @@
     height: 30px;
     line-height: 30px;
 }
+.step-item  .el-select {
+    display: block;
+}
 .step-item .time {
     display: flex;
     align-items: center;
@@ -138,7 +141,12 @@
 .step-item .target-sub-item + .target-sub-item, .step-item .target-item + .target-item {
     margin-top: 10px;
 }
-.step-item .target-sub-item > span, .step-item .target-item > span {
+.step-item .range {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+.step-item .range > span {
     margin: 0 4px;
 }
 .step-item .el-radio {
