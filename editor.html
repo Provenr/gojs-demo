@@ -29,8 +29,7 @@
         <div class="left">
             <div class="pannel" id="diagramPannel"></div>
             <div class="button-group">
-                <input id="SelectAll" type="button"
-                       onclick="myDiagram.commandHandler.selectAll()" value="Select All" />
+                <el-button icon="el-icon-refresh" circle  id="ZoomToFit" @click="myDiagram.commandHandler.zoomToFit()"></el-button>
             </div>
         </div>
         <div class="main">
@@ -110,6 +109,8 @@
 
 <!-- 人员流程组件 -->
 <script src="script/processInfo.js"></script>
+<script src="lib/jszip.js"></script>
+<script src="lib/FileSaver.min.js"></script>
 
 <script>
     var Ctor = Vue.extend(Editor);

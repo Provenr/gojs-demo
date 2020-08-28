@@ -7,6 +7,8 @@ let PromiseFileList = [] // 读取的文件
 
 let fileDataArr = [] // 读取的文件列表
 
+let fileDataXML = [{name: '1', content: 'asda'},{name: '2', content: 'asdsdfa'}] // 导出文件列表
+
 //播放类型选项
 var loopTypeOptions = [{
     code: '1',
@@ -94,7 +96,8 @@ const Editor = {
             this.personParseData(newPersonJson, newData);
         },
         currentNode(newNode, oldNode) {
-            if (!this.currentPersonJson) {
+            console.log(this.currentPersonJson)
+            if (this.currentPersonJson.length === 0) {
                 return false;
             }
             let index = 0;
@@ -117,7 +120,6 @@ const Editor = {
         // 初始化
         initDiagram() {
             let self = this;
-            console.log(this.currentNode)
             myDiagram = $(go.Diagram, "diagramEditor",   // 必须与Div元素的id属性一致
                 {
                     initialContentAlignment: go.Spot.Center, // 居中显示内容
@@ -134,13 +136,18 @@ const Editor = {
                 { key: "Group", isGroup: true, color: "blue" };
             // modify the default group template to allow ungrouping
             myDiagram.groupTemplate.ungroupable = true;
+            myDiagram.undoManager.isEnabled = true;
 
             // enable or disable a particular button
             function enable(name, ok) {
                 let button = document.getElementById(name);
                 if (button) button.disabled = !ok;
             }
-            // enable or disable all command buttons
+
+            /**
+             * desc: enable or disable all command buttons
+             * link : https://github.com/NorthwoodsSoftware/GoJS/blob/master/extensions/LightBoxContextMenu.js
+             */
             function enableAll() {
                 let cmdhnd = myDiagram.commandHandler;
                 enable("SelectAll", cmdhnd.canSelectAll());
@@ -152,6 +159,7 @@ const Editor = {
                 enable("Ungroup", cmdhnd.canUngroupSelection());
                 enable("Undo", cmdhnd.canUndo());
                 enable("Redo", cmdhnd.canRedo());
+                // enable("ZoomToFit", cmdhnd.canZoomToFit());
             }
 
             // 事件监听
@@ -171,58 +179,48 @@ const Editor = {
             }.bind(this));
 
             myDiagram.addDiagramListener("BackgroundContextClicked", function () {
-                $(go.Adornment, "Vertical", new go.Binding("itemArray", "commands"), {
-                    itemTemplate: $("ContextMenuButton",
-                        $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
-                        $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 0, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
-                        {
-                            click: function(e, button) {
-                                if (myDiagram.isReadOnly) return;
-                                let cmd = button.data;
-                                console.log(button.part.adornedPart)
-                                let nodeData = button.part.adornedPart.data;
 
-                                let curNode = myDiagram.findNodeForKey(nodeData.key);
-                                // self.currentNode = myDiagram.findNodeForKey(nodeData.key);
-                                console.log('当前节点', nodeData)
-                                // options.contextMenu(curNode, cmd.text);
-                            }
-                        }
-                    )
-                })
             }.bind(this));
 
+            // 定义右键菜单
+            myDiagram.contextMenu =
+                $("ContextMenu",
+                    $("ContextMenuButton",
+                        $(go.TextBlock, "撤销"),
+                        { click: function(e, obj) { e.diagram.commandHandler.undo(); } },
+                        new go.Binding("visible", "", function(o) {
+                            return o.diagram.commandHandler.canUndo();
+                        }).ofObject()),
+                    $("ContextMenuButton",
+                        $(go.TextBlock, "恢复"),
+                        { click: function(e, obj) { e.diagram.commandHandler.redo(); } },
+                        new go.Binding("visible", "", function(o) {
+                            return o.diagram.commandHandler.canRedo();
+                        }).ofObject()),
+                    // no binding, always visible button:
+                    $("ContextMenuButton",
+                        $(go.TextBlock, "新建节点"),
+                        { click: function(e, obj) {
+                                e.diagram.commit(function(d) {
+                                    // get the context menu that holds the button that was clicked
+                                    var contextmenu = obj.part;
+                                    // get the node data to which the Node is data bound
+                                    var nodedata = contextmenu.data;
+                                    var data = {
+                                        category: 'Process',
+                                        key: 0,
+                                        text: "流程",
+                                        fill: "#FEF7E7",
+                                        stroke: '#FDCF90'
+                                    };
+                                    d.model.addNodeData(data);
+                                    part = d.findPartForData(data);  // must be same data reference, not a new {}
+                                    // set location to saved mouseDownPoint in ContextMenuTool
+                                    part.location = d.toolManager.contextMenuTool.mouseDownPoint;
+                                }, 'new node');
+                            } })
+                );
 
-
-            // 定义步骤（默认类型）节点的模板
-            myDiagram.nodeTemplateMap.add("Process1",  // 默认类型
-                $(go.Node, "Table", this.nodeStyle(),
-                    // 步骤节点是一个包含可编辑文字块的长方形图块
-                    $(go.Panel, "Auto",
-                        $(go.Shape, "Rectangle",
-                            { fill: "#00A9C9", strokeWidth: 0 },
-                            new go.Binding("figure", "figure")
-                        ),
-
-                        $(go.TextBlock, this.textStyle(),
-                            {
-                                margin: 8,
-                                maxSize: new go.Size(160, NaN),
-                                wrap: go.TextBlock.WrapFit, // 尺寸自适应
-                                editable: true,  // 文字可编辑
-                            },
-                            new go.Binding("text").makeTwoWay() // 双向绑定模型中"text"属性
-                        ),
-                    ),
-
-                    // 上、左、右可以入，左、右、下可以出
-                    // "Top"表示中心，"TopSide"表示上方任一位置，自动选择
-                    this.makePort("T", go.Spot.Top, go.Spot.TopSide, false, true),
-                    this.makePort("L", go.Spot.Left, go.Spot.LeftSide, true, true),
-                    this.makePort("R", go.Spot.Right, go.Spot.RightSide, true, true),
-                    this.makePort("B", go.Spot.Bottom, go.Spot.BottomSide, true, false)
-                )
-            );
 
             // 定义开始节点的模板
             myDiagram.nodeTemplateMap.add("Start",
@@ -267,7 +265,6 @@ const Editor = {
             // 定义流程节点模板
             myDiagram.nodeTemplateMap.add("Process",
                 $(go.Node, "Auto", this.nodeStyle(),
-
                     {
                         click: function(e, obj) {
                             let nodeKey = obj.part.data.key;
@@ -293,10 +290,10 @@ const Editor = {
                             {
                                 row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center,
                                 margin: 5,
-                                maxSize: new go.Size(150, NaN),
+                                maxSize: new go.Size(60, 50),
                                 // wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
-                                contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]), {
+                                contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", 'cammands'), {
                                     itemTemplate: $("ContextMenuButton",
                                         $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
                                         $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 0, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
@@ -323,57 +320,52 @@ const Editor = {
                         $(go.TextBlock, this.textStyle(),
                             {
                                 row: 1, column: 0, columnSpan: 3, alignment: go.Spot.Center,
-                                maxSize: new go.Size(150, NaN),
+                                maxSize: new go.Size(60, 50),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                             },
                             new go.Binding("text", "text").makeTwoWay() // 双向绑定模型中"text"属性
                         )
                     ),
+                    // 树形展开按钮
                     // $("TreeExpanderButton", {
                     //     alignment: go.Spot.Right,
                     //     alignmentFocus: go.Spot.Left,
                     //     "ButtonBorder.figure": "Rectangle"
                     // })
+                    // 上、左、右可以入，左、右、下可以出
+                    // "Top"表示中心，"TopSide"表示上方任一位置，自动选择
+                    this.makePort("T", go.Spot.Top, go.Spot.TopSide, false, true),
+                    this.makePort("L", go.Spot.Left, go.Spot.LeftSide, true, true),
+                    this.makePort("R", go.Spot.Right, go.Spot.RightSide, true, true),
+                    this.makePort("B", go.Spot.Bottom, go.Spot.BottomSide, true, false)
                 )
             );
 
-            myDiagram.groupTemplate =
-                $(go.Group, "Auto",
-                    // { // define the group's internal layout
-                    //     layout: $(go.TreeLayout,
-                    //         { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
-                    //     // the group begins unexpanded;
-                    //     // upon expansion, a Diagram Listener will generate contents for the group
-                    //     isSubGraphExpanded: false,
-                    //     // when a group is expanded, if it contains no parts, generate a subGraph inside of it
-                    //     subGraphExpandedChanged: function(group) {
-                    //         if (group.memberParts.count === 0) {
-                    //             randomGroup(group.data.key);
-                    //         }
-                    //     }
-                    // },
-                    $(go.Shape, "Rectangle",
-                        { fill: 'gray', stroke: "#666", strokeWidth: 1 }),
-                    $(go.Panel, "Vertical",
-                        { defaultAlignment: go.Spot.Left, margin: 4 },
-                        $(go.Panel, "Horizontal",
-                            { defaultAlignment: go.Spot.Top },
-                            // the SubGraphExpanderButton is a panel that functions as a button to expand or collapse the subGraph
-                            $("SubGraphExpanderButton"),
-                            $(go.TextBlock,
-                                { font: "Bold 18px Sans-Serif", margin: 4 },
-                                new go.Binding("text", "key")),
-                            $(go.TextBlock,
-                                { font: "Bold 18px Sans-Serif", margin: 4 },
-                                new go.Binding("text"))
-
-                        ),
-                        // 设置 go.Placeholder 对象的目的是, 让组自适应内部节点的大小;
-                        $(go.Placeholder,
-                            { padding: new go.Margin(0, 10) })
-                    )  // end Vertical Panel
-                );  // end Group
+            // myDiagram.groupTemplate.add("Group",
+            //     $(go.Group, "Auto",
+            //         $(go.Shape, "Rectangle",
+            //             { fill: 'gray', stroke: "#666", strokeWidth: 1 }),
+            //         $(go.Panel, "Vertical",
+            //             { defaultAlignment: go.Spot.Left, margin: 4 },
+            //             $(go.Panel, "Horizontal",
+            //                 { defaultAlignment: go.Spot.Top },
+            //                 // the SubGraphExpanderButton is a panel that functions as a button to expand or collapse the subGraph
+            //                 $("SubGraphExpanderButton"),
+            //                 $(go.TextBlock,
+            //                     { font: "Bold 18px Sans-Serif", margin: 4 },
+            //                     new go.Binding("text", "key")),
+            //                 $(go.TextBlock,
+            //                     { font: "Bold 18px Sans-Serif", margin: 4 },
+            //                     new go.Binding("text"))
+            //
+            //             ),
+            //             // 设置 go.Placeholder 对象的目的是, 让组自适应内部节点的大小;
+            //             $(go.Placeholder,
+            //                 { padding: new go.Margin(0, 10) })
+            //         )  // end Vertical Panel
+            //     )  // end Group
+            // )
 
 
             // 初始化连接线的模板
@@ -687,18 +679,19 @@ const Editor = {
         },
 
         exportFile(type) {
-            if (type === 1) {
-                // 流程导出
-                this.exportProceeXML();
-            } else {
-                // 人员信息导出
-                this.exportPersonXML();
-            }
+            this.editorVal = myDiagram.model.toJson()
+            // if (type === 1) {
+            //     // 流程导出
+            //     this.exportProceeXML();
+            // } else {
+            //     // 人员信息导出
+            //     this.exportPersonXML();
+            // }
+            this.exportData()
         },
 
         // 人员信息导出
         exportPersonXML() {
-            this.editorVal = myDiagram.model.toJson()
             let { nodeDataArray, linkDataArray } = this.editorVal
             // TODO: XML 模板修改
             let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
@@ -730,7 +723,7 @@ const Editor = {
             // nodeDataArray.
 
 
-            let currTime = getCurrTime();
+            // let currTime = getCurrTime();
             let xmlFile = '';
             if (impFileName != '') {
                 let len = impFileName.length;
@@ -746,8 +739,36 @@ const Editor = {
         //导出文件
         //doc为拼接好的字符串，file为文件名
         exportData(doc, file) {
-            var blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, file);
+            // var blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
+            // saveAs(blob, file);
+            let currTime = getCurrTime();
+
+            var zip = new JSZip();
+            fileDataXML.forEach(function (obj) {
+                // zip包里面不断塞 xml文件
+                zip.file(obj.name + '.xml', obj.content);
+            });
+            // 生成zip文件并下载
+            zip.generateAsync({
+                type: 'blob'
+            }).then(function(content) {
+                saveAs(content, `process_${currTime}.zip`);
+                // // 下载的文件名
+                // var filename = key + '.zip';
+                // // 创建隐藏的可下载链接
+                // var eleLink = document.createElement('a');
+                // eleLink.download = filename;
+                // eleLink.style.display = 'none';
+                // // 下载内容转变成blob地址
+                // eleLink.href = URL.createObjectURL(content);
+                // // 触发点击
+                // document.body.appendChild(eleLink);
+                // eleLink.click();
+                // // 然后移除
+                // document.body.removeChild(eleLink);
+            });
+
         },
+
     }
 }
