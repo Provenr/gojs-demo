@@ -1,5 +1,5 @@
-const $ = go.GraphObject.make;    // 创建画布
 let myDiagram = null;
+const $ = go.GraphObject.make;    // 创建画布
 
 let processData = '' // 流程数据
 
@@ -7,7 +7,7 @@ let PromiseFileList = [] // 读取的文件
 
 let fileDataArr = [] // 读取的文件列表
 
-let fileDataXML = [{name: '1', content: 'asda'},{name: '2', content: 'asdsdfa'}] // 导出文件列表
+let fileDataXML = [] // 导出文件列表
 
 //播放类型选项
 var loopTypeOptions = [{
@@ -25,7 +25,7 @@ let ToolListOptions = [];
 const Editor = {
     data() {
         return {
-            editorVal: '', // 可视化编辑的内容
+            editorVal: {nodeDataArray: []}, // 可视化编辑的内容
             oldPerson: '',
             currentPerson: '', // 当前人员
             processTplName: '',
@@ -97,7 +97,7 @@ const Editor = {
         },
         currentNode(newNode, oldNode) {
             console.log(this.currentPersonJson)
-            if (this.currentPersonJson.length === 0) {
+            if (!this.currentPersonJson.ProcessInfo) {
                 return false;
             }
             let index = 0;
@@ -131,12 +131,14 @@ const Editor = {
                 }
             );
 
-            // allow the group command to execute
+            // This is the actual HTML context menu:
+            let cxElement = document.getElementById("contextMenu");
+            //
+            // // allow the group command to execute
             myDiagram.commandHandler.archetypeGroupData =
-                { key: "Group", isGroup: true, color: "blue" };
-            // modify the default group template to allow ungrouping
+                { key: "1", isGroup: true, text: 'groupName', color: "blue" };
+            // // modify the default group template to allow ungrouping
             myDiagram.groupTemplate.ungroupable = true;
-            myDiagram.undoManager.isEnabled = true;
 
             // enable or disable a particular button
             function enable(name, ok) {
@@ -182,43 +184,56 @@ const Editor = {
 
             }.bind(this));
 
+
             // 定义右键菜单
             myDiagram.contextMenu =
                 $("ContextMenu",
                     $("ContextMenuButton",
-                        $(go.TextBlock, "撤销"),
+                        $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "撤销"),
                         { click: function(e, obj) { e.diagram.commandHandler.undo(); } },
                         new go.Binding("visible", "", function(o) {
                             return o.diagram.commandHandler.canUndo();
                         }).ofObject()),
                     $("ContextMenuButton",
-                        $(go.TextBlock, "恢复"),
+                        $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(),"恢复"),
                         { click: function(e, obj) { e.diagram.commandHandler.redo(); } },
                         new go.Binding("visible", "", function(o) {
                             return o.diagram.commandHandler.canRedo();
                         }).ofObject()),
-                    // no binding, always visible button:
                     $("ContextMenuButton",
-                        $(go.TextBlock, "新建节点"),
-                        { click: function(e, obj) {
-                                e.diagram.commit(function(d) {
-                                    // get the context menu that holds the button that was clicked
-                                    var contextmenu = obj.part;
-                                    // get the node data to which the Node is data bound
-                                    var nodedata = contextmenu.data;
-                                    var data = {
-                                        category: 'Process',
-                                        key: 0,
-                                        text: "流程",
-                                        fill: "#FEF7E7",
-                                        stroke: '#FDCF90'
-                                    };
-                                    d.model.addNodeData(data);
-                                    part = d.findPartForData(data);  // must be same data reference, not a new {}
-                                    // set location to saved mouseDownPoint in ContextMenuTool
-                                    part.location = d.toolManager.contextMenuTool.mouseDownPoint;
-                                }, 'new node');
-                            } })
+                        $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "打组"),
+                        { click: function(e, obj) { e.diagram.commandHandler.groupSelection(); } },
+                        new go.Binding("visible", "", function(o) {
+                            return o.diagram.commandHandler.canGroupSelection();
+                        }).ofObject()),
+                    $("ContextMenuButton",
+                        $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "取消打组"),
+                        { click: function(e, obj) { e.diagram.commandHandler.ungroupSelection(); } },
+                        new go.Binding("visible", "", function(o) {
+                            return o.diagram.commandHandler.canUngroupSelection();
+                        }).ofObject()),
+                    // no binding, always visible button:
+                    // $("ContextMenuButton",
+                    //     $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "新建节点"),
+                    //     { click: function(e, obj) {
+                    //             e.diagram.commit(function(d) {
+                    //                 // get the context menu that holds the button that was clicked
+                    //                 var contextmenu = obj.part;
+                    //                 // get the node data to which the Node is data bound
+                    //                 var nodedata = contextmenu.data;
+                    //                 var data = {
+                    //                     category: 'Process',
+                    //                     key: 0,
+                    //                     text: "流程",
+                    //                     fill: "#FEF7E7",
+                    //                     stroke: '#FDCF90'
+                    //                 };
+                    //                 d.model.addNodeData(data);
+                    //                 part = d.findPartForData(data);  // must be same data reference, not a new {}
+                    //                 // set location to saved mouseDownPoint in ContextMenuTool
+                    //                 part.location = d.toolManager.contextMenuTool.mouseDownPoint;
+                    //             }, 'new node');
+                    //         } })
                 );
 
 
@@ -228,7 +243,7 @@ const Editor = {
                     // 开始节点是一个圆形图块，文字不可编辑
                     $(go.Panel, "Auto",
                         $(go.Shape, "Circle",
-                            { minSize: new go.Size(40, 40), fill: "#79C900", strokeWidth: 0 }),
+                            { minSize: new go.Size(60, 60), fill: "#79C900", strokeWidth: 0 }),
                         $(go.TextBlock, "Start", this.textStyle(),
                             new go.Binding("text"))
                     ),
@@ -264,7 +279,7 @@ const Editor = {
 
             // 定义流程节点模板
             myDiagram.nodeTemplateMap.add("Process",
-                $(go.Node, "Auto", this.nodeStyle(),
+                $(go.Node, "Table", this.nodeStyle(),
                     {
                         click: function(e, obj) {
                             let nodeKey = obj.part.data.key;
@@ -280,23 +295,24 @@ const Editor = {
                         {
                             fill: "#409EFF",
                             stroke: "lightgray",
+                            minSize: new go.Size(60, 60)
                         }
                     ),
 
                     $(go.Panel, "Table",
-                        { defaultAlignment: go.Spot.Left, margin: 4 },
+                        { defaultAlignment: go.Spot.Left, margin: 4 , minSize: new go.Size(60, 60)},
                         $(go.RowColumnDefinition, { column: 1, width: 4 }),
                         $(go.TextBlock, this.textStyle(),
                             {
                                 row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center,
                                 margin: 5,
                                 maxSize: new go.Size(60, 50),
-                                // wrap: go.TextBlock.WrapFit, // 尺寸自适应
+                                wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                                 contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", 'cammands'), {
                                     itemTemplate: $("ContextMenuButton",
                                         $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
-                                        $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 0, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
+                                        $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 5, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
                                         {
                                             click: function(e, button) {
                                                 if (myDiagram.isReadOnly) return;
@@ -342,30 +358,61 @@ const Editor = {
                 )
             );
 
-            // myDiagram.groupTemplate.add("Group",
-            //     $(go.Group, "Auto",
-            //         $(go.Shape, "Rectangle",
-            //             { fill: 'gray', stroke: "#666", strokeWidth: 1 }),
-            //         $(go.Panel, "Vertical",
-            //             { defaultAlignment: go.Spot.Left, margin: 4 },
-            //             $(go.Panel, "Horizontal",
-            //                 { defaultAlignment: go.Spot.Top },
-            //                 // the SubGraphExpanderButton is a panel that functions as a button to expand or collapse the subGraph
-            //                 $("SubGraphExpanderButton"),
-            //                 $(go.TextBlock,
-            //                     { font: "Bold 18px Sans-Serif", margin: 4 },
-            //                     new go.Binding("text", "key")),
-            //                 $(go.TextBlock,
-            //                     { font: "Bold 18px Sans-Serif", margin: 4 },
-            //                     new go.Binding("text"))
-            //
-            //             ),
-            //             // 设置 go.Placeholder 对象的目的是, 让组自适应内部节点的大小;
-            //             $(go.Placeholder,
-            //                 { padding: new go.Margin(0, 10) })
-            //         )  // end Vertical Panel
-            //     )  // end Group
-            // )
+            myDiagram.groupTemplate =
+                $(go.Group, "Vertical",
+                    {
+                        selectionObjectName: "PANEL",  // selection handle goes around shape, not label
+                        ungroupable: true  // enable Ctrl-Shift-G to ungroup a selected Group
+                    },
+                    $(go.Panel, go.Panel.Horizontal, // title above Placeholder
+                        // $(go.Panel, go.Panel.Horizontal,  // button next to TextBlock
+                            { stretch: go.GraphObject.Horizontal, background: "#33D3E5"},
+                            $(go.TextBlock,
+                                {
+                                    alignment: go.Spot.Left,
+                                    minSize: new go.Size(50, NaN),
+                                    editable: true,
+                                    margin: 5,
+                                    font: "bold 16px sans-serif",
+                                    stroke: "#006080"
+                                },
+                                new go.Binding("text", "key").makeTwoWay()
+                            ),
+                            $(go.TextBlock,
+                                {
+                                    alignment: go.Spot.Right,
+                                    editable: true,
+                                    margin: 5,
+                                    font: "bold 16px sans-serif",
+                                    stroke: "#006080"
+                                },
+                                new go.Binding("text", "text").makeTwoWay()
+                            ),
+                        // ),
+                    ),
+                    $(go.Panel, "Auto",
+                        { name: "PANEL" },
+                        $(go.Shape, "Rectangle",  // the rectangular shape around the members
+                            {
+                                fill: "rgba(128,128,128,0.2)", stroke: "gray", strokeWidth: 2,
+                                portId: "", cursor: "pointer",  // the Shape is the port, not the whole Node
+                                // allow all kinds of links from and to this port
+                                // fromLinkable: true, fromLinkableSelfNode: true, fromLinkableDuplicates: true,
+                                // toLinkable: true, toLinkableSelfNode: true, toLinkableDuplicates: true
+                            }),
+                        $(go.Placeholder, { margin: 10, background: "transparent" })  // represents where the members are
+                    ),
+                    // { // this tooltip Adornment is shared by all groups
+                    //     toolTip:
+                    //         $("ToolTip",
+                    //             $(go.TextBlock, { margin: 4 },
+                    //                 // bind to tooltip, not to Group.data, to allow access to Group properties
+                    //                 new go.Binding("text", "", groupInfo).ofObject())
+                    //         ),
+                    //     // the same context menu Adornment is shared by all groups
+                    //     contextMenu: partContextMenu
+                    // }
+                );
 
 
             // 初始化连接线的模板
@@ -501,6 +548,16 @@ const Editor = {
                 textAlign: "center",
             }
         },
+        // 右键菜单 文字风格
+        ContextMenuTextStyle() {
+            return {
+                stroke: "deepskyblue", height: 24, width: 40, margin: 5, verticalAlignment: go.Spot.Center,
+                font: "11pt Helvetica, Arial, sans-serif",
+                textAlign: "center",
+            }
+        },
+
+
 
         // xml 导入
         loadJsonFile(file, fileList) {
@@ -615,6 +672,7 @@ const Editor = {
             if(json.ProcessConfigure.BigProcessConfigure) {
                 let BigProcessConfigure = json.ProcessConfigure.BigProcessConfigure; // 大流程 => 流程图中的组
                 let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
+                console.log()
 
                 // _Index: "1", _ProcessSection: "1,1-1,1-2", _Name: "拆前置喷头"
             }
@@ -637,7 +695,7 @@ const Editor = {
                         category: "Process",
                         text: item._Name,
                         key: item._Index,
-                        loc: `88 ${37 + 80 * (index + 1)}`,
+                        loc: `88 ${37 + 150 * (index + 1)}`,
                         commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]
                     };
                     nodeDataArray.push(node);
@@ -651,7 +709,7 @@ const Editor = {
                     }
                 })
 
-                let end = { category: "End", text: "结束", key: 'end', loc: `88 ${37 + 80 * (ProcessInfo.length + 1) }` };
+                let end = { category: "End", text: "结束", key: 'end', loc: `88 ${37 + 150 * (ProcessInfo.length + 1) }` };
                 nodeDataArray.push(end);
 
                 let endKey = ProcessInfo.slice(-1)[0]._Index
@@ -682,10 +740,10 @@ const Editor = {
             this.editorVal = myDiagram.model.toJson()
             // if (type === 1) {
             //     // 流程导出
-            //     this.exportProceeXML();
+                this.exportProceeXML();
             // } else {
             //     // 人员信息导出
-            //     this.exportPersonXML();
+            // this.exportPersonXML();
             // }
             this.exportData()
         },
@@ -711,29 +769,88 @@ const Editor = {
         // 流程信息导出
         exportProceeXML () {
             this.editorVal = myDiagram.model.toJson()
-            let { nodeDataArray, linkDataArray } = this.editorVal
+            let { nodeDataArray, linkDataArray } = JSON.parse(this.editorVal);
             let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
-                '<ProcessConfigure' + ' ID="' + this.ToolMode + '"' + 'Name="' +  +'">\r\n' +
-                '  <ProcessConfigure>\r\n';
+                '<ProcessConfigure' + ' ID="' + this.processJson._ID + '"' + ' Name="' + this.processJson._Name +'">\r\n';
+                // '  <ProcessConfigure>\r\n';
             // tmp
+            let groupXML = `    <BigProcessConfigure>\n`; // 流程节点组合
 
-            // <ProcessInfo Index="3" Name="前臂左侧螺丝" BackIndex="">
-            //     <ProcessBranch Index="3-1"/>
-            // </ProcessInfo>
-            // nodeDataArray.
+            let processInfo = ''; // 流程节点
+            let groupArr = {}; //group
+
+            let ProcessSection = {}; //group
+            for (let i = 0; i < nodeDataArray.length; i++) {
+                let item = nodeDataArray[i];
+                item.children = [];
+            // nodeDataArray.forEach(item => {
+                let processBranch = linkDataArray.filter(link => item.key === link.from);
+
+                // 去除组节点
+                // TODO:是否去除开始结束节点
+                if (!item.isGroup && !['Start', 'End'].includes(item.category)) {
+                    processInfo += `    <ProcessInfo Index="${item.key}" Name="${item.text}" BackIndex="">\n`;
+                    processBranch.forEach(branch => {
+                        processInfo += `        <ProcessBranch Index="${branch.to}"/>\n`
+                    })
+                    processInfo += `    </ProcessInfo>\n\n`
+
+                }
+
+                // 当前节点为 组节点
+                if (item.isGroup) { // 当前节点为组节点
+                    groupArr[item.key] = Object.assign(item, groupArr[item.key]);
+                    continue;
+                }
+
+                if (item.group) { // 该节点属于组
+                    if (Object.keys(groupArr).includes(item.group)){
+                        groupArr[item.group].children.push(item.key);
+                    } else {
+                        groupArr[item.group] = {children: []};
+                        groupArr[item.group].children.push(item.key);
+                    }
+                    // groupArr.forEach(g => {
+                    //     if (g.key === item.group) {
+                    //         g.children.push(item.key)
+                    //     }
+                    // })
+                }
+
+                // if(item.group && !ProcessSection[item.group]) {
+                //     // TODO: 添加组名称
+                //     ProcessSection[item.group] = [];
+                //     ProcessSection[item.group].push(item.key);
+                // } else {
+                //     ProcessSection[item.group].push(item.key);
+                // }
 
 
-            // let currTime = getCurrTime();
-            let xmlFile = '';
-            if (impFileName != '') {
-                let len = impFileName.length;
-                xmlfile = impFileName.substring(0, len - 4) + '_' + currTime + '.xml';
-            } else {
-                xmlfile = 'ProcessConfig_' + currTime + '.xml';
+            // })
+            }
+            xmlDoc += processInfo;
+
+            // groupArr.forEach(g => {
+            //     console.log(g.children)
+            //     groupXML +=  `    <BigProcessInfo Index="${g.key}" ProcessSection="${g.children.toString()}" Name="${g.text}"/>\n`;
+            // })
+            for([key, val] of Object.entries(groupArr)){
+                groupXML += `        <BigProcessInfo Index="${key}" ProcessSection="${val.children.toString()}" Name="${val.text}"/>\n`
             }
 
-            this.exportData(xmlDoc, xmlfile);
 
+            groupXML += '   </BigProcessConfigure>\n\n';
+
+            xmlDoc += groupXML;
+            xmlDoc += '</ProcessConfigure>\r\n';
+
+            fileDataXML.push({name:'ProcessConfig.xml', content:xmlDoc});
+            // this.exportData(xmlDoc, 'ProcessConfig.xml');
+        },
+
+        // 更新当前 节点信息
+        updateCurrentNode(value) {
+            this.currentPersonJson.ProcessInfo[this.currentNodeIndex] = value;
         },
 
         //导出文件
@@ -741,6 +858,10 @@ const Editor = {
         exportData(doc, file) {
             // var blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, file);
+            if (!fileDataXML.length) {
+
+                return false;
+            }
             let currTime = getCurrTime();
 
             var zip = new JSZip();
