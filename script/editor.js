@@ -143,7 +143,7 @@ const Editor = {
             //
             // // allow the group command to execute
             myDiagram.commandHandler.archetypeGroupData =
-                { key: "1", isGroup: true, text: 'groupName', color: "blue" };
+                { key: '01', isGroup: true, text: '组名称', color: "blue" };
             // // modify the default group template to allow ungrouping
             myDiagram.groupTemplate.ungroupable = true;
 
@@ -369,7 +369,13 @@ const Editor = {
                 $(go.Group, "Vertical",
                     {
                         selectionObjectName: "PANEL",  // selection handle goes around shape, not label
-                        ungroupable: true  // enable Ctrl-Shift-G to ungroup a selected Group
+                        ungroupable: true,  // enable Ctrl-Shift-G to ungroup a selected Group
+                        computesBoundsAfterDrag: true,
+                        layout:$(go.GridLayout,
+                            {
+                                wrappingWidth: Infinity, alignment: go.GridLayout.Position,
+                                cellSize: new go.Size(1, 1), spacing: new go.Size(4, 4)
+                            })
                     },
                     $(go.Panel, go.Panel.Horizontal, // title above Placeholder
                         // $(go.Panel, go.Panel.Horizontal,  // button next to TextBlock
