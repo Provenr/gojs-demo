@@ -570,8 +570,6 @@ const Editor = {
             }
         },
 
-
-
         // xml 导入
         loadJsonFile(file, fileList) {
             let self = this;
@@ -694,7 +692,8 @@ const Editor = {
                 let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
                 for (let i = 0; i < BigProcessInfo.length; i++) {
                     let groupItem = BigProcessInfo[i];
-                    let groupKey = completionZero(groupItem._Index, BigProcessInfo.length)
+                    let length = BigProcessInfo.length + 1;
+                    let groupKey = completionZero(groupItem._Index, length);
                     groupArr[groupKey] = groupItem._ProcessSection.split(',');
                     nodeDataArray.push({key: groupKey, isGroup: true, text: groupItem._Name, color: 'blue'})
                 }

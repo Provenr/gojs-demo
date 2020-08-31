@@ -34,7 +34,7 @@ body {
     top: 62px;
     left: 0;
     bottom: 0;
-    width: 80px;
+    width: 120px;
     background-color: #81D3F8;
     text-align: center;
     border-right: 1px solid #999;
@@ -46,7 +46,7 @@ body {
 .main {
     position: absolute;
     top: 62px;
-    left: 80px;
+    left: 120px;
     bottom: 0;
     right: 0;
     display: flex;
