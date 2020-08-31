@@ -84,7 +84,7 @@ const Editor = {
             } else {
                 this.oldPerson = oldData;
             }
-            console.log(this.currentPerson, this.oldPerson)
+            // console.log(this.currentPerson, this.oldPerson)
             let newPersonJson = null;
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
             this.currentPersonJson = null;
@@ -764,15 +764,22 @@ const Editor = {
             this.currentPersonJson = json.ProcessConfigure;
         },
 
-        exportFile(type) {
+        exportFile() {
             this.editorVal = myDiagram.model.toJson()
-            // if (type === 1) {
-            //     // 流程导出
-                this.exportProceeXML();
-            // } else {
-            //     // 人员信息导出
+
+            // 导出前 保存当前人员的信息
+            let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
+            fileDataArr.forEach(item => {
+                if (item.personId && item.personId === this.currentPerson) {
+                    item.json.ProcessConfigure = oldPersonJson;
+                }
+            })
+            // 流程导出
+            this.exportProceeXML();
+
+            // TODO: 人员信息导出
             // this.exportPersonXML();
-            // }
+            
             this.exportData()
         },
 
