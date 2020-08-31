@@ -907,11 +907,16 @@ Vue.component('process-info', {
             console.log(eventItem)
             if (type == 'save') {
                 this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
-                this.info.EventList.Event[this.eventItemIndex] = eventItem
+                this.info.EventList.Event[this.eventItemIndex]._Content = eventItem
             } else {
                 this.eventList.push(this.code2text(eventItem))
-                this.info.EventList.Event.push(eventItem)
+                this.info.EventList.Event.push({ _Content: eventItem })
             }
+
+            this.$message({
+                message: type == 'save' ? '保存成功' : '新建成功',
+                type: 'success'
+            });
             this.$emit('update', this.info)
         },
         // 保存
