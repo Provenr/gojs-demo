@@ -9,6 +9,13 @@ let fileDataArr = [] // 读取的文件列表
 
 let fileDataXML = [] // 导出文件列表
 
+function completionZero(num, length) {
+    for(let len = (num + "").length; len < length; len = num.length) {
+        num = "0" + num;
+    }
+    return num;
+}
+
 //播放类型选项
 var loopTypeOptions = [{
     code: '1',
@@ -563,7 +570,8 @@ const Editor = {
         loadJsonFile(file, fileList) {
             let self = this;
             this.fileList = fileList;
-            console.log(this.fileList)
+            // console.log(this.fileList)
+            PromiseFileList = []; // 清空
             if (fileList) {
                 for (let i = 0; i < fileList.length; i++) {
                     let file = fileList[i]
@@ -664,22 +672,29 @@ const Editor = {
         // 流程信息数据 解析
         processParseData(json) {
             console.log('流程信息', json);
+            // 基础节点
+            let nodeDataArray = []  // 节点
+            let linkDataArray = [] // 链接
+
             //xml转换为json后，当只有一个元素时，格式为对象，非对象数组，强制将它们转为对象数组，以便使用forEach
 
             this.processJson._ID = json.ProcessConfigure._ID;
             this.processJson._Name = json.ProcessConfigure._Name;
+
             // 节点组
+            let groupArr = {};
             if(json.ProcessConfigure.BigProcessConfigure) {
                 let BigProcessConfigure = json.ProcessConfigure.BigProcessConfigure; // 大流程 => 流程图中的组
                 let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
-                console.log()
+                for (let i = 0; i < BigProcessInfo.length; i++) {
+                    let groupItem = BigProcessInfo[i];
+                    let groupKey = completionZero(groupItem._Index, BigProcessInfo.length)
+                    groupArr[groupKey] = groupItem._ProcessSection.split(',');
+                    nodeDataArray.push({key: groupKey, isGroup: true, text: groupItem._Name, color: 'blue'})
+                }
 
                 // _Index: "1", _ProcessSection: "1,1-1,1-2", _Name: "拆前置喷头"
             }
-
-            // 基础节点
-            let nodeDataArray = []  // 节点
-            let linkDataArray = [] // 链接
 
             if(json.ProcessConfigure.ProcessInfo) {
                 let ProcessInfo = json.ProcessConfigure.ProcessInfo; // 流程节点信息
@@ -696,8 +711,13 @@ const Editor = {
                         text: item._Name,
                         key: item._Index,
                         loc: `88 ${37 + 150 * (index + 1)}`,
-                        commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]
+                        // commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }]
                     };
+                    for ([groupKey, groupVal] of Object.entries(groupArr)) {
+                        if (groupVal.includes(item._Index)) {
+                            node.group = groupKey;
+                        }
+                    }
                     nodeDataArray.push(node);
                     item.ProcessBranch = item.ProcessBranch ? forceArr(item.ProcessBranch) : []
                     // console.log( item.ProcessBranch)
@@ -727,6 +747,9 @@ const Editor = {
                 // 转json
                 // this.editorVal = myDiagram.model.toJson()
             }
+
+
+
 
         },
 
