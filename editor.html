@@ -105,7 +105,7 @@
             <div>{{editorVal}}</div>
             <div class="info-area" v-if="hasData">
                 <el-row :gutter="50">
-                    <el-col :md="8">
+                    <el-col :span="8">
                         <div class="base-info">
                             <div class="title">基本信息</div>
                             <div>节点ID：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Index}}</div>
@@ -120,22 +120,25 @@
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo"
+                            @update="value => updateCurrentNode('StartEventInfo', value)"></process-info>
                         </div>
                         <div class="arrow arrow1"></div>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :span="8">
                         <div class="step step-event" data-title="进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" type="step"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" type="step"
+                            @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
                         </div>
                         <div class="arrow arrow2"></div>
                     </el-col>
-                    <el-col :md="8">
+                    <el-col :span="8">
                         <div class="step end" data-title="结束">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].EndEventInfo"
+                            @update="value => updateCurrentNode('EndEventInfo', value)"></process-info>
                         </div>
                     </el-col>
                 </el-row>

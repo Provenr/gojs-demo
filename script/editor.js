@@ -878,8 +878,9 @@ const Editor = {
         },
 
         // 更新当前 节点信息
-        updateCurrentNode(value) {
-            this.currentPersonJson.ProcessInfo[this.currentNodeIndex] = value;
+        updateCurrentNode(step, value) {
+            console.log(step, value)
+            this.currentPersonJson.ProcessInfo[this.currentNodeIndex][step] = value;
         },
 
         //导出文件

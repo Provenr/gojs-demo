@@ -32,7 +32,7 @@ let template = `
                     </el-table-column>
                     <el-table-column label="用时" width="60" aligin="center">
                         <template slot-scope="scope">
-                            
+                            {{scope.row.time ? scope.row.time + 's' : ''}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -79,6 +79,7 @@ let template = `
                             <el-input
                                 v-model="AnimationEvent.TargetObject.SingleObject"
                                 @focus="focusMainRadio(1,1)"
+                                @change="updateParam('1')"
                                 :disabled="eventCtrlDisable.singleObj"
                                 placeholder="仅输入一个目标"></el-input>
                         </div>
@@ -97,6 +98,7 @@ let template = `
                                     <el-input
                                         v-model="AnimationEvent.TargetObject.AndObjects.NoSqcObjects"
                                         @focus="focusMainRadio(1,2);focusSubRadio(1,1)"
+                                        @change="updateParam('21')"
                                         :disabled="eventCtrlDisable.nonSingleObj"
                                         placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
@@ -109,12 +111,14 @@ let template = `
                                         <el-input
                                             v-model="AnimationEvent.TargetObject.AndObjects.SqcObject1"
                                             @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
+                                            @change="orderChange('2')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="开始"></el-input>
                                         <span>至</span>
                                         <el-input
                                             v-model="AnimationEvent.TargetObject.AndObjects.SqcObject2"
                                             @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
+                                            @change="orderChange('2')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="结束"></el-input>
                                     </div>
@@ -135,7 +139,8 @@ let template = `
                                         :disabled="eventCtrlDisable.nonSingleObj">无序</el-radio>
                                     <el-input
                                         v-model="AnimationEvent.TargetObject.OrObjects.NoSqcObjects"
-                                        @focus="focusMainRadio(1,3);focusSubRadio(1,1)"
+                                         @focus="focusMainRadio(1,3);focusSubRadio(1,1)"
+                                        @change="updateParam('31')"
                                         :disabled="eventCtrlDisable.nonSingleObj"
                                         placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
@@ -148,12 +153,14 @@ let template = `
                                         <el-input
                                             v-model="AnimationEvent.TargetObject.OrObjects.SqcObject1"
                                             @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
+                                            @change="orderChange('3')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="开始"></el-input>
                                         <span>至</span>
                                         <el-input
                                             v-model="AnimationEvent.TargetObject.OrObjects.SqcObject2"
                                             @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
+                                            @change="orderChange('3')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="结束"></el-input>
                                     </div>
@@ -242,8 +249,8 @@ let template = `
                 </div>
             </el-form>
             <div class="process-btns">
-                <el-button class="small-button" type="primary" plain @click="onSubmit">保存</el-button>
-                <el-button class="small-button" type="warning" plain>新建</el-button>
+                <el-button class="small-button" type="primary" plain @click="submit" :disabled="!eventCtrlDisable.selectCtrl">保存</el-button>
+                <el-button class="small-button" type="warning" plain @click="add">新建</el-button>
             </div>
         </div>
 
@@ -391,15 +398,16 @@ Vue.component('process-info', {
         return {
             classList: JSON.parse(JSON.stringify(classmethod)), // 类型选项，从classmethod.js里获取
             eventList: [], // 事件列表
+            eventItemIndex: -1, // 当前事件列表选中的索引
             NewMethodName: [], // 方法
-            //控件禁用状态：初始均不可用
+            //控件禁用状态：初始只有类型和方法均不可用
             eventCtrlDisable: {
                 selectCtrl: false, //类、方法下拉框
-                radioMain: false, //主单选按钮
-                singleObj: false, //单选物体
-                nonSingleObj: false, //非单选物体
-                par: false, //参数表
-                dotw: false, //dotw
+                radioMain: true, //主单选按钮
+                singleObj: true, //单选物体
+                nonSingleObj: true, //非单选物体
+                par: true, //参数表
+                dotw: true, //dotw
             },
             AnimationEvent: { // 信息
                 ClassName: '', //类名
@@ -455,6 +463,9 @@ Vue.component('process-info', {
             },
             // 事件对象信息表数据
             targetData: [],
+            hasObj: false, // 是否含有目标
+            hasPar: false, // 是否含有参数
+            hasDotW: false // 是否含有下边那4项
         }
     },
     created() {
@@ -474,19 +485,122 @@ Vue.component('process-info', {
                 this.formateEventList()
                 this.resetEventData()
             }
+        },
+        'AnimationEvent.TargetObject.TypeRadio'(newV) { // 主单选
+            // console.log('主', newV)
+            let AndRadio = this.AnimationEvent.TargetObject.AndObjects.AndRadio,
+                OrRadio = this.AnimationEvent.TargetObject.OrObjects.OrRadio
+            if (newV == '1') { // 选择单
+                this.updateParam('1')
+            } else {
+                if (newV == '2' && AndRadio) { // 选择与
+                    this.updateParam('2' + AndRadio)
+                }
+                if (newV == '3' && OrRadio) { // 选择或
+                    this.updateParam('3' + OrRadio)
+                }
+            }
+        },
+        'AnimationEvent.TargetObject.AndObjects.AndRadio'(newV) { // 与单选
+            // console.log('与', newV)
+            if (this.AnimationEvent.TargetObject.TypeRadio == 2 && newV != 0) {
+                this.updateParam('2' + newV)
+            }
+        },
+        'AnimationEvent.TargetObject.OrObjects.OrRadio'(newV) { // 或单选
+            // console.log('或', newV)
+            if (this.AnimationEvent.TargetObject.TypeRadio == 3 && newV != 0) {
+                this.updateParam('3' + newV)
+            }
         }
-    },
+     },
     methods: {
+        // 根据目标更新参数
+        updateParam(type) { // 1：单选，21：与无序，22：与有序，31：或无序，32：或有序
+            // console.log(type)
+            switch (type) {
+                case '1':
+                    // 没有值参数设置为[]
+                    this.targetData = this.AnimationEvent.TargetObject.SingleObject ? [{
+                        'seen': false, //可见性
+                        'Target': this.AnimationEvent.TargetObject.SingleObject, //目标
+                        "StartValue": '', //起始值
+                        'EndValue': '' //结束值
+                    }] : []
+                    break
+                case '21':
+                    // 无序只传一个值
+                    this.targetData = this.obj2par(this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects)
+                    break
+                case '22':
+                    // 有序传开始和结束
+                    this.targetData = this.obj2par(this.AnimationEvent.TargetObject.AndObjects.SqcObject1, this.AnimationEvent.TargetObject.AndObjects.SqcObject2)
+                    break
+                case '31':
+                    this.targetData = this.obj2par(this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects)
+                    break
+                case '32':
+                    this.targetData = this.obj2par(this.AnimationEvent.TargetObject.OrObjects.SqcObject1, this.AnimationEvent.TargetObject.OrObjects.SqcObject2)
+                    break
+            }
+        },
+        // 根据目标设置参数
+        obj2par(str1, str2) {
+            if (!!str2) {
+                if (!!str1) {
+                    let start = +(str1.substr(str1.lastIndexOf('_') + 1)),
+                        end = +(str2.substr(str2.lastIndexOf('_') + 1)),
+                        str = str1.substring(0, str1.lastIndexOf('_') + 1)
+                    par = []
+                    for (let i = start; i <= end; i++) {
+                        par.push({
+                            'seen': false, //可见性
+                            'Target': str + i, //目标
+                            "StartValue": '', //起始值
+                            'EndValue': '' //结束值
+                        })
+                    }
+                    return par
+                } else {
+                    return []
+                }
+            } else {
+                return str1 ? str1.split(',').map(item => ({
+                    'seen': false, //可见性
+                    'Target': item, //目标
+                    "StartValue": '', //起始值
+                    'EndValue': '' //结束值
+                })) : []
+            }
+        },
+        // 有序blur
+        orderChange(radio) {
+            let radioMap = {
+                '2': 'AndObjects',
+                '3': 'OrObjects'
+            }
+            let start = this.AnimationEvent.TargetObject[radioMap[radio]].SqcObject1,
+                end = this.AnimationEvent.TargetObject[radioMap[radio]].SqcObject2
+            if (!!start && !!end) { // 只有开始和结束都有才执行
+                if (start.substring(0, start.lastIndexOf('_') + 1) != end.substring(0, end.lastIndexOf('_') + 1)) {
+                    this.$alert('有序对象1和对象2的名称前缀不一致，请检查', '提示', { type: 'warning' });
+                } else {
+                    this.updateParam(radio + '2')
+                }
+            } else {
+                this.targetData = []
+            }
+        },
         // 重置绑定信息
         resetEventData() {
-            //控件禁用状态：初始均不可用
+            //控件禁用状态：初始只有类型和方法均不可用
             this.eventCtrlDisable = {
                 selectCtrl: false, //类、方法下拉框
-                radioMain: false, //主单选按钮
-                singleObj: false, //单选物体
-                nonSingleObj: false, //非单选物体
-                par: false, //参数表
-                dotw: false, //dotw
+                radioMain: true, //主单选按钮
+                singleObj: true, //单选物体
+                nonSingleObj: true, //非单选物体
+                par: true, //参数表
+                dotw: true, //dotw
             }
             this.AnimationEvent = { // 信息
                 ClassName: '', //类名
@@ -515,6 +629,9 @@ Vue.component('process-info', {
                 LoopTimes: '0', //循环次数
             }
             this.targetData = []
+            this.hasObj = false // 是否含有目标
+            this.hasPar = false // 是否含有参数
+            this.hasDotW = false // 是否含有下边那4项
         },
         // 解析通用事件列表
         formateEventList() {
@@ -527,7 +644,7 @@ Vue.component('process-info', {
         // 根据code获取text，格式化事件列表数据
         code2text(code) {
             let [classCode, methodCode] = code.split('#')[0].slice(0, -1).split('_')
-            let className = '', methodName = '', classList = this.classList
+            let className = '', methodName = '', time = '', classList = this.classList
             for (let i = 0, length = classList.length; i < length; i++) {
                 if (classCode == classList[i].code) {
                     className = classList[i].text
@@ -541,9 +658,13 @@ Vue.component('process-info', {
                     break
                 }
             }
+            if (code.includes('#dotw')) {
+                time = code.substring(code.indexOf('#dotw') + 5, code.lastIndexOf('#dotw')).split('#')[0]
+            }
             return {
                 text: (className || classCode) + '_' + (methodName || methodCode),
-                code: code
+                code: code,
+                time: time
             }
         },
         // 组装格式化进行步骤数据
@@ -634,12 +755,14 @@ Vue.component('process-info', {
         // 点击事件列表某一行
         eventClick(row) {
             console.log(row)
+            this.eventItemIndex = this.eventList.indexOf(row)
             this.$refs.eventTable.setCurrentRow(row)
             this.parseEventData(row.code)
             this.eventCtrlDisable.selectCtrl = true
         },
         // 解析事件数据
         parseEventData(str) {
+            this.targetData = []
             // 获取类型和方法
             let classAndMethod = str.split('#')[0].slice(0, -1).split('_')
             // 类型、方法处理
@@ -649,12 +772,15 @@ Vue.component('process-info', {
             let param = str.substr(str.indexOf('#'))
             let obj = '', par = '', dotw = ''
             if (param.includes('#obj')) {
+                this.hasObj = true
                 obj = param.slice(param.indexOf('#obj') + 4, param.lastIndexOf('#obj'))
             }
             if (param.includes('#par')) {
+                this.hasPar = true
                 par = param.slice(param.indexOf('#par') + 4, param.lastIndexOf('#par'))
             }
             if (param.includes('#dotw')) {
+                this.hasDotW = true
                 dotw = param.slice(param.indexOf('#dotw') + 5, param.lastIndexOf('#dotw'))
             }
             // 含有#obj
@@ -697,19 +823,16 @@ Vue.component('process-info', {
             if (par) {
                 let pars = par.split('|')
                 let objs = obj.split('|')
-                this.targetData = pars.map((item, index) => {
-                    return {
+                pars.forEach((item, index) => {
+                    this.targetData.push({
                         'seen': false, //可见性
                         'Target': objs[index], //目标
                         "StartValue": item.includes('+') ? item.split('+')[0] : '', //起始值
                         'EndValue': item.includes('+') ? item.split('+')[1] : item //结束值
-                    }
+                    })
                 })
             }
-            // 不含有#par
-            if (!par) {
-                this.targetData = []
-            }
+            console.log(this.targetData)
             // 含有#dotw
             if (dotw) {
                 let [duration, PlayType, LoopType, LoopTimes ] = dotw.split('#')
@@ -735,8 +858,71 @@ Vue.component('process-info', {
             this.eventCtrlDisable.dotw = !dotw
             console.log(this.eventCtrlDisable)
         },
+        // AnimationEvent json格式的转换成字符串形式的，EventList里Event格式
+        json2str(type) { // type操作类型，save保存，add新建
+            let eventItem = '' // 事件项
+            let AnimationEvent = this.AnimationEvent
+            let { ClassName, MethodName, DurationMinute, DurationSecond, PlayType, LoopType, LoopTimes } = AnimationEvent
+            //  目标obj
+            let obj = ''
+            if (this.hasObj) {
+                let TargetObject = AnimationEvent.TargetObject
+                let TypeRadio = TargetObject.TypeRadio
+                let AndObjects = TargetObject.AndObjects
+                if (TypeRadio == 1) {
+                    obj = `#obj${TargetObject.SingleObject}#obj`
+                } else if (TypeRadio == 2) {
+                    if (AndObjects.AndRadio == 1) {
+                        obj = `#obj${AndObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
+                    } else {
+                        obj = `#obj${AndObjects.SqcObject1}+${AndObjects.SqcObject2}#obj`
+                    }
+                } else if (TypeRadio == 3) {
+                    if (OrObjects.AndRadio == 1) {
+                        obj = `#obj${OrObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
+                    } else {
+                        obj = `#obj${OrObjects.SqcObject1}+${OrObjects.SqcObject2}#obj`
+                    }
+                }
+            }
+            
+            // 参数par
+            let par = '', temp = []
+            if (this.hasPar) {
+                this.targetData.forEach(item => {
+                    if (item.StartValue && item.EndValue) {
+                        temp.push(`${item.StartValue}+${item.EndValue}`)
+                    } else if (item.StartValue) {
+                        temp.push(`${item.StartValue}`)
+                    } else if (item.EndValue) {
+                        temp.push(`${item.EndValue}`)
+                    }
+                })
+                par = `#par${temp.join('|')}#par`
+            }
+            
+            // dotw
+            let dotw = this.hasDotW ? `#dotw${DurationMinute * 60 + DurationSecond * 1}#${PlayType}#${LoopType}#${LoopTimes}#dotw` : ''
+            eventItem = [ClassName, MethodName, obj, par, dotw].filter(item => item != '').join('_')
+            console.log(eventItem)
+            if (type == 'save') {
+                this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
+                this.info.EventList.Event[this.eventItemIndex] = eventItem
+            } else {
+                this.eventList.push(this.code2text(eventItem))
+                this.info.EventList.Event.push(eventItem)
+            }
+            this.$emit('update', this.info)
+        },
+        // 保存
+        submit() {
+            this.json2str('save')
+        },
+        // 新建
+        add() {
+            this.json2str('add')
+        },
         //保存提交按钮
-        //目前存在问题：使用\n换行，发现与原始文件换行符号不一致，换成\r\n，表面看起来一致，但有时候保存后文件与导入的文件有看不见差异（SVN的文件比较功能）
         onSubmit() {
             var isSave = true;
             var xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
@@ -786,7 +972,7 @@ Vue.component('process-info', {
                                     '" Name="' + node.Name +
                                     '" ClipFrame="' + node.ClipFrameStart + '_' + node.ClipFrameEnd +
                                     '" Speed="' + node.Speed +
-                                    '" TriggerObject="' + this.getObjectData(node.TriggerObject, 1) +
+                                    '" TriggerObject="' + this.getObjectData(node.TriggerObject, 1 ) +
                                     '" TriggerObjectMove="' + node.TriggerObjectMove + '"'; //+
                                 //'>\r\n';
                                 // 帧
@@ -1033,7 +1219,9 @@ Vue.component('process-info', {
             //设置禁用和启用两种颜色，用于流程图
             // var disableColor = 'gray';
             // var enableColor = 'darkturquoise';
-
+            this.hasObj = obj != 0
+            this.hasPar = par != 0
+            this.hasDotW = dotw != 0
             switch (obj) {
                 //触发目标三个逻辑下的控件
                 case 0:
@@ -1074,17 +1262,9 @@ Vue.component('process-info', {
             switch (dotw) {
                 //事件区最底下四项
                 case 0:
-                    this.$refs.refEventTimeElapsed.style.background = disableColor;
-                    this.$refs.refEventSlowMotion.style.background = disableColor;
-                    this.$refs.refEventLoop.style.background = disableColor;
-                    this.$refs.refEventTimes.style.background = disableColor;
                     this.eventCtrlDisable.dotw = true;
                     break;
                 case 1:
-                    this.$refs.refEventTimeElapsed.style.background = enableColor;
-                    this.$refs.refEventSlowMotion.style.background = enableColor;
-                    this.$refs.refEventLoop.style.background = enableColor;
-                    this.$refs.refEventTimes.style.background = enableColor;
                     this.eventCtrlDisable.dotw = false;
                     break;
             }
@@ -1329,7 +1509,9 @@ Vue.component('process-info', {
 
         //根据方法参数中的配置，事件信息区域禁用部分控件
         setCtrlDisable(obj, par, dotw) {
-
+            this.hasObj = obj != 0
+            this.hasPar = par != 0
+            this.hasDotW = dotw != 0
             switch (obj) {
                 //触发目标三个逻辑下的控件
                 case 0:
