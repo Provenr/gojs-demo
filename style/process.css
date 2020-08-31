@@ -124,6 +124,15 @@
     height: 30px;
     line-height: 30px;
 }
+.delay {
+    height: 24px;
+}
+.delay .el-input__inner {
+    height: 24px;
+    line-height: 24px;
+    padding: 0 5px;
+    text-align: center;
+}
 .step-item  .el-select {
     display: block;
 }

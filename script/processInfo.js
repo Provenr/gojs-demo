@@ -250,7 +250,8 @@ let template = `
             </el-form>
             <div class="process-btns">
                 <el-button class="small-button" type="primary" plain @click="submit" :disabled="!eventCtrlDisable.selectCtrl">保存</el-button>
-                <el-button class="small-button" type="warning" plain @click="add">新建</el-button>
+                <el-button class="small-button" type="warning" plain @click="add"
+                :disabled="!AnimationEvent.MethodName">新建</el-button>
             </div>
         </div>
 
@@ -465,7 +466,8 @@ Vue.component('process-info', {
             targetData: [],
             hasObj: false, // 是否含有目标
             hasPar: false, // 是否含有参数
-            hasDotW: false // 是否含有下边那4项
+            hasDotW: false, // 是否含有下边那4项
+            delayInputShow: false, // 总用时是否显示输入框
         }
     },
     created() {
@@ -593,6 +595,9 @@ Vue.component('process-info', {
         },
         // 重置绑定信息
         resetEventData() {
+            this.eventList =  [] // 事件列表
+            this.eventItemIndex = -1 // 当前事件列表选中的索引
+            this.NewMethodName = [] // 方法
             //控件禁用状态：初始只有类型和方法均不可用
             this.eventCtrlDisable = {
                 selectCtrl: false, //类、方法下拉框
@@ -733,6 +738,7 @@ Vue.component('process-info', {
         },
         // 事件列表最后一行合并
         getSummaries(param) {
+            const h = this.$createElement;
             const { columns } = param;
             const sums = [];
             columns.forEach((_, index) => {
@@ -745,7 +751,22 @@ Vue.component('process-info', {
                     return;
                 }
                 if (index === 2) {
-                    sums[index] = this.info._NextDelay + 's';
+                    sums[index] = h('div', {
+                        attrs: {
+                            class: 'delay'
+                        },
+                        on: {
+                            click: () => this.delayInputShow = true
+                        }
+                    }, [this.delayInputShow ? h('el-input', {
+                        attrs: {
+                            'value': this.info._NextDelay,
+                        },
+                        on: {
+                            blur: () => this.delayInputShow = false,
+                            input: e => this.info._NextDelay = e
+                        }
+                    }, 'click') : (this.info._NextDelay ? this.info._NextDelay + 's' : ' ')])
                     return;
                 }
             });
