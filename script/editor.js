@@ -101,6 +101,7 @@ const Editor = {
             })
             console.log(`new${newData}`, newPersonJson.ProcessConfigure)
             this.personParseData(newPersonJson, newData);
+            this.setAutoPlay()
         },
         currentNode(newNode, oldNode) {
             console.log(this.currentPersonJson)
@@ -118,12 +119,20 @@ const Editor = {
             }
             this.currentNodeIndex = index;
             console.log(this.currentNodeIndex)
+            this.setAutoPlay()
         }
     },
     mounted() {
         this.initDiagram()
     },
     methods: {
+        // 设置当前节点的执行方式
+        setAutoPlay() {
+            if (this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '1'
+            && this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '2') {
+                this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay = '2'
+            }
+        },
         // 初始化
         initDiagram() {
             let self = this;
@@ -790,7 +799,7 @@ const Editor = {
             this.exportData()
         },
 
-        // 导出人员信息中的事件循环
+        // 导出人员信息中的事件循环，不要调整格式，调整后会影响导出文件的格式
         forEachEvent(EventList) {
             let Event = ''
             if (typeof EventList == 'object' && EventList.Event instanceof Array) {
@@ -803,7 +812,7 @@ const Editor = {
             }
             return Event
         },
-        // 导出人员信息步骤循环
+        // 导出人员信息步骤循环，不要调整格式，调整后会影响导出文件的格式
         forEachStep(stepName, stepInfo) {
             return `<${stepName} Index="${stepInfo._Index}" AnimaIndex="${stepInfo._AnimaIndex}" TriggerObject="${stepInfo._TriggerObject}" ObjectType="${stepInfo._ObjectType}" ObjectName="${stepInfo._ObjectName}"
                     OperationPerson="${stepInfo._OperationPerson}" ColliderMode="${stepInfo._ColliderMode}" ColliderScale="${stepInfo._ColliderScale}" TriggerMode="${stepInfo._TriggerMode}"
@@ -820,7 +829,7 @@ const Editor = {
             //     '  <ToolPartsList>\r\n';
             // // tmp
 
-            // 人员信息模板
+            // 人员信息模板，不要调整格式，调整后会影响导出文件的格式
             let ProcessConfigure = file.json.ProcessConfigure
             let ProcessInfo = ProcessConfigure.ProcessInfo
             let xmlDocStart = '<?xml version="1.0" encoding="utf-8"?>\r\n' +

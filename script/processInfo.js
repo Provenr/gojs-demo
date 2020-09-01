@@ -14,6 +14,7 @@ let template = `
         <div v-if="type=='common'">
             <div class="events">
                 <el-table
+                    id="event-table"
                     ref="eventTable"
                     :data="eventList"
                     border
@@ -21,7 +22,8 @@ let template = `
                     @row-click="eventClick"
                     max-height="200"
                     :summary-method="getSummaries"
-                    show-summary>
+                    show-summary
+                    row-key="text">
                     <el-table-column label="序号" width="50" aligin="center">
                         <template slot-scope="scope">{{ scope.$index + 1 }}</template>
                     </el-table-column>
@@ -249,7 +251,7 @@ let template = `
                 </div>
             </el-form>
             <div class="process-btns">
-                <el-button class="small-button" type="primary" plain @click="submit" :disabled="!eventCtrlDisable.selectCtrl">保存</el-button>
+                <el-button class="small-button" type="primary" plain @click="submit">保存</el-button>
                 <el-button class="small-button" type="warning" plain @click="add"
                 :disabled="!AnimationEvent.MethodName">新建</el-button>
             </div>
@@ -515,8 +517,28 @@ Vue.component('process-info', {
                 this.updateParam('3' + newV)
             }
         }
-     },
+    },
+    mounted() {
+        this.rowDrop()
+    },
     methods: {
+        // 事件表拖动行排序
+        rowDrop() {
+            const tbody = document.querySelector('#event-table tbody')
+            const _this = this
+            Sortable.create(tbody, {
+                onEnd({ newIndex, oldIndex }) {
+                    // 事件表显示的
+                    const currRow = _this.eventList.splice(oldIndex, 1)[0]
+                    // 真实数据
+                    const currEventRow = _this.info.EventList.Event.splice(oldIndex, 1)[0]
+                    // 更新事件表
+                    _this.eventList.splice(newIndex, 0, currRow)
+                    // 更新真实数据
+                    _this.info.EventList.Event.splice(newIndex, 0, currEventRow)
+                }
+            })
+        },
         // 根据目标更新参数
         updateParam(type) { // 1：单选，21：与无序，22：与有序，31：或无序，32：或有序
             // 如果没有参数就不设置参数
@@ -928,19 +950,25 @@ Vue.component('process-info', {
             // dotw
             let dotw = this.hasDotW ? `#dotw${DurationMinute * 60 + DurationSecond * 1}#${PlayType}#${LoopType}#${LoopTimes}#dotw` : ''
             eventItem = [ClassName, MethodName, obj, par, dotw].filter(item => item != '').join('_')
-            console.log(eventItem)
             if (type == 'save') {
-                this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
-                this.info.EventList.Event[this.eventItemIndex]._Content = eventItem
+                if (eventItem) {
+                    this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
+                    this.info.EventList.Event[this.eventItemIndex]._Content = eventItem
+                }
             } else {
                 this.eventList.push(this.code2text(eventItem))
                 this.info.EventList.Event.push({ _Content: eventItem })
+                // 等事件表更新后定位到最后一行
+                this.$nextTick(() => {
+                    this.$refs.eventTable.bodyWrapper.scrollTop = this.$refs.eventTable.bodyWrapper.scrollHeight
+                })
             }
 
             this.$message({
                 message: type == 'save' ? '保存成功' : '新建成功',
                 type: 'success'
             });
+            console.log(this.info)
             this.$emit('update', this.info)
         },
         // 保存
@@ -951,215 +979,7 @@ Vue.component('process-info', {
         add() {
             this.json2str('add')
         },
-        //保存提交按钮
-        onSubmit() {
-            var isSave = true;
-            var xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
-                '<AnimationConfigure' + (xmlns == '' ? '' : (' ' + xmlns)) + ' Name="' + this.ModelObject.AnimationContent + '" Version="1.0">\r\n' +
-                '  <ModelObject AnimationName="' + this.ModelObject.AnimationModel + '" CameraName="' + this.ModelObject.CameraName + '"';
-
-            if (this.ModelObject.NoAnimation == '') {
-                xmlDoc += ' />\r\n'
-            } else {
-                xmlDoc += '>\r\n'
-                var noAnim = this.ModelObject.NoAnimation.split(',');
-                noAnim.forEach(element => {
-                    xmlDoc += '    <NoAnimation ModelName="' + element + '" />\r\n'
-                });
-                xmlDoc += '  </ModelObject>\r\n';
-            }
-
-            var clipSection = ''; //片段
-            var frame = ''; //帧
-            var eventSection = ''; //事件
-            var stageSection = '  <AnimationStage>\r\n' //stage
-            var count = 0;
-            var clipId = 0;
-            this.treeNodes.forEach(node => {
-                if (node.ClipFrameStart == '' || node.ClipFrameEnd == '') {
-                    isSave = false;
-                } else {
-                    count++;
-                    // 配置XML中的<AnimationStage>
-                    stageSection += '    <Sort Index="' + count +
-                        '" ClipFrame="' + node.ClipFrameStart + '_' + node.ClipFrameEnd +
-                        '" GroupName="' + node.Name +
-                        '" TriggerObject="' + this.getObjectData(node.TriggerObject, 1) +
-                        '" />\r\n';
-
-                    // 配置XML中的<AnimationClip>
-                    if (node.children != undefined && node.children.length > 0) {
-                        node.children.forEach(node => {
-                            clipId++;
-                            //clipSection += '  <AnimationClip ID="' + node.id +
-                            if (node.ClipFrameStart == '' || node.ClipFrameEnd == '') {
-                                //如果起始结束帧缺失，提示
-                                isSave = false;
-                            } else {
-                                //片段信息
-                                clipSection += '  <AnimationClip ID="' + clipId +
-                                    '" Name="' + node.Name +
-                                    '" ClipFrame="' + node.ClipFrameStart + '_' + node.ClipFrameEnd +
-                                    '" Speed="' + node.Speed +
-                                    '" TriggerObject="' + this.getObjectData(node.TriggerObject, 1 ) +
-                                    '" TriggerObjectMove="' + node.TriggerObjectMove + '"'; //+
-                                //'>\r\n';
-                                // 帧
-                                if (node.children != undefined && node.children.length > 0) {
-                                    node.children.forEach(node => {
-                                        frame = node.label;
-                                        //事件
-                                        if (node.children != undefined && node.children.length > 0) {
-                                            node.children.forEach(node => {
-                                                eventSection += '    <Event Content="' + frame +
-                                                    '_' + node.ClassName +
-                                                    '_' + node.MethodName + '_';
-                                                // 事件的目标对象obj
-                                                if (node.TargetObject != undefined && forceArr(node.TargetObject).length > 0 && this.getObjectData(node.TargetObject, 2) != '') {
-                                                    //getObjectData根据逻辑计算取得对象字符串，参数2表示事件， 参数1表示片段
-                                                    eventSection += '#obj' + this.getObjectData(node.TargetObject, 2) + '#obj';
-                                                }
-                                                //参数par，如果没有数值，不拼接
-                                                if (node.TargetData != undefined && forceArr(node.TargetData).length > 0 && (node.TargetData[0].StartValue != '' || node.TargetData[0].EndValue != '')) {
-                                                    if (node.TargetObject != undefined) {
-                                                        if (node.TargetData[0].StartValue == '默认') {
-                                                            eventSection += '#par#par'
-                                                        } else {
-                                                            eventSection += '#par' + this.getTargetTableValue_Bak(node.TargetObject, node.TargetData) + '#par'
-                                                        }
-                                                    } else {
-                                                        var msg = currPNode.label + '帧事件“' + node.label + '”存在无效信息，请修改';
-                                                        this.$alert(msg, '警告', { type: 'warning' });
-                                                        //isSave = false;
-                                                    }
-
-                                                }
-                                                //dotw部分，判断参数是否未填写，如果未填写，则不会拼接到事件字符串中
-                                                if (node.DurationMinute != undefined &&
-                                                    node.DurationSecond != undefined &&
-                                                    node.PlayType != undefined &&
-                                                    node.PlayType != '' &&
-                                                    node.LoopType != undefined &&
-                                                    node.LoopTimes != undefined &&
-                                                    node.LoopTimes != '') {
-                                                    var time = parseInt(node.DurationMinute) * 60 + parseFloat(node.DurationSecond);
-                                                    //if (time != 0) { 发现有事件持续事件为0
-                                                    eventSection += '#dotw' + time +
-                                                        '#' + node.PlayType +
-                                                        '#' + node.LoopType +
-                                                        '#' + node.LoopTimes + '#dotw';
-                                                    //}
-                                                }
-                                                eventSection += '" />\r\n';
-
-                                            });
-                                        }
-                                    });
-                                    clipSection += '>\r\n' + eventSection;
-                                    // 事件信息追加后将其清空，避免后面重复追加
-                                    eventSection = '';
-                                    clipSection += '  </AnimationClip>\r\n';
-                                } else {
-                                    clipSection += ' />\r\n'
-                                }
-                            }
-                        });
-                    } else {
-                        isSave = false;
-                    }
-                }
-            });
-            xmlDoc += clipSection;
-            stageSection += '  </AnimationStage>\r\n'
-            xmlDoc += stageSection;
-            //xmlDoc += '  <AnimationInit>\r\n  </AnimationInit>\r\n';
-            if (animationInit.length == 0) {
-                animationInit = '\r\n';
-            }
-            xmlDoc += '  <AnimationInit>' + animationInit + '  </AnimationInit>\r\n';
-            xmlDoc += "</AnimationConfigure>";
-
-            //导出文件，文件名由固定部分和当前日期组成
-            //如果是导入的文件，则文件名的固定部分为原来的文件名，如果是新创建的，文件名固定部分config_test_
-            var currTime = getCurrTime();
-            var xmlFile = '';
-            if (impFileName != '') {
-                var len = impFileName.length;
-                xmlfile = impFileName.substring(0, len - 4) + '_' + currTime + '.xml';
-            } else {
-                xmlfile = 'config_test_' + currTime + '.xml';
-            }
-
-            if (isSave) {
-                this.exportData(xmlDoc, xmlfile);
-            } else {
-                this.$alert('片段起始帧和结束帧不能有空值，且大片段必须有子片段', '警告', { type: 'warning' })
-            }
-
-
-            //起初设计的导出一份json配置文件
-            // var jsonContent = {
-            //     'AnimationName': this.ModelObject.AnimationName,
-            //     'CameraName': this.ModelObject.CameraName,
-            //     'AnimationModel': this.ModelObject.AnimationModel,
-            //     'AnimationContent': this.ModelObject.AnimationContent,
-            //     'TreeNodes': this.treeNodes
-            // };
-
-            // var jsonDoc = JSON.stringify(jsonContent);
-            // var jsonFile = 'config_test_' + currTime + '.jcfg';
-            // this.exportData(jsonDoc, jsonFile);
-        },
-
-        //根据传入的对象数据，进行逻辑判断，最后合成对象字符串
-        //因片段信息和事件信息两部分都有触发目标物体，整合在此一个方法中
-        //type=1为片段，2为事件
-        getObjectData(object, type) {
-            var objectData = '';
-            var condition = '';
-            if (type == '1') {
-                condition = object.TriggerRadio; //片段
-            } else {
-                condition = object.TypeRadio; //事件
-            }
-            switch (condition) {
-                case 1: //单
-                    objectData = object.SingleObject;
-                    break;
-                case 2: //与
-                    switch (object.AndObjects.AndRadio) {
-                        case 1: //无序
-                            objectData = object.AndObjects.NoSqcObjects;
-                            break;
-                        case 2: //有序
-                            if (object.AndObjects.SqcObject1 != '' && object.AndObjects.SqcObject2 != '') {
-                                //如果起始和结束输入框都不为空，进行有序计算和拼接
-                                objectData = this.sqcObject(object.AndObjects.SqcObject1, object.AndObjects.SqcObject2);
-                            }
-                            break;
-                    }
-                    //将拼接的字符串中“,”换成“+”
-                    objectData = objectData.toString().replace(/,/g, '+');
-                    break;
-                case 3: //或
-                    switch (object.OrObjects.OrRadio) {
-                        case 1: //无序
-                            objectData = object.OrObjects.NoSqcObjects;
-                            break;
-                        case 2: //有序
-                            if (object.OrObjects.SqcObject1 != '' && object.OrObjects.SqcObject2 != '') {
-                                objectData = this.sqcObject(object.OrObjects.SqcObject1, object.OrObjects.SqcObject2);
-                            }
-                            break;
-                    }
-                    //将拼接的字符串中“,”换成“|”
-                    objectData = objectData.toString().replace(/,/g, '|');
-                    break;
-                default:
-                    objectData = ''
-            }
-            return objectData;
-        },
+        
         /**
          * 事件类名、方法名二级联动
          * 两种情况：新建事件时，选择class后，默认取第一个method
@@ -1308,191 +1128,6 @@ Vue.component('process-info', {
         cellClick(row, column) {
             row.seen = true;
         },
-        //汇总目标参数表数据，只取结束值，起始值统一“默认”，但没有保存到xml中
-        //本方法已不使用
-        // getTargetTableValue(object, data) {
-        //     var objectData = '';
-        //     switch (object.TypeRadio) {
-        //         case 1: //单
-        //             objectData = data[0].EndValue + 'x';
-        //             break;
-        //         case 2: //与
-        //             data.forEach(element => {
-        //                 objectData += element.EndValue + '+';
-        //             });
-        //             break;
-        //         case 3: //或
-        //             data.forEach(element => {
-        //                 objectData += element.EndValue + '|';
-        //             });
-        //             break;
-        //         default:
-        //             //无触发物体时
-        //             objectData = data[0].EndValue + 'x';
-        //             break;
-        //     }
-        //     var length = objectData.length;
-        //     if (length > 0) {
-        //         //去掉结尾多余的分隔父
-        //         objectData = objectData.substring(0, length - 1);
-        //     }
-        //     return objectData;
-        // },
-        //上面方法的备份，区别为计算参数数据表时加入了起始值
-        //当前采用的方法
-        getTargetTableValue_Bak(object, data) {
-            var objectData = '';
-            switch (object.TypeRadio) {
-                default: //没有触发物体，或者TypeRadio为空
-                    if (data[0].EndValue == '') {
-                        //没有结束值则只取起始值，后面的“x”用于分隔
-                        objectData = data[0].StartValue + 'x';
-                    } else {
-                        //如果有结束值，则~
-                        objectData = data[0].StartValue + '~' + data[0].EndValue + 'x';
-                    }
-                break;
-                case 1: //单，算法与default一致
-                        if (data[0].EndValue == '') {
-                            objectData = data[0].StartValue + 'x';
-                        } else {
-                            objectData = data[0].StartValue + '~' + data[0].EndValue + 'x';
-                        }
-                        //objectData = data[0].StartValue + '~' + data[0].EndValue + 'x';
-                    break;
-                case 2: //与
-                    //循环取参数表中每一行数据，结尾的加号用于分隔
-                        data.forEach(element => {
-                        if (element.EndValue == '') {
-                            objectData += element.StartValue + '+';
-                        } else {
-                            objectData += element.StartValue + '~' + element.EndValue + '+';
-                        }
-                    });
-                    break;
-                case 3: //或
-                    //循环取参数表中每一行数据，结尾的连接符用于分隔不同物体的参数
-                        data.forEach(element => {
-                        if (element.EndValue == '') {
-                            objectData += element.StartValue + '|';
-                        } else {
-                            objectData += element.StartValue + '~' + element.EndValue + '|';
-                        }
-                    });
-                    break;
-            }
-            var length = objectData.length;
-            if (length > 0) {
-                // 去掉结尾多余的'+'或者'|'
-                objectData = objectData.substring(0, length - 1);
-            }
-            return objectData;
-        },
-
-        //事件信息区域的控件数值改变，实时对树节点进行修改
-        //本方法的重难点在于事件触发物修改是，何种逻辑下，保留原来的部分数据进行修改，何种逻辑下清除原来的数据，重新写入
-        //经过慎重考虑，“单”逻辑和“与”、“或”中的有序逻辑下，触发物体修改，需要部分修改参数表，其他情况则清空
-        ctrlEventChange() {
-            
-        },
-
-        //在有序目标情况下，比如当前名称为 obj_05——obj_07，如果修改起止的对象为obj_01——obj_09，又要保留还留在范围内的对象，在此进行处理
-        changeTargetdataSqc(obj1, obj2) {
-            //取得起始终止对象的数字
-            //有序对象的命名规则最新：xxx_21_xx_01，xxx_21_xx_09
-            var ctrlNumStart = parseInt(obj1.split('_').pop());
-            var ctrlNumEnd = parseInt(obj2.split('_').pop());
-            //取得参数表数据的起始终止对象的数字
-            var tableNumStart = parseInt(this.targetData[0].Target.split('_').pop());
-            var tableNumEnd = parseInt(this.targetData[this.targetData.length - 1].Target.split('_').pop());
-            //取得起始终止对象除数字外的前缀
-            var objStartPrefix = obj1.replace(ctrlNumStart, '');
-            var objEndPrefix = obj2.replace(ctrlNumEnd, '');
-            if (objStartPrefix != objEndPrefix) {
-                this.$alert('有序对象1和对象2的名称前缀不一致，请检查', '提示', { type: 'warning' });
-            } else {
-                //名称前缀一致
-                if (this.targetData.length == 1 && this.targetData[0].Target == '') {
-                    //根据起始值，生成有序数组
-                    var targets = this.sqcObject(obj1, obj2);
-                    this.targetData = [];
-                    if (targets != undefined) {
-                        //向参数表填入数据
-                        targets.forEach(element => {
-                            this.updateTargetTable(element, '默认', '');
-                        });
-                    }
-                } else {
-                    //有序起始目标数值
-                    var diff = ctrlNumStart - tableNumStart
-                    if (diff > 0) {
-                        //新的数值必原有数值大，则表中需要删除一部分
-                        for (var i = 0; i < diff; i++) {
-                            this.targetData.splice(0, 1);
-                        }
-                    } else if (diff < 0) {
-                        //新的数值比原有的小，追加
-                        for (var i = 0; i < Math.abs(diff); i++) {
-                            this.targetData.splice(i, 0, { 'seen': false, 'Target': objStartPrefix + (ctrlNumStart + i), "StartValue": '默认', 'EndValue': '' });
-                        }
-                    } else {
-                        // diff == 0什么都不做
-                    }
-
-                    //有结束目标数值
-                    var diff = ctrlNumEnd - tableNumEnd
-                    if (diff < 0) {
-                        // 新的数值必原有的小，删除
-                        for (var i = 0; i < Math.abs(diff); i++) {
-                            this.targetData.splice(-1, 1);
-                        }
-                    } else if (diff > 0) {
-                        //追加
-                        for (var i = 0; i < diff; i++) {
-                            this.targetData.push({ 'seen': false, 'Target': objStartPrefix + (tableNumEnd + 1 + i), "StartValue": '默认', 'EndValue': '' });
-                        }
-                    } else {
-                        // diff == 0什么都不做
-                    }
-                }
-            }
-
-        },
-
-        //更新目标数值表
-        updateTargetTable(target, start, end) {
-            this.targetData.push({ 'seen': false, 'Target': target, "StartValue": start, 'EndValue': end });
-        },
-
-        //触发对象有序时处理
-        sqcObject(objStart, objEnd) {
-            var Objects = [];
-            //旧的截取对象编号不适用了
-            // var numStart = objStart.replace(/[^0-9]/ig, '');
-            // var numEnd = objEnd.replace(/[^0-9]/ig, '');
-            var pos = objStart.lastIndexOf('_');
-            var numStart = parseInt(objStart.substring(pos + 1, objStart.length));
-            var numEnd = parseInt(objEnd.substring(pos + 1, objEnd.length));
-            var objStartPrefix = objStart.substring(0, pos + 1);
-            var objEndPrefix = objEnd.substring(0, pos + 1);
-            if (objStartPrefix == objEndPrefix) {
-                if (numStart >= numEnd) {
-                    this.$alert('起始对象和结束对象编号有误', '警告', { type: 'error' });
-                } else {
-                    for (var i = numStart; i <= numEnd; i++) {
-                        //对象的名称中编号为_01、_02..._09、_10
-                        //Objects.push(objEndPrefix + i);
-                        Objects.push(objEndPrefix + (i <= 9 ? '0' + i : i));
-                    }
-                }
-                //Objects = Objects.substr(0, Objects.length - 1);
-                return Objects;
-            } else {
-                this.$alert('有序对象1和对象2的名称前缀不一致，请检查', '提示', { type: 'warning' });
-            }
-
-        },
-
 
         //输入框获得焦点后变更对应单选框（单与或），因此不必去手工勾选单选框
         //type=0(片段)，type=1(事件)
