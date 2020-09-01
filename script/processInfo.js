@@ -484,8 +484,8 @@ Vue.component('process-info', {
             if (this.type === 'step') {
                 this.formateStepEvent()
             } else {
-                this.formateEventList()
                 this.resetEventData()
+                this.formateEventList()
             }
         },
         'AnimationEvent.TargetObject.TypeRadio'(newV) { // 主单选
@@ -519,6 +519,10 @@ Vue.component('process-info', {
     methods: {
         // 根据目标更新参数
         updateParam(type) { // 1：单选，21：与无序，22：与有序，31：或无序，32：或有序
+            // 如果没有参数就不设置参数
+            if (!this.hasPar) {
+                return
+            }
             // console.log(type)
             switch (type) {
                 case '1':
@@ -775,7 +779,6 @@ Vue.component('process-info', {
         },
         // 点击事件列表某一行
         eventClick(row) {
-            console.log(row)
             this.eventItemIndex = this.eventList.indexOf(row)
             this.$refs.eventTable.setCurrentRow(row)
             this.parseEventData(row.code)
@@ -793,19 +796,20 @@ Vue.component('process-info', {
             let param = str.substr(str.indexOf('#'))
             let obj = '', par = '', dotw = ''
             if (param.includes('#obj')) {
-                this.hasObj = true
                 obj = param.slice(param.indexOf('#obj') + 4, param.lastIndexOf('#obj'))
             }
             if (param.includes('#par')) {
-                this.hasPar = true
                 par = param.slice(param.indexOf('#par') + 4, param.lastIndexOf('#par'))
             }
             if (param.includes('#dotw')) {
-                this.hasDotW = true
                 dotw = param.slice(param.indexOf('#dotw') + 5, param.lastIndexOf('#dotw'))
             }
+            // 设置是否含有
+            this.hasObj = param.includes('#obj')
+            this.hasPar = param.includes('#par')
+            this.hasDotW = param.includes('#dotw')
             // 含有#obj
-            if (obj) {
+            if (this.hasObj) {
                 if (/[\|\+]/.test(obj)) { // 说明是有多个对象
                     if (/\|/.test(obj)) { // 或
                         this.AnimationEvent.TargetObject.TypeRadio = 3
@@ -822,7 +826,7 @@ Vue.component('process-info', {
                 }
             }
             // 不含有#obj
-            if (!obj) {
+            if (!this.hasObj) {
                 this.AnimationEvent.TargetObject = { //目标物体
                     TypeRadio: '', //主单选按钮
                     SingleObject: '', //单物体
@@ -841,7 +845,7 @@ Vue.component('process-info', {
                 }
             }
             // 含有#par
-            if (par) {
+            if (this.hasPar) {
                 let pars = par.split('|')
                 let objs = obj.split('|')
                 pars.forEach((item, index) => {
@@ -853,9 +857,8 @@ Vue.component('process-info', {
                     })
                 })
             }
-            console.log(this.targetData)
             // 含有#dotw
-            if (dotw) {
+            if (this.hasDotW) {
                 let [duration, PlayType, LoopType, LoopTimes ] = dotw.split('#')
                 this.AnimationEvent.DurationMinute = parseInt(duration / 60)
                 this.AnimationEvent.DurationSecond = duration % 60
@@ -864,7 +867,7 @@ Vue.component('process-info', {
                 this.AnimationEvent.LoopTimes = LoopTimes
             }
             // 不含有#dotw
-            if (!dotw) {
+            if (!this.hasDotW) {
                 this.AnimationEvent.DurationMinute = 0
                 this.AnimationEvent.DurationSecond = 0
                 this.AnimationEvent.PlayType = '0'
