@@ -765,6 +765,8 @@ const Editor = {
         },
 
         exportFile() {
+            // 每次导出把之前的导出文件清空
+            fileDataXML = []
             this.editorVal = myDiagram.model.toJson()
 
             // 导出前 保存当前人员的信息
@@ -778,27 +780,71 @@ const Editor = {
             this.exportProceeXML();
 
             // TODO: 人员信息导出
-            // this.exportPersonXML();
+            fileDataArr.forEach(item => {
+                // 只有文件名AssembledConfig_索引.xml的文件
+                if (/AssembledConfig_\d+\.xml/.test(item.name)) {
+                    this.exportPersonXML(item);
+                }
+            })
 
             this.exportData()
         },
 
+        // 导出人员信息中的事件循环
+        forEachEvent(EventList) {
+            let Event = ''
+            if (typeof EventList == 'object' && EventList.Event instanceof Array) {
+                EventList.Event.forEach((item, index) => {
+                    Event += `\r\n                <Event Content="${item._Content}"/>`
+                    if (index == EventList.Event.length - 1) {
+                        Event += `\r\n            `
+                    }
+                })
+            }
+            return Event
+        },
+        // 导出人员信息步骤循环
+        forEachStep(stepName, stepInfo) {
+            return `<${stepName} Index="${stepInfo._Index}" AnimaIndex="${stepInfo._AnimaIndex}" TriggerObject="${stepInfo._TriggerObject}" ObjectType="${stepInfo._ObjectType}" ObjectName="${stepInfo._ObjectName}"
+                    OperationPerson="${stepInfo._OperationPerson}" ColliderMode="${stepInfo._ColliderMode}" ColliderScale="${stepInfo._ColliderScale}" TriggerMode="${stepInfo._TriggerMode}"
+                    ShowMode="${stepInfo._ShowMode}" ShowModeTime="${stepInfo._ShowModeTime}" MaskColliderObject="${stepInfo._MaskColliderObject}" NextDelay="${stepInfo._NextDelay}">
+            <EventList>${this.forEachEvent(stepInfo.EventList)}</EventList>
+        </${stepName}>`
+        },
         // 人员信息导出
-        exportPersonXML() {
-            let { nodeDataArray, linkDataArray } = this.editorVal
-            // TODO: XML 模板修改
-            let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
-                '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
-                '  <ToolPartsList>\r\n';
-            // tmp
+        exportPersonXML(file) {
+            // let { nodeDataArray, linkDataArray } = this.editorVal
+            // // TODO: XML 模板修改
+            // let xmlDoc = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
+            //     '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
+            //     '  <ToolPartsList>\r\n';
+            // // tmp
 
             // 人员信息模板
+            let ProcessConfigure = file.json.ProcessConfigure
+            let ProcessInfo = ProcessConfigure.ProcessInfo
+            let xmlDocStart = '<?xml version="1.0" encoding="utf-8"?>\r\n' +
+                '<ProcessConfigure' + ' Name="' + ProcessConfigure._Name + '" PersonNumber="' + ProcessConfigure._PersonNumber + '" AssembleModel="' + ProcessConfigure._AssembleModel + '">\r\n'
+            let xmlDocEnd = '</ProcessConfigure>'
+            let xmlDocContent = ''
+            ProcessInfo.forEach((item, index) => {
+                xmlDocContent +=
+    `<ProcessInfo Index="${item._Index}" Name="${item._Name}" AutoPlay="${item._AutoPlay}">
+        ${this.forEachStep('StartEventInfo', item.StartEventInfo)}
+        ${this.forEachStep('StepEventInfo', item.StepEventInfo)}
+        ${this.forEachStep('EndEventInfo', item.EndEventInfo)}
+    </ProcessInfo>`
+                if (index < ProcessInfo.length -1) {
+                    xmlDocContent += 
+    `
 
-
-
-            let currTime = getCurrTime();
-            let xmlfile = 'AssembledConfig_' + this.currentPerson + currTime + '.xml';
-            this.exportData(xmlDoc, xmlfile);
+    `
+                }
+            })
+            let xmlDoc = `${xmlDocStart}    ${xmlDocContent}\r\n${xmlDocEnd}`
+            // console.log(xmlDoc)
+            fileDataXML.push({ name: file.name, content: xmlDoc });
+            // this.exportData(xmlDoc, xmlfile);
         },
 
         // 流程信息导出
@@ -885,13 +931,11 @@ const Editor = {
 
         // 更新当前 节点信息
         updateCurrentNode(step, value) {
-            console.log(step, value)
             this.currentPersonJson.ProcessInfo[this.currentNodeIndex][step] = value;
         },
 
         //导出文件
-        //doc为拼接好的字符串，file为文件名
-        exportData(doc, file) {
+        exportData() {
             // var blob = new Blob([doc], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, file);
             if (!fileDataXML.length) {
@@ -903,7 +947,7 @@ const Editor = {
             var zip = new JSZip();
             fileDataXML.forEach(function (obj) {
                 // zip包里面不断塞 xml文件
-                zip.file(obj.name + '.xml', obj.content);
+                zip.file(obj.name, obj.content);
             });
             // 生成zip文件并下载
             zip.generateAsync({
