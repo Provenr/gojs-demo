@@ -804,7 +804,7 @@ Vue.component('process-info', {
             this.eventItemIndex = this.eventList.indexOf(row)
             this.$refs.eventTable.setCurrentRow(row)
             this.parseEventData(row.code)
-            this.eventCtrlDisable.selectCtrl = true
+            // this.eventCtrlDisable.selectCtrl = true
         },
         // 解析事件数据
         parseEventData(str) {
@@ -931,7 +931,7 @@ Vue.component('process-info', {
                     }
                 }
             }
-            
+
             // 参数par
             let par = '', temp = []
             if (this.hasPar) {
@@ -946,7 +946,7 @@ Vue.component('process-info', {
                 })
                 par = `#par${temp.join('|')}#par`
             }
-            
+
             // dotw
             let dotw = this.hasDotW ? `#dotw${DurationMinute * 60 + DurationSecond * 1}#${PlayType}#${LoopType}#${LoopTimes}#dotw` : ''
             eventItem = [ClassName, MethodName, obj, par, dotw].filter(item => item != '').join('_')
@@ -979,7 +979,7 @@ Vue.component('process-info', {
         add() {
             this.json2str('add')
         },
-        
+
         /**
          * 事件类名、方法名二级联动
          * 两种情况：新建事件时，选择class后，默认取第一个method
