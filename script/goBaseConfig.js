@@ -23,7 +23,7 @@ const goBaseConfig = {
     // 右键菜单 文字风格
     ContextMenuTextStyle: () => {
         return {
-            height: 24, width: 40, margin: 4, verticalAlignment: go.Spot.Center,
+            height: 24, width: 50, margin: 4, verticalAlignment: go.Spot.Center,
             font: "11pt Helvetica, Arial, sans-serif",
             textAlign: "center",
         }

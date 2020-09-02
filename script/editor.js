@@ -2,6 +2,8 @@ let myDiagram = null;
 const $ = go.GraphObject.make;    // 创建画布
 
 let processData = '' // 流程数据
+let nodeDataArray = []  // 节点
+let linkDataArray = [] // 链接
 
 let PromiseFileList = [] // 读取的文件
 
@@ -143,7 +145,15 @@ const Editor = {
                     allowDrop: true,  // 是否允许从Palette面板拖入元素
                     "LinkDrawn": this.showLinkLabel,  // 每次画线后调用的事件：为条件连线加上标签，该方法后面定义
                     "LinkRelinked": this.showLinkLabel,  // 每次重画线后调用的事件：同上LinkDrawn
-                    scrollsPageOnFocus: false   // 图选中时页面不会滚动
+                    scrollsPageOnFocus: false,   // 图选中时页面不会滚动
+                    // "ModelChanged": function(e) {
+                    //     if (e.isTransactionFinished) {
+                    //         console.log(e.model.modelData)
+                    //         // TODO: 判断节点是否存
+                    //         // findNodeDataForKey
+                    //         self.$alert('该节点KEY已存在')
+                    //     }
+                    // }
                 }
             );
 
@@ -152,7 +162,7 @@ const Editor = {
             //
             // // allow the group command to execute
             myDiagram.commandHandler.archetypeGroupData =
-                { key: '01', isGroup: true, text: '组名称', color: "blue" };
+                { key: '1', isGroup: true, text: '组名称', color: "blue" };
             // // modify the default group template to allow ungrouping
             myDiagram.groupTemplate.ungroupable = true;
 
@@ -194,12 +204,20 @@ const Editor = {
 
             myDiagram.addDiagramListener("ChangedSelection", function () {
                 enableAll();
+                console.log('ChangedSelection')
             }.bind(this));
 
-            myDiagram.addDiagramListener("BackgroundContextClicked", function () {
+            // 从Palette拖过来节触发的事件
+            myDiagram.addDiagramListener("externalobjectsdropped", function(e) {
+                e.subject.each(function(n){
+                    // 当前节点 key
+                    // console.log(n.data);
+                    // console.log(nodeDataArray)
+                });
+            })
 
-            }.bind(this));
 
+            // myDiagram.model.updateTargetBindings(node.data)
 
             // 定义右键菜单
             myDiagram.contextMenu =
@@ -218,13 +236,18 @@ const Editor = {
                         }).ofObject()),
                     $("ContextMenuButton",
                         $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "打组"),
-                        { click: function(e, obj) { e.diagram.commandHandler.groupSelection(); } },
+                        { click: function(e, obj) {
+                            self.$alert('请设置组索引');
+                            e.diagram.commandHandler.groupSelection();
+                        }},
                         new go.Binding("visible", "", function(o) {
                             return o.diagram.commandHandler.canGroupSelection();
                         }).ofObject()),
                     $("ContextMenuButton",
                         $(go.TextBlock, goBaseConfig.ContextMenuTextStyle(), "取消打组"),
-                        { click: function(e, obj) { e.diagram.commandHandler.ungroupSelection(); } },
+                        { click: function(e, obj) {
+                            e.diagram.commandHandler.ungroupSelection();
+                        }},
                         new go.Binding("visible", "", function(o) {
                             return o.diagram.commandHandler.canUngroupSelection();
                         }).ofObject()),
@@ -300,7 +323,7 @@ const Editor = {
                         click: function(e, obj) {
                             let nodeKey = obj.part.data.key;
                             self.currentNode = nodeKey;
-                            console.log("Clicked on " + obj.part.data.key);
+                            // console.log("Clicked on " + obj.part.data.key);
                         },
                         selectionChanged: function(part) {
                             var shape = part.elt(0);
@@ -320,39 +343,58 @@ const Editor = {
                         $(go.RowColumnDefinition, { column: 1, width: 4 }),
                         $(go.TextBlock, this.textStyle(),
                             {
-                                row: 0, column: 0, columnSpan: 3, alignment: go.Spot.Center,
+                                row: 0, column: 0, alignment: go.Spot.Center,
                                 margin: 5,
-                                maxSize: new go.Size(60, 50),
+                                maxSize: new go.Size(60, 200),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
-                                contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", 'cammands'), {
-                                    itemTemplate: $("ContextMenuButton",
-                                        $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
-                                        $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 5, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
-                                        {
-                                            click: function(e, button) {
-                                                if (myDiagram.isReadOnly) return;
-                                                let cmd = button.data;
-                                                console.log(button.part.adornedPart)
-                                                let nodeData = button.part.adornedPart.data;
-
-                                                let curNode = myDiagram.findNodeForKey(nodeData.key);
-                                                // self.currentNode = myDiagram.findNodeForKey(nodeData.key);
-                                                console.log('当前节点', nodeData)
-                                                // options.contextMenu(curNode, cmd.text);
-                                            }
-                                        }
-                                    )
-                                })
-
+                                // contextMenu: $(go.Adornment, "Vertical", new go.Binding("itemArray", 'cammands'), {
+                                //     itemTemplate: $("ContextMenuButton",
+                                //         $(go.Shape, { figure: "RoundedRectangle", fill: "transparent", width: 40, height: 24, stroke: "gray", strokeWidth: 1, scale: 1.0, areaBackground: "transparent" }),
+                                //         $(go.TextBlock, { stroke: "deepskyblue", height: 24, width: 40, margin: 5, font: "bold 12px serif", textAlign: "center", verticalAlignment: go.Spot.Center }, new go.Binding("text")),
+                                //         {
+                                //             click: function(e, button) {
+                                //                 if (myDiagram.isReadOnly) return;
+                                //                 let cmd = button.data;
+                                //                 console.log(button.part.adornedPart)
+                                //                 let nodeData = button.part.adornedPart.data;
+                                //
+                                //                 let curNode = myDiagram.findNodeForKey(nodeData.key);
+                                //                 // self.currentNode = myDiagram.findNodeForKey(nodeData.key);
+                                //                 console.log('当前节点', nodeData)
+                                //                 // options.contextMenu(curNode, cmd.text);
+                                //             }
+                                //         }
+                                //     )
+                                // })
+                                textValidation: function(textBlock, previousText, currentText) {
+                                    // console.log(textBlock,textBlock.part.data);
+                                    let nodeArr = nodeDataArray.filter(item => {
+                                        return item.key === currentText
+                                    })
+                                    // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
+                                    textBlock.part.data.key = previousText;
+                                    if (!nodeArr.length) {
+                                        return true
+                                    } else {
+                                        self.$notify({
+                                            title: '提示',
+                                            type: 'warning',
+                                            // position: 'top-left',
+                                            message: '该索引已存在,请重新设置',
+                                            // duration: 0
+                                        });
+                                        return false
+                                    }
+                                }
                             },
                             new go.Binding("text", "key").makeTwoWay() // 双向绑定模型中"text"属性
                         ),
 
                         $(go.TextBlock, this.textStyle(),
                             {
-                                row: 1, column: 0, columnSpan: 3, alignment: go.Spot.Center,
-                                maxSize: new go.Size(60, 50),
+                                row: 1, column: 0, alignment: go.Spot.Center,
+                                maxSize: new go.Size(100, 200),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                             },
@@ -394,6 +436,24 @@ const Editor = {
                                     alignment: go.Spot.Left,
                                     minSize: new go.Size(50, NaN),
                                     editable: true,
+                                    textValidation: function(textBlock, previousText, currentText) {
+                                        // console.log(textBlock,textBlock.part.data);
+                                        let nodeArr = nodeDataArray.filter(item => {
+                                            return item.key === currentText
+                                        })
+                                        // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
+                                        if (!nodeArr.length) {
+                                            return true
+                                        } else {
+                                            self.$notify({
+                                                title: '提示',
+                                                type: 'warning',
+                                                // position: 'top-left',
+                                                message: '该索引已存在,请重新设置',
+                                            });
+                                            return false
+                                        }
+                                    },
                                     margin: 5,
                                     font: "bold 16px sans-serif",
                                     stroke: "#006080"
@@ -492,11 +552,11 @@ const Editor = {
                         { category: "Start", text: "开始" },
                         {
                             category: 'Process',
-                            key: '1',
+                            key: '0-1',
                             text: "流程",
                             fill: "#FEF7E7",
                             stroke: '#FDCF90',
-                            commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }],
+                            // commands: [{ text: "查看", action: "view" }, { text: "删除", action: "view" }],
                         },
 
                         { category: "End", text: "结束" },
@@ -504,6 +564,12 @@ const Editor = {
                 }
             );
 
+            myDiagram.model = go.Model.fromJson(
+                {
+                    nodeDataArray,
+                    linkDataArray
+                }
+            )
         },
 
         // 此事件方法由整个画板的LinkDrawn和LinkRelinked事件触发
@@ -567,14 +633,6 @@ const Editor = {
             return {
                 font: "11pt Helvetica, Arial, sans-serif",
                 stroke: "#fff",
-                textAlign: "center",
-            }
-        },
-        // 右键菜单 文字风格
-        ContextMenuTextStyle() {
-            return {
-                stroke: "deepskyblue", height: 24, width: 40, margin: 5, verticalAlignment: go.Spot.Center,
-                font: "11pt Helvetica, Arial, sans-serif",
                 textAlign: "center",
             }
         },
@@ -685,9 +743,9 @@ const Editor = {
         // 流程信息数据 解析
         processParseData(json) {
             console.log('流程信息', json);
-            // 基础节点
-            let nodeDataArray = []  // 节点
-            let linkDataArray = [] // 链接
+            // 清空基础节点
+            nodeDataArray = []  // 节点
+            linkDataArray = [] // 链接
 
             //xml转换为json后，当只有一个元素时，格式为对象，非对象数组，强制将它们转为对象数组，以便使用forEach
 
@@ -761,9 +819,6 @@ const Editor = {
                 // 转json
                 // this.editorVal = myDiagram.model.toJson()
             }
-
-
-
 
         },
 
@@ -844,7 +899,7 @@ const Editor = {
         ${this.forEachStep('EndEventInfo', item.EndEventInfo)}
     </ProcessInfo>`
                 if (index < ProcessInfo.length -1) {
-                    xmlDocContent += 
+                    xmlDocContent +=
     `
 
     `
