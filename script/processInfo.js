@@ -251,7 +251,7 @@ let template = `
                 </div>
             </el-form>
             <div class="process-btns">
-                <el-button class="small-button" type="primary" plain @click="submit">保存</el-button>
+                    <el-button class="small-button" type="primary" plain @click="submit">保存</el-button>
                 <el-button class="small-button" type="warning" plain @click="add"
                 :disabled="!AnimationEvent.MethodName">新建</el-button>
             </div>
@@ -395,6 +395,10 @@ Vue.component('process-info', {
         type: {
             type: String,
             default: 'common'
+        },
+        step: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -470,6 +474,7 @@ Vue.component('process-info', {
             hasPar: false, // 是否含有参数
             hasDotW: false, // 是否含有下边那4项
             delayInputShow: false, // 总用时是否显示输入框
+            stepInfo: {},
         }
     },
     created() {
@@ -478,12 +483,45 @@ Vue.component('process-info', {
             this.formateStepEvent()
         } else {
             this.formateEventList()
+            // 只在辅助进行的组件中监听 StepEvent change
+            if (this.step) {
+                EventBus.$on('StepEvent',res => {
+                    this.StepEvent = res;
+                });
+            }
+            // console.log(EventBus)
         }
     },
     watch: {
         info() {
             // 进行步骤
             if (this.type === 'step') {
+                this.StepEvent = { // 进行信息
+                    ToolType: '', //工具名
+                        TargetObject: { //目标物体
+                        TypeRadio: '', //主单选按钮
+                            SingleObject: '', //单物体
+                            OrObjects: {
+                            OrRadio: '', //或单选按钮
+                                NoSqcObjects: '', //无序
+                                SqcObject1: '', //有序1
+                                SqcObject2: '' //有序2
+                        }
+                    },
+                    MaskObject: { //排除物体
+                        TypeRadio: '', //主单选按钮
+                            SingleObject: '', //单物体
+                            OrObjects: {
+                            OrRadio: '', //或单选按钮
+                                NoSqcObjects: '', //无序
+                                SqcObject1: '', //有序1
+                                SqcObject2: '' //有序2
+                        }
+                    },
+                    StepParam: [], // 参数
+                        ShowMode: '', // 展示模式
+                        TriggerMode: '', // 触发模型
+                };
                 this.formateStepEvent()
             } else {
                 this.resetEventData()
@@ -516,10 +554,24 @@ Vue.component('process-info', {
             if (this.AnimationEvent.TargetObject.TypeRadio == 3 && newV != 0) {
                 this.updateParam('3' + newV)
             }
+        },
+        'StepEvent': {
+            handler(newObj, oldObj) {
+                if (this.type === 'step') {
+                    EventBus.$emit('StepEvent', newObj);
+                }
+            },
+            deep: true
         }
     },
     mounted() {
         this.rowDrop()
+        // if (this.step) {
+        //     EventBus.$on('updateStepInfo',res => {
+        //         this.stepInfo = res;
+        //     });
+        // }
+
     },
     methods: {
         // 事件表拖动行排序
@@ -672,7 +724,7 @@ Vue.component('process-info', {
                 })
             }
         },
-        // 根据code获取text，格式化事件列表数据
+        // 根据code获取text，格式化事件列表数据1
         code2text(code) {
             let [classCode, methodCode] = code.split('#')[0].slice(0, -1).split('_')
             let className = '', methodName = '', time = '', classList = this.classList
@@ -701,12 +753,13 @@ Vue.component('process-info', {
         // 组装格式化进行步骤数据
         formateStepEvent() {
             let stepInfo = this.info
+            console.log('stepInfo', stepInfo);
             // 工具
             let [ToolType] = stepInfo._TriggerObject.split('|')
             // 目标
             let TargetObject = stepInfo._TriggerObject.substr(stepInfo._TriggerObject.indexOf('|') + 1)
             // 排除
-            let MaskObject = stepInfo.MaskColliderObject
+            let MaskObject = stepInfo._MaskColliderObject
             // 目标名称
             let ObjectName = stepInfo._ObjectName.split('|')
             // 磁盘类型
@@ -761,7 +814,77 @@ Vue.component('process-info', {
             this.StepEvent.StepParam = StepParam
             this.StepEvent.TriggerMode = TriggerMode
             this.StepEvent.ShowMode = ShowMode
+            // console.log('this.StepEvent', this.StepEvent)
+            EventBus.$emit('StepEvent', this.StepEvent);
         },
+
+        // 保存时 反序列 进行步骤的数据
+        ParseeStepEvent(stepEvent) {
+            // let  = this.StepEvent;
+            console.log(stepEvent)
+            let stepInfo = {};
+
+            // 排除
+            // TargetObject
+            let obj = '';
+            let TargetObject = stepEvent.TargetObject
+            let TypeRadio = TargetObject.TypeRadio
+            let OrObjects = TargetObject.OrObjects
+            if (TypeRadio) {
+                if (TypeRadio == 1) {
+                    // 工具 + 目标
+                    obj = stepEvent.ToolType + '|' + TargetObject.SingleObject;
+                } else if (TypeRadio == 2) {
+                    if (OrObjects.OrRadio == 1) {
+                        obj = stepEvent.ToolType + '|' + OrObjects.NoSqcObjects.replace(/\,/g, '|');
+                    } else {
+                        obj = `#obj${OrObjects.SqcObject1}+${OrObjects.SqcObject2}#obj`
+                    }
+                }
+            }
+            stepInfo._TriggerObject = obj;
+            // MaskObject
+            let maskObj = '';
+            let MaskObject = stepEvent.MaskObject
+            TypeRadio = MaskObject.TypeRadio
+            OrObjects = MaskObject.OrObjects
+            if (TypeRadio) {
+                if (TypeRadio == 1) {
+                    maskObj = MaskObject.SingleObject;
+                } else if (TypeRadio == 2) {
+                    if (OrObjects.OrRadio == 1) {
+                        maskObj = OrObjects.NoSqcObjects.replace(/\,/g, '|');
+                    } else {
+                        maskObj = `${OrObjects.SqcObject1}|${OrObjects.SqcObject2}`
+                    }
+                }
+            }
+            stepInfo._MaskColliderObject = maskObj;
+
+            // 展示模式
+            stepInfo._ShowMode = this.StepEvent.ShowMode;
+            // 参数
+            let ColliderMode = []
+            let ColliderScale = []
+            let ObjectName = []
+            this.StepEvent.StepParam.forEach(item => {
+                ColliderMode.push[item.ColliderMode]
+                ColliderScale.push[item.ColliderScale]
+                ObjectName.push[item.ObjectName]
+            })
+            // 参数--目标名称
+            stepInfo._ObjectName = ObjectName.join('|');
+            // 参数--磁盘类型
+            stepInfo._ColliderMode = ColliderMode.join('|');
+            // 参数--磁盘大小
+            stepInfo._ColliderScale = ColliderScale.join('|');
+
+            // 触发类型
+            stepInfo._TriggerMode = this.StepEvent.TriggerMode;
+            this.stepInfo = stepInfo;
+            // this.$emit('updateStepInfo', stepInfo)
+        },
+
         // 事件列表最后一行合并
         getSummaries(param) {
             const h = this.$createElement;
@@ -955,6 +1078,12 @@ Vue.component('process-info', {
                     this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
                     this.info.EventList.Event[this.eventItemIndex]._Content = eventItem
                 }
+                // 进行中 的步骤
+                debugger;
+                if (this.step) {
+                    Object.assign(this.info, this.stepInfo)
+                }
+
             } else {
                 this.eventList.push(this.code2text(eventItem))
                 this.info.EventList.Event.push({ _Content: eventItem })
@@ -973,6 +1102,10 @@ Vue.component('process-info', {
         },
         // 保存
         submit() {
+            if (this.step) {
+                // console.log(this.StepEvent)
+                this.ParseeStepEvent(this.StepEvent);
+            }
             this.json2str('save')
         },
         // 新建

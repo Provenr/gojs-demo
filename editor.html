@@ -67,9 +67,11 @@
         <div class="header">
 
             <div class="btns">
+
                 <el-select v-model="currentPerson" v-if="personOptions.length > 0">
                     <el-option v-for="item in personOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
+                <el-button type="primary" @click="AddPerson">新增人员</el-button>
                 <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile" multiple="true" :file-list="fileList"
                     :show-file-list="false" accept=".xml">
                     <el-button slot="trigger"  type="primary">选取文件</el-button>
@@ -119,7 +121,7 @@
                             </div>
                         </div>
                         <div class="step start" data-title="开始">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo"
+                            <process-info  v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StartEventInfo"
                             @update="value => updateCurrentNode('StartEventInfo', value)"></process-info>
                         </div>
                         <div class="arrow arrow1"></div>
@@ -130,7 +132,7 @@
                             @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
+                            <process-info :step="true" v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
                         </div>
                         <div class="arrow arrow2"></div>
                     </el-col>
@@ -170,7 +172,8 @@
 
 <script>
     var Ctor = Vue.extend(Editor);
-   let VM =  new Ctor().$mount('#app');
+    let VM =  new Ctor().$mount('#app');
+    const EventBus = new Vue();
 </script>
 
 </html>

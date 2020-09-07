@@ -2,13 +2,167 @@ let myDiagram = null;
 const $ = go.GraphObject.make;    // 创建画布
 
 let processData = '' // 流程数据
+let processTmpJson = {
+    ProcessConfigure: {
+        BigProcessConfigure: {},
+        ProcessInfo: [
+            // {
+            //     ProcessBranch: [{_Index: "1-1"}],
+            //     _BackIndex: "",
+            //     _Index: "",
+            //     _Name: ""
+            // }
+        ],
+        _ID: "",
+        _Name: ""
+    }
+} // 流程模板数据
+
 let nodeDataArray = []  // 节点
 let linkDataArray = [] // 链接
+//
+function setPersonNodeTmpJson (id, name) {
+    return {
+        EndEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        StartEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        StepEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        _AutoPlay: "1",
+        _Index: id,
+        _Name: name
+    }
+}
+let personTmpJson = { // 人员模板数据
+    ProcessConfigure: {
+        ProcessInfo: [{
+        EndEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        StartEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        StepEventInfo: {
+            EventList: {
+                Event:[
+                    // {_Content: ""}
+                ]
+            },
+            _AnimaIndex: "",
+            _ColliderMode: "",
+            _ColliderScale: "",
+            _Index: "",
+            _MaskColliderObject: "null",
+            _NextDelay: "3",
+            _ObjectName: "",
+            _ObjectType: "",
+            _OperationPerson: "1",
+            _ShowMode: "dotween",
+            _ShowModeTime: "0",
+            _TriggerMode: "0",
+            _TriggerObject: ""
+        },
+        _AutoPlay: "",
+        _Index: "",
+        _Name: ""
+    }],
+        _AssembleModel: "",
+        _Name: "",
+        _PersonNumber: ""
+    }
+}
 
 let PromiseFileList = [] // 读取的文件
-
 let fileDataArr = [] // 读取的文件列表
-
 let fileDataXML = [] // 导出文件列表
 
 function completionZero(num, length) {
@@ -19,7 +173,7 @@ function completionZero(num, length) {
 }
 
 //播放类型选项
-var loopTypeOptions = [{
+let loopTypeOptions = [{
     code: '1',
     text: '是'
 }, {
@@ -86,12 +240,12 @@ const Editor = {
             } else {
                 this.oldPerson = oldData;
             }
-            // console.log(this.currentPerson, this.oldPerson)
+            console.log('this.currentPersonJson',this.currentPersonJson)
             let newPersonJson = null;
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
-            this.currentPersonJson = null;
+            this.currentPersonJson = {};
             // this.currentNode = ''; // 人员改变 清空当前节点
-            console.log(`old${this.oldPerson}`, oldPersonJson)
+            // console.log(`old${this.oldPerson}`, oldPersonJson)
             // FIXME: 可能需要深拷贝
             fileDataArr.forEach(item => {
                 if (item.personId && item.personId === this.oldPerson) {
@@ -106,7 +260,7 @@ const Editor = {
             this.setAutoPlay()
         },
         currentNode(newNode, oldNode) {
-            console.log(this.currentPersonJson)
+            // console.log(this.currentPersonJson)
             if (!this.currentPersonJson.ProcessInfo) {
                 return false;
             }
@@ -120,7 +274,7 @@ const Editor = {
                 }
             }
             this.currentNodeIndex = index;
-            console.log(this.currentNodeIndex)
+            // console.log(this.currentNodeIndex)
             this.setAutoPlay()
         }
     },
@@ -128,6 +282,65 @@ const Editor = {
         this.initDiagram()
     },
     methods: {
+
+        AddPerson() {
+            let personId = 0; // 默认从一开始
+            let toolConfig = false; // 默认不存在工具配置文件
+            let processConfig = false; // 默认不存在流程配置文件
+            let processJson = null;
+            // 1. 获取人员ID 最大值 ,在此基础上 新增人员文件
+            // 2. 判断 是否存在 工具配置文件
+            // 3. 判断是否存在流程文件
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                    // 人员信息
+                    // 获取最大的人员ID
+                    personId = Math.max(impFileName.match(/(?<=AssembledConfig_)\d+/g)[0], personId)
+                    // this.personParseData(file.json, i)
+                    // // 获取已存在的人员配置 💺模板
+                    // processTmpJson = file.json
+                    // this.hasData = true;
+                } else if (/ToolsConfig/g.test(impFileName)) {
+                    toolConfig = true;
+                } else if (/ProcessConfig/g.test(impFileName)) {
+                    // 流程信息
+                    processConfig = true;
+                    processJson = file.json
+                }
+            }
+            if (!toolConfig) { // 不存在工具配置, 直接退出
+                this.$alert('请导入工具配置信息');
+                return false;
+            }
+            if (!processConfig) { // 不存在流程配置, 创建一个空流程配置
+                fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson})
+                fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: personTmpJson, personId: `${personId + 1}`})
+            } else {
+                let personJson = JSON.parse(JSON.stringify(personTmpJson.ProcessConfigure));
+                // 存在流程配置, 根据流程节点添加人员节点
+                if(processJson.ProcessConfigure.ProcessInfo.length > 0) {
+                    let ProcessInfo = processJson.ProcessConfigure.ProcessInfo; // 流程节点信息
+                    ProcessInfo = forceArr(ProcessInfo);
+                    ProcessInfo.forEach((item, index) => {
+                        personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
+                    })
+                }
+            }
+
+            // 下拉框
+            this.personOptions.push({
+                name: `人员${personId + 1}`,
+                id: `${personId + 1}`
+            })
+
+            this.json2Tree();
+            // TODO: 设置为新增人员
+            // this.currentPerson = personId + 1; // 设置当前人员
+        },
+
         // 设置当前节点的执行方式
         setAutoPlay() {
             if (this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '1'
@@ -204,19 +417,45 @@ const Editor = {
 
             myDiagram.addDiagramListener("ChangedSelection", function () {
                 enableAll();
-                console.log('ChangedSelection')
+                // console.log('ChangedSelection')
             }.bind(this));
 
             // 从Palette拖过来节触发的事件
-            myDiagram.addDiagramListener("externalobjectsdropped", function(e) {
-                e.subject.each(function(n){
-                    // 当前节点 key
-                    // console.log(n.data);
-                    // console.log(nodeDataArray)
-                });
-            })
+            // myDiagram.addDiagramListener("externalobjectsdropped", function(e) {
+            //     e.subject.each(function(n){
+            //         // 获取当前 人员配置文件
+            //         let currentPersonJson = '';
+            //         fileDataArr.forEach(item => {
+            //               if(item.personId === self.currentPerson) {
+            //                   currentPersonJson = item.json
+            //               }
+            //         })
+            //         currentPersonJson.ProcessConfigure
+            //         // 当前节点 key
+            //         console.log(n.data);
+            //         console.log(nodeDataArray)
+            //     });
+            // })
 
-
+            myDiagram.addModelChangedListener(function(evt) {
+                if (!evt.isTransactionFinished){
+                    return;
+                }else{
+                    var txn = evt.object; //获取事务
+                    if (txn === null) return;
+                    txn.changes.each(function(e) {//遍历事务
+                        if (e.change === go.ChangedEvent.Insert && e.propertyName === "nodeDataArray") {//节点新增 不包含连线
+                            console.log(evt.propertyName , "** added *****************88",e.newValue);
+                            self.updatePersonData('add', e.newValue)
+                        } else if (e.change === go.ChangedEvent.Remove && e.propertyName === "nodeDataArray") {
+                            console.log(evt.propertyName , "******* delete ***********",e.oldValue);
+                            self.updatePersonData('add', e.oldValue)
+                        }else if (e.change === go.ChangedEvent.Property && e.propertyName=="text") {
+                            console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
+                        }
+                    });
+                }
+            });
             // myDiagram.model.updateTargetBindings(node.data)
 
             // 定义右键菜单
@@ -372,6 +611,10 @@ const Editor = {
                                     let nodeArr = nodeDataArray.filter(item => {
                                         return item.key === currentText
                                     })
+
+                                    // 修改人员信息的 key
+                                    self.changePersonText(previousText, currentText, type)
+
                                     // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
                                     textBlock.part.data.key = previousText;
                                     if (!nodeArr.length) {
@@ -572,6 +815,33 @@ const Editor = {
             )
         },
 
+
+        // 修改流程节点text 更新当前节点人员配置信息
+        changePersonText(oldData, newData, type){
+
+        },
+
+        // 流程节点change 更新人员配置函数
+        updatePersonData(type, node) {
+            let currentPersonJson = '';
+            fileDataArr.forEach(item => {
+                if(item.personId === self.currentPerson) {
+                    currentPersonJson = item.json
+                }
+            })
+            // currentPersonJson.ProcessConfigure.ProcessInfo
+            if (type == 'add') {
+                // 新增
+                currentPersonJson.ProcessConfigure.ProcessInfo.push(this.setPersonNodeTmpJson(node.key, node.name))
+            } else {
+                // 删除
+                let newPersonData = []
+                forceArr(currentPersonJson.ProcessConfigure.ProcessInfo).filter(item => item.key == node.key)
+                currentPersonJson.ProcessConfigure.ProcessInfo = newPersonData.length == 1 ? newPersonData[0] : newPersonData
+            }
+        },
+
+
         // 此事件方法由整个画板的LinkDrawn和LinkRelinked事件触发
         // 如果连线是从”conditional"条件节点出发，则将连线上的标签显示出来
         showLinkLabel(e) {
@@ -657,7 +927,7 @@ const Editor = {
                         obj[next.name] ? '' : obj[next.name] = true && item.push(next);
                         return item;
                     }, []);
-                    // console.log('Promise then1', fileDataArr)
+                    console.log('Promise then1', fileDataArr)
                     self.personOptions = fileDataArr.map(item => {
                         if (/(AssembledConfig_)\d+/g.test(item.name)) {
                             let id = item.name.match(/(?<=AssembledConfig_)\d+/g)[0];
@@ -690,6 +960,7 @@ const Editor = {
                     let result = {name: file.name, json: jsonObj}
                     if (/(AssembledConfig_)\d+/g.test(file.name)) {
                         let PersonID = file.name.match(/(?<=AssembledConfig_)\d+/g)[0];
+                        console.log(typeof PersonID)
                         result.personId = PersonID
                     }
                     resolve(result)
@@ -727,6 +998,10 @@ const Editor = {
         // 工具下拉列表
         handleTools(json) {
             console.log('工具信息', json);
+            // this.$message({
+            //     message: '工具配置导入成功',
+            //     type: 'success'
+            // });
             let toolInfoList = json.ToolsConfigure.ToolInfoList.ToolInfo; // 基础工具
             toolInfoList = forceArr(toolInfoList);
             ToolListOptions = this.handleBaseTool(toolInfoList);
@@ -756,19 +1031,19 @@ const Editor = {
             let groupArr = {};
             if(json.ProcessConfigure.BigProcessConfigure) {
                 let BigProcessConfigure = json.ProcessConfigure.BigProcessConfigure; // 大流程 => 流程图中的组
-                let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
-                for (let i = 0; i < BigProcessInfo.length; i++) {
-                    let groupItem = BigProcessInfo[i];
-                    let length = BigProcessInfo.length + 1;
-                    let groupKey = completionZero(groupItem._Index, length);
-                    groupArr[groupKey] = groupItem._ProcessSection.split(',');
-                    nodeDataArray.push({key: groupKey, isGroup: true, text: groupItem._Name, color: 'blue'})
+                if (BigProcessConfigure.BigProcessInfo) {
+                    let BigProcessInfo = forceArr(BigProcessConfigure.BigProcessInfo)
+                    for (let i = 0; i < BigProcessInfo.length; i++) {
+                        let groupItem = BigProcessInfo[i];
+                        let length = BigProcessInfo.length + 1;
+                        let groupKey = completionZero(groupItem._Index, length);
+                        groupArr[groupKey] = groupItem._ProcessSection.split(',');
+                        nodeDataArray.push({key: groupKey, isGroup: true, text: groupItem._Name, color: 'blue'})
+                    }
                 }
-
                 // _Index: "1", _ProcessSection: "1,1-1,1-2", _Name: "拆前置喷头"
             }
-
-            if(json.ProcessConfigure.ProcessInfo) {
+            if(json.ProcessConfigure.ProcessInfo.length > 0) {
                 let ProcessInfo = json.ProcessConfigure.ProcessInfo; // 流程节点信息
                 ProcessInfo = forceArr(ProcessInfo);
 
@@ -807,25 +1082,23 @@ const Editor = {
                 let endKey = ProcessInfo.slice(-1)[0]._Index
                 // 添加结束节点link
                 linkDataArray.push({ from: endKey, to: 'end', fromPort: "B", toPort: "T" })
-                // console.log(nodeDataArray)
-                // console.log(linkDataArray)
 
-                myDiagram.model = go.Model.fromJson(
-                    {
-                        nodeDataArray,
-                        linkDataArray
-                    }
-                )
-                // 转json
-                // this.editorVal = myDiagram.model.toJson()
             }
+            myDiagram.model = go.Model.fromJson(
+                {
+                    nodeDataArray,
+                    linkDataArray
+                }
+            )
 
         },
 
         // 人员信息数据 解析
         personParseData(json, i) {
+            console.log('人员信息', json);
                 //xml转换为json后，当只有一个元素时，格式为对象，forceArr 非对象数组，强制将它们转为对象数组，以便使用forEach
             this.currentPersonJson = json.ProcessConfigure;
+            console.log('this.currentPersonJson',this.currentPersonJson)
         },
 
         exportFile() {
