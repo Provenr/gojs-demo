@@ -613,7 +613,7 @@ const Editor = {
                                     })
 
                                     // 修改人员信息的 key
-                                    self.changePersonText(previousText, currentText, type)
+                                    self.changePersonText(previousText, currentText, 'key')
 
                                     // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
                                     textBlock.part.data.key = previousText;
@@ -640,6 +640,11 @@ const Editor = {
                                 maxSize: new go.Size(100, 200),
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
+                                textValidation: function(textBlock, previousText, currentText) {
+                                    // 修改人员信息的 key
+                                    self.changePersonText(previousText, currentText, 'text')
+
+                                }
                             },
                             new go.Binding("text", "text").makeTwoWay() // 双向绑定模型中"text"属性
                         )
