@@ -90,71 +90,74 @@ function setPersonNodeTmpJson (id, name) {
 }
 let personTmpJson = { // 人员模板数据
     ProcessConfigure: {
-        ProcessInfo: [{
-        EndEventInfo: {
-            EventList: {
-                Event:[
-                    // {_Content: ""}
-                ]
-            },
-            _AnimaIndex: "",
-            _ColliderMode: "",
-            _ColliderScale: "",
-            _Index: "",
-            _MaskColliderObject: "null",
-            _NextDelay: "3",
-            _ObjectName: "",
-            _ObjectType: "",
-            _OperationPerson: "1",
-            _ShowMode: "dotween",
-            _ShowModeTime: "0",
-            _TriggerMode: "0",
-            _TriggerObject: ""
-        },
-        StartEventInfo: {
-            EventList: {
-                Event:[
-                    // {_Content: ""}
-                ]
-            },
-            _AnimaIndex: "",
-            _ColliderMode: "",
-            _ColliderScale: "",
-            _Index: "",
-            _MaskColliderObject: "null",
-            _NextDelay: "3",
-            _ObjectName: "",
-            _ObjectType: "",
-            _OperationPerson: "1",
-            _ShowMode: "dotween",
-            _ShowModeTime: "0",
-            _TriggerMode: "0",
-            _TriggerObject: ""
-        },
-        StepEventInfo: {
-            EventList: {
-                Event:[
-                    // {_Content: ""}
-                ]
-            },
-            _AnimaIndex: "",
-            _ColliderMode: "",
-            _ColliderScale: "",
-            _Index: "",
-            _MaskColliderObject: "null",
-            _NextDelay: "3",
-            _ObjectName: "",
-            _ObjectType: "",
-            _OperationPerson: "1",
-            _ShowMode: "dotween",
-            _ShowModeTime: "0",
-            _TriggerMode: "0",
-            _TriggerObject: ""
-        },
-        _AutoPlay: "",
-        _Index: "",
-        _Name: ""
-    }],
+        ProcessInfo: [
+            {
+                EndEventInfo: {
+                    EventList: {
+                        Event:[
+                            // {_Content: ""}
+                        ]
+                    },
+                    _AnimaIndex: "",
+                    _ColliderMode: "",
+                    _ColliderScale: "",
+                    _Index: "",
+                    _MaskColliderObject: "null",
+                    _NextDelay: "3",
+                    _ObjectName: "",
+                    _ObjectType: "",
+                    _OperationPerson: "1",
+                    _ShowMode: "dotween",
+                    _ShowModeTime: "0",
+                    _TriggerMode: "0",
+                    _TriggerObject: ""
+                },
+                StartEventInfo: {
+                    EventList: {
+                        Event:[
+                            // {_Content: ""}
+                        ]
+                    },
+                    _AnimaIndex: "",
+                    _ColliderMode: "",
+                    _ColliderScale: "",
+                    _Index: "",
+                    _MaskColliderObject: "null",
+                    _NextDelay: "3",
+                    _ObjectName: "",
+                    _ObjectType: "",
+                    _OperationPerson: "1",
+                    _ShowMode: "dotween",
+                    _ShowModeTime: "0",
+                    _TriggerMode: "0",
+                    _TriggerObject: ""
+                },
+                StepEventInfo: {
+                    EventList: {
+                        Event:[
+                            // {_Content: ""}
+                        ]
+                    },
+                    _AnimaIndex: "",
+                    _ColliderMode: "",
+                    _ColliderScale: "",
+                    _Index: "",
+                    _MaskColliderObject: "null",
+                    _NextDelay: "3",
+                    _ObjectName: "",
+                    _ObjectType: "",
+                    _OperationPerson: "1",
+                    _ShowMode: "dotween",
+                    _ShowModeTime: "0",
+                    _TriggerMode: "0",
+                    _TriggerObject: ""
+                },
+                _TEST: 'Template',
+                _AutoPlay: "",
+                _Index: "",
+                _Name: ""
+            }
+        ],
         _AssembleModel: "",
         _Name: "",
         _PersonNumber: ""
@@ -276,12 +279,45 @@ const Editor = {
             this.currentNodeIndex = index;
             // console.log(this.currentNodeIndex)
             this.setAutoPlay()
-        }
+        },
+        'currentPersonJson._Name'(newVal, oldVal) {
+            this.twoWayBindPerson(fileDataArr, this.currentPerson, '_Name', newVal)
+            // for (let i = 0; i < fileDataArr.length; i++) {
+            //     let file = fileDataArr[i] ? fileDataArr[i] : ''
+            //     if (!file) continue
+            //     let impFileName = file.name; // 文件名称
+            //     if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+            //         if(impFileName.match(/(?<=AssembledConfig_)\d+/g)[0] == this.currentPerson){
+            //             fileDataArr[i].json.ProcessConfigure._AssembleModel = newVal
+            //         }
+            //     }
+            // }
+        },
+        'currentPersonJson._PersonNumber'(newVal, oldVal) {
+            this.twoWayBindPerson(fileDataArr, this.currentPerson, '_PersonNumber', newVal)
+        },
+        'currentPersonJson._AssembleModel'(newVal, oldVal) {
+            this.twoWayBindPerson(fileDataArr, this.currentPerson, '_AssembleModel', newVal)
+        },
+
     },
     mounted() {
         this.initDiagram()
     },
     methods: {
+
+        twoWayBindPerson(fileDataArr, currentPerson, updateKey, updateValue) {
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                    if(impFileName.match(/(?<=AssembledConfig_)\d+/g)[0] == currentPerson){
+                        fileDataArr[i].json.ProcessConfigure[updateKey] = updateValue
+                    }
+                }
+            }
+        },
 
         AddPerson() {
             let personId = 0; // 默认从一开始
@@ -445,13 +481,28 @@ const Editor = {
                     if (txn === null) return;
                     txn.changes.each(function(e) {//遍历事务
                         if (e.change === go.ChangedEvent.Insert && e.propertyName === "nodeDataArray") {//节点新增 不包含连线
-                            console.log(evt.propertyName , "** added *****************88",e.newValue);
-                            self.updatePersonData('add', e.newValue)
+                            // console.log(evt.propertyName , "** added *****************88",e.newValue);
+                            // self.AddPerson();
+                            let personFlag = false;
+                            for (let i = 0; i < fileDataArr.length; i++) {
+                                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                                if (!file) continue
+                                let impFileName = file.name; // 导入文件名称
+                                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                                    personFlag = true;
+                                }
+                            }
+
+                            // FIXME: 人员信息配置文件存在时  排除组节点
+                            if (personFlag && !e.newValue.isGroup) {
+                                self.updatePersonData('add', e.newValue)
+                            }
+
                         } else if (e.change === go.ChangedEvent.Remove && e.propertyName === "nodeDataArray") {
-                            console.log(evt.propertyName , "******* delete ***********",e.oldValue);
+                            // console.log(evt.propertyName , "******* delete ***********",e.oldValue);
                             self.updatePersonData('add', e.oldValue)
                         }else if (e.change === go.ChangedEvent.Property && e.propertyName=="text") {
-                            console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
+                            // console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
                         }
                     });
                 }
@@ -607,13 +658,18 @@ const Editor = {
                                 //     )
                                 // })
                                 textValidation: function(textBlock, previousText, currentText) {
-                                    // console.log(textBlock,textBlock.part.data);
+                                    console.log(textBlock,textBlock.part.data);
+                                    let nodeData = textBlock.part.data;
+                                    if (currentText === previousText) { // 未修改
+                                        return true
+                                    }
+
                                     let nodeArr = nodeDataArray.filter(item => {
                                         return item.key === currentText
                                     })
 
                                     // 修改人员信息的 key
-                                    self.changePersonText(previousText, currentText, 'key')
+                                    self.changePersonText(nodeData, currentText, 'key')
 
                                     // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
                                     textBlock.part.data.key = previousText;
@@ -641,9 +697,14 @@ const Editor = {
                                 wrap: go.TextBlock.WrapFit, // 尺寸自适应
                                 editable: true,  // 文字可编辑
                                 textValidation: function(textBlock, previousText, currentText) {
+                                    console.log(textBlock,textBlock.part.data);
+                                    let nodeData = textBlock.part.data;
+                                    if (currentText.trim() === previousText.trim()) { // 未修改
+                                        return true
+                                    }
                                     // 修改人员信息的 key
-                                    self.changePersonText(previousText, currentText, 'text')
-
+                                    self.changePersonText(nodeData, currentText, 'text')
+                                    return true
                                 }
                             },
                             new go.Binding("text", "text").makeTwoWay() // 双向绑定模型中"text"属性
@@ -686,6 +747,9 @@ const Editor = {
                                     editable: true,
                                     textValidation: function(textBlock, previousText, currentText) {
                                         // console.log(textBlock,textBlock.part.data);
+                                        if (currentText === previousText) { // 未修改
+                                            return true
+                                        }
                                         let nodeArr = nodeDataArray.filter(item => {
                                             return item.key === currentText
                                         })
@@ -819,30 +883,56 @@ const Editor = {
                 }
             )
         },
+        // 过滤初始化模板数据
+        filterPersonData(data) {
+            return data.filter(item => item._TEST !== 'Template')
+        },
 
 
         // 修改流程节点text 更新当前节点人员配置信息
         changePersonText(oldData, newData, type){
-
+            let index = this.currentNode; // 当前节点
+            fileDataArr.forEach(item => {
+                if(item.personId) { // 判断当前文件是否为 人员信息配置文件
+                    let ProcessInfoArr = forceArr(item.json.ProcessConfigure.ProcessInfo);
+                    item.json.ProcessConfigure.ProcessInfo = ProcessInfoArr.map(item => {
+                        if (type === 'key') {
+                            if (item._Index == oldData.key) {
+                                item._Index = newData
+                            }
+                            return item
+                        } else {
+                            if (item._Index == oldData.key) {
+                                item._Name = newData
+                            }
+                            return item
+                        }
+                    })
+                }
+            })
         },
 
         // 流程节点change 更新人员配置函数
         updatePersonData(type, node) {
             let currentPersonJson = '';
             fileDataArr.forEach(item => {
-                if(item.personId === self.currentPerson) {
+                if(item.personId === this.currentPerson) {
                     currentPersonJson = item.json
                 }
             })
-            // currentPersonJson.ProcessConfigure.ProcessInfo
+            let tmpJsonArr = currentPersonJson.ProcessConfigure.ProcessInfo;
             if (type == 'add') {
                 // 新增
-                currentPersonJson.ProcessConfigure.ProcessInfo.push(this.setPersonNodeTmpJson(node.key, node.name))
+                tmpJsonArr.push(setPersonNodeTmpJson(node.key, node.text))
+                if (tmpJsonArr.find(item => item._TEST !== 'Template')) {
+                    currentPersonJson.ProcessConfigure.ProcessInfo = this.filterPersonData(tmpJsonArr)
+                }
+                this.currentNode = node.key;
             } else {
                 // 删除
                 let newPersonData = []
-                forceArr(currentPersonJson.ProcessConfigure.ProcessInfo).filter(item => item.key == node.key)
-                currentPersonJson.ProcessConfigure.ProcessInfo = newPersonData.length == 1 ? newPersonData[0] : newPersonData
+                forceArr(tmpJsonArr).filter(item => item.key == node.key)
+                tmpJsonArr = newPersonData.length == 1 ? newPersonData[0] : newPersonData
             }
         },
 
