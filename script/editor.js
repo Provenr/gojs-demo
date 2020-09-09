@@ -29,10 +29,10 @@ function setPersonNodeTmpJson (id, name) {
                     // {_Content: ""}
                 ]
             },
-            _AnimaIndex: "",
+            _AnimaIndex: name,
             _ColliderMode: "",
             _ColliderScale: "",
-            _Index: "",
+            _Index: "3",
             _MaskColliderObject: "null",
             _NextDelay: "3",
             _ObjectName: "",
@@ -49,10 +49,10 @@ function setPersonNodeTmpJson (id, name) {
                     // {_Content: ""}
                 ]
             },
-            _AnimaIndex: "",
+            _AnimaIndex: name,
             _ColliderMode: "",
             _ColliderScale: "",
-            _Index: "",
+            _Index: "1",
             _MaskColliderObject: "null",
             _NextDelay: "3",
             _ObjectName: "",
@@ -69,10 +69,10 @@ function setPersonNodeTmpJson (id, name) {
                     // {_Content: ""}
                 ]
             },
-            _AnimaIndex: "",
+            _AnimaIndex: name,
             _ColliderMode: "",
             _ColliderScale: "",
-            _Index: "",
+            _Index: "2",
             _MaskColliderObject: "null",
             _NextDelay: "3",
             _ObjectName: "",
@@ -203,7 +203,12 @@ const Editor = {
                 _Name: ""
             },
             // oldPersonJson: {},
-            currentPersonJson: {},
+            currentPersonJson: {
+                _Name: '',
+                _PersonNumber: '',
+                _AssembleModel: '',
+                ProcessInfo: {}
+            },
             personOptions: [],
             hasData: false,
             data: {}, // 导入进来的信息
@@ -258,12 +263,15 @@ const Editor = {
                     newPersonJson = JSON.parse(JSON.stringify(item.json));
                 }
             })
-            console.log(`new${newData}`, newPersonJson.ProcessConfigure)
+            // console.log(`new${newData}`, newPersonJson.ProcessConfigure)
             this.personParseData(newPersonJson, newData);
             this.setAutoPlay()
         },
         currentNode(newNode, oldNode) {
-            // console.log(this.currentPersonJson)
+            // console.log('currentNode',newNode, oldNode)
+            if (newNode === null) {
+                return false;
+            }
             if (!this.currentPersonJson.ProcessInfo) {
                 return false;
             }
@@ -356,14 +364,23 @@ const Editor = {
                 fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: personTmpJson, personId: `${personId + 1}`})
             } else {
                 let personJson = JSON.parse(JSON.stringify(personTmpJson.ProcessConfigure));
+                personJson.ProcessInfo = [];
                 // 存在流程配置, 根据流程节点添加人员节点
                 if(processJson.ProcessConfigure.ProcessInfo.length > 0) {
                     let ProcessInfo = processJson.ProcessConfigure.ProcessInfo; // 流程节点信息
                     ProcessInfo = forceArr(ProcessInfo);
-                    ProcessInfo.forEach((item, index) => {
-                        personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
-                    })
+                    if (ProcessInfo.length > 0) {
+                        ProcessInfo.forEach((item, index) => {
+                            personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
+                        })
+                    } else {
+                        let obj = setPersonNodeTmpJson('', '');
+                        obj._TEST = 'Template';
+                        personJson.ProcessInfo.push(obj)
+                    }
+
                 }
+                fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: {ProcessConfigure: personJson}, personId: `${personId + 1}`})
             }
 
             // 下拉框
@@ -379,6 +396,7 @@ const Editor = {
 
         // 设置当前节点的执行方式
         setAutoPlay() {
+            if (this.currentPersonJson.ProcessInfo.length == 0) return false;
             if (this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '1'
             && this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '2') {
                 this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay = '2'
@@ -493,14 +511,18 @@ const Editor = {
                                 }
                             }
 
-                            // FIXME: 人员信息配置文件存在时  排除组节点
+                            // 人员信息配置文件存在时  排除组节点
                             if (personFlag && !e.newValue.isGroup) {
                                 self.updatePersonData('add', e.newValue)
                             }
 
                         } else if (e.change === go.ChangedEvent.Remove && e.propertyName === "nodeDataArray") {
                             // console.log(evt.propertyName , "******* delete ***********",e.oldValue);
-                            self.updatePersonData('add', e.oldValue)
+                            self.updatePersonData('delete', e.oldValue)
+                            // FIXME: currentnode 重置
+                            this.currentNode = null;
+                            this.hasData = false;
+
                         }else if (e.change === go.ChangedEvent.Property && e.propertyName=="text") {
                             // console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
                         }
@@ -914,6 +936,7 @@ const Editor = {
 
         // 流程节点change 更新人员配置函数
         updatePersonData(type, node) {
+            let self = this;
             let currentPersonJson = '';
             fileDataArr.forEach(item => {
                 if(item.personId === this.currentPerson) {
@@ -927,13 +950,20 @@ const Editor = {
                 if (tmpJsonArr.find(item => item._TEST !== 'Template')) {
                     currentPersonJson.ProcessConfigure.ProcessInfo = this.filterPersonData(tmpJsonArr)
                 }
-                this.currentNode = node.key;
             } else {
                 // 删除
-                let newPersonData = []
-                forceArr(tmpJsonArr).filter(item => item.key == node.key)
-                tmpJsonArr = newPersonData.length == 1 ? newPersonData[0] : newPersonData
+                // let newPersonData = []
+                currentPersonJson.ProcessConfigure.ProcessInfo = forceArr(tmpJsonArr).filter(item => item.key == node.key);
+                // currentPersonJson.ProcessConfigure.ProcessInfo = newPersonData.length == 1 ? newPersonData[0] : newPersonData
             }
+            // TODO: 设置currentPerson, 提前设置模型
+            let {_Name, _PersonNumber, _AssembleModel} = this.currentPersonJson;
+            this.currentPersonJson = Object.assign(currentPersonJson.ProcessConfigure, {
+                _Name,
+                _PersonNumber,
+                _AssembleModel,
+            });
+            // this.currentPersonJson.ProcessInfo = currentPersonJson.ProcessConfigure.ProcessInfo;
         },
 
 
@@ -1038,7 +1068,6 @@ const Editor = {
                 }, err => {
                     this.$alert(err)
                 })
-
 
                 // TODO:读取多文件 end
 
