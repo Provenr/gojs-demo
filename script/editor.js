@@ -369,16 +369,13 @@ const Editor = {
                 if(processJson.ProcessConfigure.ProcessInfo.length > 0) {
                     let ProcessInfo = processJson.ProcessConfigure.ProcessInfo; // 流程节点信息
                     ProcessInfo = forceArr(ProcessInfo);
-                    if (ProcessInfo.length > 0) {
-                        ProcessInfo.forEach((item, index) => {
-                            personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
-                        })
-                    } else {
-                        let obj = setPersonNodeTmpJson('', '');
-                        obj._TEST = 'Template';
-                        personJson.ProcessInfo.push(obj)
-                    }
-
+                    ProcessInfo.forEach((item, index) => {
+                        personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
+                    })
+                } else {
+                    let obj = setPersonNodeTmpJson('', '');
+                    obj._TEST = 'Template';
+                    personJson.ProcessInfo.push(obj)
                 }
                 fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: {ProcessConfigure: personJson}, personId: `${personId + 1}`})
             }
