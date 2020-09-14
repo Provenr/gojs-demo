@@ -191,7 +191,7 @@ let ToolListOptions = [];
 const Editor = {
     data() {
         return {
-            editorVal: {nodeDataArray: []}, // 可视化编辑的内容
+            editorVal: '', // 可视化编辑的内容
             oldPerson: '',
             currentPerson: '', // 当前人员
             processTplName: '',
@@ -327,6 +327,89 @@ const Editor = {
             }
         },
 
+        // 流程节点转JSON
+        processValToJSON() {
+            let processTmpJson1 = {
+                ProcessConfigure: {
+                    BigProcessConfigure: {},
+                    ProcessInfo: [],
+                    _ID: "",
+                    _Name: ""
+                }
+            }
+            let BigProcessConfigure = {};
+            let ProcessInfo = [];
+
+            let groupArr = {}; //group
+
+            let processConfig = false; // 默认不存在流程配置文件
+            // let processJson = null;
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/ProcessConfig/g.test(impFileName)) {
+                    // 流程信息
+                    processConfig = true;
+                    // processJson = file.json
+                }
+            }
+            if (!processConfig) { // 不存在流程配置,
+                let editorTmp = this.editorVal ? JSON.parse(this.editorVal) : this.editorVal;
+                let { nodeDataArray, linkDataArray } = editorTmp;
+
+                for (let i = 0; i < nodeDataArray.length; i++) {
+                    let item = nodeDataArray[i];
+                    let processBranch = linkDataArray.filter(link => item.key === link.from);
+                    if (!item.isGroup && !['Start', 'End'].includes(item.category)) {
+                        let processInfoItem = {
+                            ProcessBranch: [],
+                            _BackIndex: "",
+                            _Index: item.key,
+                            _Name: item.text
+                        }
+                        processBranch.forEach(branch => {
+                            let processBranchItem = {_Index: branch.to}
+                            processInfoItem.ProcessBranch.push(processBranchItem);
+                        })
+                        ProcessInfo.push(processInfoItem);
+                    }
+
+                    // 当前节点为 组节点
+                    if (item.isGroup) { // 当前节点为组节点
+                        groupArr[item.key] = Object.assign(item, groupArr[item.key]);
+                        continue;
+                    }
+
+                    if (item.group) { // 该节点属于组
+                        if (Object.keys(groupArr).includes(item.group)){
+                            groupArr[item.group].children.push(item.key);
+                        } else {
+                            groupArr[item.group] = {children: []};
+                            groupArr[item.group].children.push(item.key);
+                        }
+                    }
+                }
+
+                if (groupArr.length > 0) {
+                    BigProcessConfigure.BigProcessInfo = [];
+                }
+                for([key, val] of Object.entries(groupArr)){
+                    let BigProcessInfoItem = {
+                        _Index: key,
+                        _Name: val.text,
+                        _ProcessSection: val.children.toString()
+                    }
+                    BigProcessConfigure.BigProcessInfo.push(BigProcessInfoItem);
+                }
+                processTmpJson1.BigProcessConfigure = BigProcessConfigure;
+                processTmpJson1.ProcessInfo = ProcessInfo;
+
+                fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
+                return processTmpJson1;
+            }
+        },
+
         AddPerson() {
             let personId = 0; // 默认从一开始
             let toolConfig = false; // 默认不存在工具配置文件
@@ -359,10 +442,24 @@ const Editor = {
                 this.$alert('请导入工具配置信息');
                 return false;
             }
+            let editorTmp = this.editorVal ? JSON.parse(this.editorVal) : this.editorVal;
+            let processConfigVal = false;
+            if (editorTmp && editorTmp.nodeDataArray.length !== 0) {
+                processConfigVal = true;
+                processConfig = true;
+            }
             if (!processConfig) { // 不存在流程配置, 创建一个空流程配置
-                fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson})
-                fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: personTmpJson, personId: `${personId + 1}`})
+                // fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson})
+                // fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: personTmpJson, personId: `${personId + 1}`})
+                this.$alert('请导入流程配置');
+                return false;
             } else {
+                if (processConfigVal) {
+                    processJson = this.processValToJSON();
+                } else {
+                    this.$alert('请先创建流程');
+                    return false;
+                }
                 let personJson = JSON.parse(JSON.stringify(personTmpJson.ProcessConfigure));
                 personJson.ProcessInfo = [];
                 // 存在流程配置, 根据流程节点添加人员节点
@@ -498,6 +595,7 @@ const Editor = {
                         if (e.change === go.ChangedEvent.Insert && e.propertyName === "nodeDataArray") {//节点新增 不包含连线
                             // console.log(evt.propertyName , "** added *****************88",e.newValue);
                             // self.AddPerson();
+                            self.editorVal = myDiagram.model.toJson();
                             let personFlag = false;
                             for (let i = 0; i < fileDataArr.length; i++) {
                                 let file = fileDataArr[i] ? fileDataArr[i] : ''
@@ -514,6 +612,7 @@ const Editor = {
                             }
 
                         } else if (e.change === go.ChangedEvent.Remove && e.propertyName === "nodeDataArray") {
+                            self.editorVal = myDiagram.model.toJson();
                             // console.log(evt.propertyName , "******* delete ***********",e.oldValue);
                             self.updatePersonData('delete', e.oldValue)
                             // FIXME: currentnode 重置
@@ -1286,12 +1385,14 @@ const Editor = {
             let xmlDocEnd = '</ProcessConfigure>'
             let xmlDocContent = ''
             ProcessInfo.forEach((item, index) => {
+                if (!['开始', '结束'].includes(item._Name)) {
                 xmlDocContent +=
     `<ProcessInfo Index="${item._Index}" Name="${item._Name}" AutoPlay="${item._AutoPlay}">
         ${this.forEachStep('StartEventInfo', item.StartEventInfo)}
         ${this.forEachStep('StepEventInfo', item.StepEventInfo)}
         ${this.forEachStep('EndEventInfo', item.EndEventInfo)}
     </ProcessInfo>`
+                    }
                 if (index < ProcessInfo.length -1) {
                     xmlDocContent +=
     `

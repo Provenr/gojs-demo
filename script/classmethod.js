@@ -38,24 +38,24 @@ let classmethod = [{
         "par": 2,
         "dotw": 2
     }, {"code": "Patent", "text": "设置相机父物体", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "SetLimitBound",
-        "text": "设置限制相机移动位置边框",
+        "code": "CreateLimitBound",
+        "text": "创建边缘限制并更改大小",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "SetCameraRotate", "text": "设置相机旋转和视角限制", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "SetAngleZoomLimit",
-        "text": "摄像机视角距离限制",
+    }, {"code": "SetLimitBound", "text": "边缘限制并更改位置", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "SetCameraRotate",
+        "text": "设置相机旋转和视角限制",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "镜头特效", "text": "给相机添加PostProcessLayer", "obj": 2, "par": 2, "dotw": 1}, {
-        "code": "SetZoomSpeed",
-        "text": "滚轮缩放大小",
+    }, {"code": "SetAngleZoomLimit", "text": "摄像机视角距离限制", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "镜头特效",
+        "text": "给相机添加PostProcessLayer",
         "obj": 2,
         "par": 2,
-        "dotw": 2
-    }]
+        "dotw": 1
+    }, {"code": "SetZoomSpeed", "text": "滚轮缩放大小", "obj": 2, "par": 2, "dotw": 2}]
 }, {
     "code": "UI",
     "text": "UI工具",
@@ -153,43 +153,51 @@ let classmethod = [{
 }, {
     "code": "Audio",
     "text": "音频工具",
-    "children": [{"code": "SystemVoiceDown", "text": "系统音量减", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "SystemVoiceUp",
-        "text": "系统音量加",
+    "children": [{
+        "code": "SystemVoiceDown",
+        "text": "系统音量减",
+        "obj": 2,
+        "par": 2,
+        "dotw": 2,
+        "abled": true
+    }, {"code": "SystemVoiceUp", "text": "系统音量加", "obj": 2, "par": 2, "dotw": 2, "abled": true}, {
+        "code": "SystemMute",
+        "text": "系统静音",
+        "obj": 2,
+        "par": 2,
+        "dotw": 2,
+        "abled": true
+    }, {"code": "PlayAssetByndleFileAudio", "text": "从AB包中找到音乐并播放", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "PlayOne",
+        "text": "音频状态播放一次",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "SystemMute", "text": "系统静音", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "PlayAssetByndleFileAudio",
-        "text": "从AB包中找到音乐并播放",
+    }, {"code": "PlayLoop", "text": "音频状态播放循环", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "Pause",
+        "text": "音频状态暂停",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "PlayOne", "text": "音频状态播放一次", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "PlayLoop",
-        "text": "音频状态播放循环",
+    }, {"code": "Stop", "text": "音频状态停止", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "RePlay",
+        "text": "音频状态重播",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "Pause", "text": "音频状态暂停", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "Stop",
-        "text": "音频状态停止",
+    }, {"code": "Voice", "text": "音频状态音量", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "Speed",
+        "text": "音频状态速度",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "RePlay", "text": "音频状态重播", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "Voice",
-        "text": "音频状态音量",
+    }, {"code": "StartMute", "text": "音频状态启动静音", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "QuitMute",
+        "text": "音频状态取消静音",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "Speed", "text": "音频状态速度", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "StartMute",
-        "text": "音频状态启动静音",
-        "obj": 2,
-        "par": 2,
-        "dotw": 2
-    }, {"code": "QuitMute", "text": "音频状态取消静音", "obj": 2, "par": 2, "dotw": 2}]
+    }]
 }, {
     "code": "Speak",
     "text": "语音工具",
@@ -198,8 +206,9 @@ let classmethod = [{
         "text": "关闭文字语音播放",
         "obj": 2,
         "par": 2,
-        "dotw": 2
-    }, {"code": "PauseAndPlay", "text": "暂停和播放文字语音", "obj": 2, "par": 2, "dotw": 2}, {
+        "dotw": 2,
+        "abled": true
+    }, {"code": "PauseAndPlay", "text": "暂停和播放文字语音", "obj": 2, "par": 2, "dotw": 2, "abled": true}, {
         "code": "Speed",
         "text": "设置文字语音速度",
         "obj": 2,
@@ -274,18 +283,24 @@ let classmethod = [{
         "par": 2,
         "dotw": 2
     }, {"code": "CloseTransparency", "text": "关闭半透明", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "OpenFlash",
-        "text": "开启闪烁",
+        "code": "SetFlashColor",
+        "text": "设置材质高亮颜色",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "CloseFlash", "text": "关闭闪烁", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "SetColor",
-        "text": "设置材质颜色",
+    }, {"code": "OpenFlash", "text": "开启闪烁", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "CloseFlash",
+        "text": "关闭闪烁",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "ReplaceMaterial", "text": "替换材质", "obj": 2, "par": 2, "dotw": 2}, {
+    }, {"code": "SetColor", "text": "设置材质颜色", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "ReplaceMaterial",
+        "text": "替换材质",
+        "obj": 2,
+        "par": 2,
+        "dotw": 2
+    }, {
         "code": "ReplaceTexture",
         "text": "替换材质颜色贴图",
         "obj": 2,
@@ -543,13 +558,14 @@ let classmethod = [{
 }, {
     "code": "Animation",
     "text": "动画工具",
-    "children": [{"code": "ConfFunction", "text": "配置动画事件函数名称", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "EndFunction",
-        "text": "动画片段结束事件函数名称",
+    "children": [{
+        "code": "ConfFunction",
+        "text": "配置动画事件函数名称",
         "obj": 2,
         "par": 2,
-        "dotw": 2
-    }]
+        "dotw": 2,
+        "abled": true
+    }, {"code": "EndFunction", "text": "动画片段结束事件函数名称", "obj": 2, "par": 2, "dotw": 2, "abled": true}]
 }, {
     "code": "MeasureSend",
     "text": "测发工具",
@@ -635,24 +651,24 @@ let classmethod = [{
         "dotw": 2
     }, {"code": "SetEventPoints", "text": "设置事件碰撞点", "obj": 2, "par": 2, "dotw": 2}, {
         "code": "SetError",
-        "text": "错误设置",
+        "text": "错误信息设置",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "SetDownInfo", "text": "设置底部信息", "obj": 2, "par": 2, "dotw": 2}, {
-        "code": "SetTools",
-        "text": "设置工具",
+    }, {"code": "SetNormal", "text": "正常信息设置", "obj": 2, "par": 2, "dotw": 2}, {
+        "code": "SetDownInfo",
+        "text": "设置底部信息",
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }]
+    }, {"code": "SetTools", "text": "设置工具", "obj": 2, "par": 2, "dotw": 2}]
 }, {
     "code": "AssembledExtend",
     "text": "拆装网络同步工具",
     "children": [{"code": "PlayModel", "text": "播放模型", "obj": 2, "par": 2, "dotw": 2}]
 }, {
     "code": "Weather",
-    "text": "天气工具UpdateMiniStepTip",
+    "text": "天气工具",
     "children": [{"code": "Time", "text": "时间", "obj": 2, "par": 2, "dotw": 2}, {
         "code": "Weather",
         "text": "天气--时间插件中的天气",
@@ -665,24 +681,31 @@ let classmethod = [{
         "obj": 2,
         "par": 2,
         "dotw": 2
-    }, {"code": "AssembledMessage", "text": "类名", "obj": 2, "par": 2, "dotw": 1}, {
+    }]
+}, {
+    "code": "AssembledMessage",
+    "text": "拆装工具",
+    "children": [{
         "code": "MiniStepStartProcess",
         "text": "拆装消息小步骤开始流程",
         "obj": 2,
         "par": 2,
-        "dotw": 2
+        "dotw": 2,
+        "abled": true
     }, {
         "code": "MiniStepStepProcess",
         "text": "拆装消息小步骤步骤流程",
         "obj": 2,
         "par": 2,
-        "dotw": 2
+        "dotw": 2,
+        "abled": true
     }, {
         "code": "MiniStepEndProcess",
         "text": "拆装消息小步骤结束流程",
         "obj": 2,
         "par": 2,
-        "dotw": 2
+        "dotw": 2,
+        "abled": true
     }, {
         "code": "UpdateMiniStepTip",
         "text": "拆装消息更新小步骤提示",

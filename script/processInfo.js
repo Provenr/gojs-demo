@@ -1124,6 +1124,7 @@ Vue.component('process-info', {
          */
         selectChange(value, methodCode) {
             //根据传递进来的value查找类名对象，应当唯一
+
             currClass = this.classList.filter(function (p) {
                 return p.code === value;
             });
@@ -1164,6 +1165,7 @@ Vue.component('process-info', {
             }
 
             //选择类和方法后，才允许操作下面内容，控件激活
+
             this.eventCtrlDisable.radioMain = false;
             this.eventCtrlDisable.singleObj = false;
             this.eventCtrlDisable.nonSingleObj = false;
@@ -1190,17 +1192,36 @@ Vue.component('process-info', {
             var obj = currMethod.obj;
             var par = currMethod.par;
             var dotw = currMethod.dotw;
-            this.setCtrlDisable(obj, par, dotw);
+            if (currMethod.abled) {
+                this.setCtrlDisable(obj, par, dotw, abled = true);
+            } else {
+                this.setCtrlDisable(obj, par, dotw, abled = false);
+            }
+
             mtdText = currMethod.text;
             // //根据类的text和方法的text更新树节点中的label
             // this.updateTreeEventNode(clsText, mtdText);
         },
         //根据方法参数中的配置，事件信息区域禁用部分控件
-        setCtrlDisable(obj, par, dotw) {
+        setCtrlDisable(obj, par, dotw, abled) {
             //禁用包括两部分，左侧的流程糖葫芦串和右边对应的控件
             //设置禁用和启用两种颜色，用于流程图
             // var disableColor = 'gray';
             // var enableColor = 'darkturquoise';
+
+            // FIXME: 特殊类方法 需要禁用
+            if(abled) {
+                this.eventCtrlDisable = {
+                    selectCtrl: false, //类、方法下拉框
+                    radioMain: true, //主单选按钮
+                    singleObj: true, //单选物体
+                    nonSingleObj: true, //非单选物体
+                    par: true, //参数表
+                    dotw: true, //dotw
+                }
+                return false;
+            }
+
             this.hasObj = obj != 0
             this.hasPar = par != 0
             this.hasDotW = dotw != 0
