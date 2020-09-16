@@ -1523,8 +1523,8 @@ const Editor = {
             }
             if (personArr.length > 1) {
                 fileDataArr.splice(fileIndex,1);
-                this.personOptions = this.personOptions.filter(item => !item.id);
-                this.currentPerson = personArr[0];
+                this.personOptions = this.personOptions.filter(item => item.id !== id);
+                this.currentPerson = this.personOptions[0].id;
                 // personArr = personArr.filter(val => val !== id)
             } else {
                 this.$alert('至少一个人员配置文件');

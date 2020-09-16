@@ -251,9 +251,9 @@ let template = `
                 </div>
             </el-form>
             <div class="process-btns">
-                    <el-button class="small-button" type="primary" plain @click="submit">保存</el-button>
-                <el-button class="small-button" type="warning" plain @click="add"
-                :disabled="!AnimationEvent.MethodName">新建</el-button>
+                <el-button class="small-button" type="primary" plain @click="submit">保存</el-button>
+                <el-button class="small-button" type="warning" plain @click="add" :disabled="!AnimationEvent.MethodName">新建</el-button>
+                <el-button class="small-button" type="info" plain @click="deleteMethod" :disabled="!AnimationEvent.MethodName">删除</el-button>
             </div>
         </div>
 
@@ -1032,7 +1032,7 @@ Vue.component('process-info', {
             console.log(this.eventCtrlDisable)
         },
         // AnimationEvent json格式的转换成字符串形式的，EventList里Event格式
-        json2str(type) { // type操作类型，save保存，add新建
+        json2str(type) { // type操作类型，save保存，add新建, delete删除
             let eventItem = '' // 事件项
             let AnimationEvent = this.AnimationEvent
             let { ClassName, MethodName, DurationMinute, DurationSecond, PlayType, LoopType, LoopTimes } = AnimationEvent
@@ -1073,22 +1073,32 @@ Vue.component('process-info', {
                 })
                 par = `#par${temp.join('|')}#par`
             }
-
+debugger;
             // dotw
             let dotw = this.hasDotW ? `#dotw${DurationMinute * 60 + DurationSecond * 1}#${PlayType}#${LoopType}#${LoopTimes}#dotw` : ''
             eventItem = [ClassName, MethodName, obj, par, dotw].filter(item => item != '').join('_')
+            let message = '保存成功';
             if (type == 'save') {
                 if (eventItem) {
                     this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
                     this.info.EventList.Event[this.eventItemIndex]._Content = eventItem
                 }
                 // 进行中 的步骤
-                debugger;
                 if (this.step) {
                     Object.assign(this.info, this.stepInfo)
                 }
 
+            } else if (type == 'delete') {
+                // 删除
+                message = '删除成功';
+                if (eventItem) {
+                    // this.$set(this.eventList, this.eventItemIndex, this.code2text(eventItem))
+                    this.eventList.splice(this.eventItemIndex, 1);
+                    this.info.EventList.Event.splice(this.eventItemIndex, 1);
+                }
+
             } else {
+                message = '新建成功';
                 this.eventList.push(this.code2text(eventItem))
                 this.info.EventList.Event.push({ _Content: eventItem })
                 // 等事件表更新后定位到最后一行
@@ -1098,10 +1108,10 @@ Vue.component('process-info', {
             }
 
             this.$message({
-                message: type == 'save' ? '保存成功' : '新建成功',
+                message: message,
                 type: 'success'
             });
-            console.log(this.info)
+            // console.log(this.info)
             this.$emit('update', this.info)
         },
         // 保存
@@ -1115,6 +1125,10 @@ Vue.component('process-info', {
         // 新建
         add() {
             this.json2str('add')
+        },
+        // 删除
+        deleteMethod() {
+            this.json2str('delete')
         },
 
         /**
