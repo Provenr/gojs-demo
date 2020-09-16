@@ -328,7 +328,7 @@ const Editor = {
         },
 
         // 流程节点转JSON
-        processValToJSON() {
+        processValToJSON(processConfig = false) {
             let processTmpJson1 = {
                 ProcessConfigure: {
                     BigProcessConfigure: {},
@@ -342,18 +342,9 @@ const Editor = {
 
             let groupArr = {}; //group
 
-            let processConfig = false; // 默认不存在流程配置文件
+            // let processConfig = false; // 默认不存在流程配置文件
             // let processJson = null;
-            for (let i = 0; i < fileDataArr.length; i++) {
-                let file = fileDataArr[i] ? fileDataArr[i] : ''
-                if (!file) continue
-                let impFileName = file.name; // 文件名称
-                if (/ProcessConfig/g.test(impFileName)) {
-                    // 流程信息
-                    processConfig = true;
-                    // processJson = file.json
-                }
-            }
+
             if (!processConfig) { // 不存在流程配置,
                 let editorTmp = this.editorVal ? JSON.parse(this.editorVal) : this.editorVal;
                 let { nodeDataArray, linkDataArray } = editorTmp;
@@ -402,12 +393,23 @@ const Editor = {
                     }
                     BigProcessConfigure.BigProcessInfo.push(BigProcessInfoItem);
                 }
-                processTmpJson1.BigProcessConfigure = BigProcessConfigure;
-                processTmpJson1.ProcessInfo = ProcessInfo;
-
+                processTmpJson1.ProcessConfigure.BigProcessConfigure = BigProcessConfigure;
+                processTmpJson1.ProcessConfigure.ProcessInfo = ProcessInfo;
                 fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
-                return processTmpJson1;
+            } else {
+                for (let i = 0; i < fileDataArr.length; i++) {
+                    let file = fileDataArr[i] ? fileDataArr[i] : ''
+                    if (!file) continue
+                    let impFileName = file.name; // 文件名称
+                    if (/ProcessConfig/g.test(impFileName)) {
+                        // 流程信息
+                        // fileDataArr.splice(i, 1);
+                        processTmpJson1 = file.json;
+                    }
+                }
             }
+            // fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
+            return processTmpJson1;
         },
 
         AddPerson() {
@@ -446,36 +448,41 @@ const Editor = {
             let processConfigVal = false;
             if (editorTmp && editorTmp.nodeDataArray.length !== 0) {
                 processConfigVal = true;
-                processConfig = true;
+                // processConfig = true;
             }
-            if (!processConfig) { // 不存在流程配置, 创建一个空流程配置
-                // fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson})
-                // fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: personTmpJson, personId: `${personId + 1}`})
-                this.$alert('请导入流程配置');
-                return false;
-            } else {
+
+            if (processConfig) {
                 if (processConfigVal) {
-                    processJson = this.processValToJSON();
+                    processJson = this.processValToJSON(true);
                 } else {
                     this.$alert('请先创建流程');
                     return false;
                 }
-                let personJson = JSON.parse(JSON.stringify(personTmpJson.ProcessConfigure));
-                personJson.ProcessInfo = [];
-                // 存在流程配置, 根据流程节点添加人员节点
-                if(processJson.ProcessConfigure.ProcessInfo.length > 0) {
-                    let ProcessInfo = processJson.ProcessConfigure.ProcessInfo; // 流程节点信息
-                    ProcessInfo = forceArr(ProcessInfo);
-                    ProcessInfo.forEach((item, index) => {
-                        personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
-                    })
+            } else {
+                if (processConfigVal) {
+                    processJson = this.processValToJSON();
                 } else {
-                    let obj = setPersonNodeTmpJson('', '');
-                    obj._TEST = 'Template';
-                    personJson.ProcessInfo.push(obj)
+                    this.$alert('请导入流程配置');
+                    return false;
                 }
-                fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: {ProcessConfigure: personJson}, personId: `${personId + 1}`})
+
             }
+
+            let personJson = JSON.parse(JSON.stringify(personTmpJson.ProcessConfigure));
+            personJson.ProcessInfo = [];
+            // 存在流程配置, 根据流程节点添加人员节点
+            if(processJson.ProcessConfigure.ProcessInfo.length > 0) {
+                let ProcessInfo = processJson.ProcessConfigure.ProcessInfo; // 流程节点信息
+                ProcessInfo = forceArr(ProcessInfo);
+                ProcessInfo.forEach((item, index) => {
+                    personJson.ProcessInfo.push(setPersonNodeTmpJson(item._Index, item._Name))
+                })
+            } else {
+                let obj = setPersonNodeTmpJson('', '');
+                obj._TEST = 'Template';
+                personJson.ProcessInfo.push(obj)
+            }
+            fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: {ProcessConfigure: personJson}, personId: `${personId + 1}`})
 
             // 下拉框
             this.personOptions.push({
@@ -1210,7 +1217,7 @@ const Editor = {
                     // 流程信息
                     // processData = file.json;
                     this.processParseData(file.json)
-                    this.processTplName = impFileName
+                    // this.processTplName = impFileName
                 }
             }
         },
@@ -1310,7 +1317,7 @@ const Editor = {
                     linkDataArray
                 }
             )
-
+            this.editorVal = myDiagram.model.toJson()
         },
 
         // 人员信息数据 解析
@@ -1491,6 +1498,37 @@ const Editor = {
         // 更新当前 节点信息
         updateCurrentNode(step, value) {
             this.currentPersonJson.ProcessInfo[this.currentNodeIndex][step] = value;
+        },
+        // 删除人员
+        deletePerson() {
+            if(this.currentPerson === '' || this.personOptions.length === 0) {
+                this.$alert('没有人员配置文件');
+                return false
+            }
+            let id = this.currentPerson;
+
+            let fileIndex = 0;
+            let personArr = [];
+            // 删除文件
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                    personArr.push(file.personId);
+                    if(file.personId == id){
+                        fileIndex = i;
+                    }
+                }
+            }
+            if (personArr.length > 1) {
+                fileDataArr.splice(fileIndex,1);
+                this.personOptions = this.personOptions.filter(item => !item.id);
+                this.currentPerson = personArr[0];
+                // personArr = personArr.filter(val => val !== id)
+            } else {
+                this.$alert('至少一个人员配置文件');
+            }
         },
 
         //导出文件

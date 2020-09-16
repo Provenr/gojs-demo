@@ -935,6 +935,10 @@ Vue.component('process-info', {
             // 获取类型和方法
             let classAndMethod = str.split('#')[0].slice(0, -1).split('_')
             // 类型、方法处理
+            currClass = this.classList.filter(function (p) {
+                return p.code === classAndMethod[0];
+            });
+            this.NewMethodName = currClass[0].children;
             this.AnimationEvent.ClassName = classAndMethod[0]
             this.AnimationEvent.MethodName = classAndMethod[1]
             // 参数处理
@@ -1124,7 +1128,6 @@ Vue.component('process-info', {
          */
         selectChange(value, methodCode) {
             //根据传递进来的value查找类名对象，应当唯一
-
             currClass = this.classList.filter(function (p) {
                 return p.code === value;
             });
@@ -1133,10 +1136,14 @@ Vue.component('process-info', {
             currNode.ClassName = value;
             //NewMethodName数组为class下所有的方法
             this.NewMethodName = currClass[0].children;
+            debugger;
 
             if (methodCode == '' || methodCode == undefined) {
                 //数据模型的MethodName取code
-                this.MethodName = this.NewMethodName[0].code;
+                //FIXME: 没有MethodName属性
+                // this.MethodName = this.NewMethodName[0].code;
+                // TODO: 方法类别下拉联动
+                this.AnimationEvent.MethodName = this.NewMethodName[0].code;
                 //配置三块功能区权限
                 var obj = this.NewMethodName[0].obj;
                 var par = this.NewMethodName[0].par;
@@ -1153,6 +1160,8 @@ Vue.component('process-info', {
                     mtdText = methodCode;
                 } else {
                     //取得方法code和text
+                    // TODO: 方法类别下拉联动
+                    this.AnimationEvent.MethodName = currMethod[0].code;
                     currNode.MethodName = currMethod[0].code;
                     mtdText = currMethod[0].text;
                     // 下面三个参数处理控件禁用

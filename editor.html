@@ -72,6 +72,7 @@
                     <el-option v-for="item in personOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
                 <el-button type="primary" @click="AddPerson">新增人员</el-button>
+                <el-button type="primary" @click="deletePerson">删除人员</el-button>
                 <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile" multiple="true" :file-list="fileList"
                     :show-file-list="false" accept=".xml">
                     <el-button slot="trigger"  type="primary">选取文件</el-button>
