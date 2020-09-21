@@ -169,9 +169,9 @@ let fileDataArr = [] // 读取的文件列表
 let fileDataXML = [] // 导出文件列表
 
 function completionZero(num, length) {
-    for(let len = (num + "").length; len < length; len = num.length) {
-        num = "0" + num;
-    }
+    // for(let len = (num + "").length; len < length; len = num.length) {
+    //     num = "0" + num;
+    // }
     return num;
 }
 
@@ -332,7 +332,8 @@ const Editor = {
         },
 
         // 流程节点转JSON
-        processValToJSON(processConfig = false) {
+        processValToJSON(processConfig = false,type=1) {
+
             let processTmpJson1 = {
                 ProcessConfigure: {
                     BigProcessConfigure: {},
@@ -378,6 +379,9 @@ const Editor = {
 
                     if (item.group) { // 该节点属于组
                         if (Object.keys(groupArr).includes(item.group)){
+                            if (!isArray(groupArr[item.group].children)) {
+                                groupArr[item.group] = {children: []};
+                            }
                             groupArr[item.group].children.push(item.key);
                         } else {
                             groupArr[item.group] = {children: []};
@@ -400,7 +404,9 @@ const Editor = {
                 }
                 processTmpJson1.ProcessConfigure.BigProcessConfigure = BigProcessConfigure;
                 processTmpJson1.ProcessConfigure.ProcessInfo = ProcessInfo;
-                fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
+                if (type == 1) {
+                    fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
+                }
             } else {
                 for (let i = 0; i < fileDataArr.length; i++) {
                     let file = fileDataArr[i] ? fileDataArr[i] : ''
@@ -413,6 +419,7 @@ const Editor = {
                     }
                 }
             }
+            console.log(processTmpJson1);
             // fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
             return processTmpJson1;
         },
@@ -440,6 +447,10 @@ const Editor = {
                 } else if (/ToolsConfig/g.test(impFileName)) {
                     toolConfig = true;
                 } else if (/ProcessConfig/g.test(impFileName)) {
+
+                    // // FIXME: 重新更新流程文件
+                    // file.json = this.processValToJSON(false, 2)
+
                     // 流程信息
                     processConfig = true;
                     processJson = file.json
@@ -607,6 +618,9 @@ const Editor = {
                     var txn = evt.object; //获取事务
                     if (txn === null) return;
                     txn.changes.each(function(e) {//遍历事务
+                        // if (e.change === go.ChangedEvent.Property && (e.propertyName == 'text' || e.propertyName == 'key')) {
+                        //     self.editorVal = myDiagram.model.toJson();
+                        // }
                         if (e.change === go.ChangedEvent.Insert && e.propertyName === "nodeDataArray") {//节点新增 不包含连线
                             // console.log(evt.propertyName , "** added *****************88",e.newValue);
                             // self.AddPerson();
@@ -630,7 +644,10 @@ const Editor = {
                         } else if (e.change === go.ChangedEvent.Remove && e.propertyName === "nodeDataArray") {
                             self.editorVal = myDiagram.model.toJson();
                             // console.log(evt.propertyName , "******* delete ***********",e.oldValue);
-                            self.updatePersonData('delete', e.oldValue)
+                            if (self.validatePersonFile() && !e.newValue.isGroup) {
+                                self.updatePersonData('delete', e.oldValue)
+                            }
+
                             // FIXME: currentnode 重置
                             this.currentNode = null;
                             this.hasData = false;
@@ -798,7 +815,7 @@ const Editor = {
                                 //     )
                                 // })
                                 textValidation: function(textBlock, previousText, currentText) {
-                                    console.log(textBlock,textBlock.part.data);
+                                    console.log(textBlock,textBlock.part.data, previousText,currentText);
                                     let nodeData = textBlock.part.data;
                                     if (currentText === previousText) { // 未修改
                                         return true
@@ -812,7 +829,7 @@ const Editor = {
                                     self.changePersonText(nodeData, currentText, 'key')
 
                                     // console.log('findNodeDataForKey',myDiagram.model.findNodeDataForKey(currentText))
-                                    textBlock.part.data.key = previousText;
+                                    // textBlock.part.data.key = previousText;
                                     if (!nodeArr.length) {
                                         return true
                                     } else {
@@ -825,6 +842,10 @@ const Editor = {
                                         });
                                         return false
                                     }
+                                },
+                                textEdited: function(textBlock, previousText, currentText){
+                                    self.editorVal = myDiagram.model.toJson();
+                                    self.updateProcessFile();
                                 }
                             },
                             new go.Binding("text", "key").makeTwoWay() // 双向绑定模型中"text"属性
@@ -845,6 +866,10 @@ const Editor = {
                                     // 修改人员信息的 text
                                     self.changePersonText(nodeData, currentText, 'text')
                                     return true
+                                },
+                                textEdited: function(textBlock, previousText, currentText){
+                                    self.editorVal = myDiagram.model.toJson();
+                                    self.updateProcessFile();
                                 }
                             },
                             new go.Binding("text", "text").makeTwoWay() // 双向绑定模型中"text"属性
@@ -905,6 +930,10 @@ const Editor = {
                                             });
                                             return false
                                         }
+                                    },
+                                    textEdited: function(textBlock, previousText, currentText){
+                                        self.editorVal = myDiagram.model.toJson();
+                                        self.updateProcessFile();
                                     },
                                     margin: 5,
                                     font: "bold 16px sans-serif",
@@ -1029,7 +1058,7 @@ const Editor = {
         },
 
 
-        // 修改流程节点text 更新当前节点人员配置信息
+        // 修改流程节点text 更新当前节点人员配置信息 流程
         changePersonText(oldData, newData, type){
             let index = this.currentNode; // 当前节点
             fileDataArr.forEach(item => {
@@ -1227,7 +1256,22 @@ const Editor = {
                 reader.readAsText(file.raw)
             })
         },
-
+        updateProcessFile() {
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/ProcessConfig/g.test(impFileName)) {
+                    file.json = this.processValToJSON(false, 2)
+                }
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                    if (file.personId == this.currentPerson) {
+                        // 更新当前人员信息
+                        this.personParseData(file.json, i);
+                    }
+                }
+            }
+        },
 
         json2Tree() {
             for (let i = 0; i < fileDataArr.length; i++) {
@@ -1354,7 +1398,7 @@ const Editor = {
             console.log('人员信息', json);
                 //xml转换为json后，当只有一个元素时，格式为对象，forceArr 非对象数组，强制将它们转为对象数组，以便使用forEach
             this.currentPersonJson = json.ProcessConfigure;
-            console.log('this.currentPersonJson',this.currentPersonJson)
+            // console.log('this.currentPersonJson',this.currentPersonJson)
         },
 
         // 保存当前人员的配置信息 到 fileDataArr文件列表
@@ -1422,7 +1466,7 @@ const Editor = {
             //     '<ToolsConfigure' + ' ToolMode="' + this.ToolMode + '">\r\n' +
             //     '  <ToolPartsList>\r\n';
             // // tmp
-
+            console.log(file)
             // 人员信息模板，不要调整格式，调整后会影响导出文件的格式
             let ProcessConfigure = file.json.ProcessConfigure
             let ProcessInfo = ProcessConfigure.ProcessInfo
