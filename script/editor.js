@@ -248,24 +248,26 @@ const Editor = {
             } else {
                 this.oldPerson = oldData;
             }
-            console.log('this.currentPersonJson',this.currentPersonJson)
+            console.log('this.currentPersonJson',this.currentPersonJson.ProcessInfo[0].StartEventInfo.EventList["Event"])
             let newPersonJson = null;
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
             this.currentPersonJson = {};
-            // this.currentNode = ''; // 人员改变 清空当前节点
-            // console.log(`old${this.oldPerson}`, oldPersonJson)
+
             // FIXME: 可能需要深拷贝
             fileDataArr.forEach(item => {
-                if (item.personId && item.personId === this.oldPerson) {
-                    item.json.ProcessConfigure = oldPersonJson;
-                }
+                // if (item.personId && item.personId === this.oldPerson) {
+                //     item.json.ProcessConfigure = oldPersonJson;
+                // }
                 if (item.personId && item.personId === newData) {
                     newPersonJson = JSON.parse(JSON.stringify(item.json));
                 }
             })
             // console.log(`new${newData}`, newPersonJson.ProcessConfigure)
             this.personParseData(newPersonJson, newData);
-            this.setAutoPlay()
+            if(this.validatePersonFile()){
+                this.setAutoPlay()
+            }
+
         },
         currentNode(newNode, oldNode) {
             // console.log('currentNode',newNode, oldNode)
@@ -286,7 +288,9 @@ const Editor = {
             }
             this.currentNodeIndex = index;
             // console.log(this.currentNodeIndex)
-            this.setAutoPlay()
+            if(this.validatePersonFile()){
+                this.setAutoPlay()
+            }
         },
         'currentPersonJson._Name'(newVal, oldVal) {
             this.twoWayBindPerson(fileDataArr, this.currentPerson, '_Name', newVal)
@@ -337,7 +341,7 @@ const Editor = {
                     _Name: ""
                 }
             }
-            let BigProcessConfigure = {};
+            let BigProcessConfigure = { BigProcessInfo: []};
             let ProcessInfo = [];
 
             let groupArr = {}; //group
@@ -382,9 +386,10 @@ const Editor = {
                     }
                 }
 
-                if (groupArr.length > 0) {
-                    BigProcessConfigure.BigProcessInfo = [];
-                }
+                // if (groupArr.length > 0) {
+                //     BigProcessConfigure.BigProcessInfo = [];
+                // }
+
                 for([key, val] of Object.entries(groupArr)){
                     let BigProcessInfoItem = {
                         _Index: key,
@@ -482,6 +487,8 @@ const Editor = {
                 obj._TEST = 'Template';
                 personJson.ProcessInfo.push(obj)
             }
+
+
             fileDataArr.push({name: `AssembledConfig_${personId + 1}.xml`, json: {ProcessConfigure: personJson}, personId: `${personId + 1}`})
 
             // 下拉框
@@ -489,6 +496,7 @@ const Editor = {
                 name: `人员${personId + 1}`,
                 id: `${personId + 1}`
             })
+
 
             this.json2Tree();
             // TODO: 设置为新增人员
@@ -602,6 +610,7 @@ const Editor = {
                         if (e.change === go.ChangedEvent.Insert && e.propertyName === "nodeDataArray") {//节点新增 不包含连线
                             // console.log(evt.propertyName , "** added *****************88",e.newValue);
                             // self.AddPerson();
+                            // TODO: 监听节点链接事件
                             self.editorVal = myDiagram.model.toJson();
                             let personFlag = false;
                             for (let i = 0; i < fileDataArr.length; i++) {
@@ -626,8 +635,14 @@ const Editor = {
                             this.currentNode = null;
                             this.hasData = false;
 
-                        }else if (e.change === go.ChangedEvent.Property && e.propertyName=="text") {
+                        }else if (e.change === go.ChangedEvent.Insert && e.propertyName=="linkDataArray") {
+                            // TODO: 监听节点链接事件
+                            self.editorVal = myDiagram.model.toJson();
                             // console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
+                        }else if (e.change === go.ChangedEvent.Remove && e.propertyName=="linkDataArray") {
+                            // console.log("e.oldValue:"+e.oldValue+"***"+"*****e.newValue:"+e.newValue);
+                            // TODO: 监听节点链接事件
+                            self.editorVal = myDiagram.model.toJson();
                         }
                     });
                 }
@@ -827,7 +842,7 @@ const Editor = {
                                     if (currentText.trim() === previousText.trim()) { // 未修改
                                         return true
                                     }
-                                    // 修改人员信息的 key
+                                    // 修改人员信息的 text
                                     self.changePersonText(nodeData, currentText, 'text')
                                     return true
                                 }
@@ -1036,11 +1051,25 @@ const Editor = {
                 }
             })
         },
+        validatePersonFile() {
+            let hasFIle = false;
+            for (let i = 0; i < fileDataArr.length; i++) {
+                let file = fileDataArr[i] ? fileDataArr[i] : ''
+                if (!file) continue
+                let impFileName = file.name; // 文件名称
+                if (/(AssembledConfig_)\d+/g.test(impFileName)) {
+                    hasFIle = true;
+                }
+            }
+            return hasFIle;
+        },
 
         // 流程节点change 更新人员配置函数
+        // bug: 流程创建完 再去添加模型, 在生成人员星系, 模型清空
         updatePersonData(type, node) {
             let self = this;
             let currentPersonJson = '';
+            if (!this.validatePersonFile) return false;
             fileDataArr.forEach(item => {
                 if(item.personId === this.currentPerson) {
                     currentPersonJson = item.json
@@ -1328,18 +1357,28 @@ const Editor = {
             console.log('this.currentPersonJson',this.currentPersonJson)
         },
 
-        exportFile() {
-            // 每次导出把之前的导出文件清空
-            fileDataXML = []
-            this.editorVal = myDiagram.model.toJson()
-
-            // 导出前 保存当前人员的信息
+        // 保存当前人员的配置信息 到 fileDataArr文件列表
+        saveCurrentPersonJson() {
             let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
             fileDataArr.forEach(item => {
                 if (item.personId && item.personId === this.currentPerson) {
                     item.json.ProcessConfigure = oldPersonJson;
                 }
             })
+        },
+        exportFile() {
+            // 每次导出把之前的导出文件清空
+            fileDataXML = []
+            this.editorVal = myDiagram.model.toJson()
+            // 导出前 保存当前人员的信息
+            this.saveCurrentPersonJson();
+
+            // let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
+            // fileDataArr.forEach(item => {
+            //     if (item.personId && item.personId === this.currentPerson) {
+            //         item.json.ProcessConfigure = oldPersonJson;
+            //     }
+            // })
             // 流程导出
             this.exportProceeXML();
 
@@ -1498,6 +1537,8 @@ const Editor = {
         // 更新当前 节点信息
         updateCurrentNode(step, value) {
             this.currentPersonJson.ProcessInfo[this.currentNodeIndex][step] = value;
+            // 当前操作的人员配置信息 更新到文件列表
+            this.saveCurrentPersonJson();
         },
         // 删除人员
         deletePerson() {

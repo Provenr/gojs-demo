@@ -341,7 +341,7 @@ let template = `
                 <div class="step-item">
                     <div class="name"><div class="icon"><span>参数</span></div></div>
                     <div class="input">
-                        <el-table :data="StepEvent.StepParam" border max-height="200" @cell-click="cellClick">
+                        <el-table :data="StepEvent.StepParam" border max-height="200" @cell-click="cellClick" >
                             <el-table-column label="序号" width="50">
                                 <template slot-scope="scope">
                                     <span>{{ scope.$index + 1 }}</span>
@@ -1024,6 +1024,7 @@ Vue.component('process-info', {
                 this.AnimationEvent.LoopTimes = '0'
             }
             // 是否可操作
+            // TODO: 需要按照配置文件判定是否可操作
             this.eventCtrlDisable.radioMain = !obj
             this.eventCtrlDisable.singleObj = !obj
             this.eventCtrlDisable.nonSingleObj = !obj
@@ -1073,7 +1074,6 @@ Vue.component('process-info', {
                 })
                 par = `#par${temp.join('|')}#par`
             }
-debugger;
             // dotw
             let dotw = this.hasDotW ? `#dotw${DurationMinute * 60 + DurationSecond * 1}#${PlayType}#${LoopType}#${LoopTimes}#dotw` : ''
             eventItem = [ClassName, MethodName, obj, par, dotw].filter(item => item != '').join('_')
@@ -1150,7 +1150,6 @@ debugger;
             currNode.ClassName = value;
             //NewMethodName数组为class下所有的方法
             this.NewMethodName = currClass[0].children;
-            debugger;
 
             if (methodCode == '' || methodCode == undefined) {
                 //数据模型的MethodName取code
@@ -1345,54 +1344,6 @@ debugger;
                 }
             }
 
-
-        },
-
-        //根据方法参数中的配置，事件信息区域禁用部分控件
-        setCtrlDisable(obj, par, dotw) {
-            this.hasObj = obj != 0
-            this.hasPar = par != 0
-            this.hasDotW = dotw != 0
-            switch (obj) {
-                //触发目标三个逻辑下的控件
-                case 0:
-                    this.eventCtrlDisable.radioMain = true;
-                    this.eventCtrlDisable.singleObj = true;
-                    this.eventCtrlDisable.nonSingleObj = true;
-                    break;
-                case 1:
-                    this.eventCtrlDisable.radioMain = false;
-                    this.eventCtrlDisable.singleObj = false;
-                    this.eventCtrlDisable.nonSingleObj = true;
-                    break;
-                case 2:
-                    this.eventCtrlDisable.radioMain = false;
-                    this.eventCtrlDisable.singleObj = false;
-                    this.eventCtrlDisable.nonSingleObj = false;
-                    break;
-            }
-            switch (par) {
-                // 参数表
-                case 0:
-                    this.eventCtrlDisable.par = true;
-                    break;
-                case 1:
-                    this.eventCtrlDisable.par = false;
-                    break;
-                case 2:
-                    this.eventCtrlDisable.par = false;
-                    break;
-            }
-
-            switch (dotw) {
-                //事件区最底下四项
-                case 0:
-                    this.eventCtrlDisable.dotw = true;
-                    break;
-                case 1:
-                    this.eventCtrlDisable.dotw = false;
-                    break;
-            }
 
         }
     },
