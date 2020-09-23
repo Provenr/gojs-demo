@@ -1384,7 +1384,12 @@ const Editor = {
                         }
                     }
                     nodeDataArray.push(node);
-                    item.ProcessBranch = item.ProcessBranch ? forceArr(item.ProcessBranch) : []
+                    if (item.ProcessBranchList) {
+                        let ProcessBranch = item.ProcessBranchList.ProcessBranch;
+                        item.ProcessBranch = forceArr(ProcessBranch)
+                    } else {
+                        item.ProcessBranch = item.ProcessBranch ? forceArr(item.ProcessBranch) : []
+                    }
                     // console.log( item.ProcessBranch)
                     if (item.ProcessBranch.length > 0) {
                         item.ProcessBranch.forEach(branch => {
