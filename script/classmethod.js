@@ -49,9 +49,15 @@ let classmethod = [{
         "obj": 0,
         "par": 2,
         "dotw": 2
-    }, {"code": "SetAngleZoomLimit", "text": "摄像机视角距离限制", "obj": 0, "par": 2, "dotw": 2}, {
-        "code": "镜头特效",
-        "text": "AddPostProcessLayer",
+    }, {
+        "code": "SetAngleZoomLimit",
+        "text": "摄像机视角距离限制",
+        "obj": 0,
+        "par": 2,
+        "dotw": 2
+    }, {
+        "code": "AddPostProcessLayer",
+        "text": "给相机添加镜头特效PostProcessLayer",
         "obj": 0,
         "par": 0,
         "dotw": 2

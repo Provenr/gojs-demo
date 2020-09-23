@@ -116,12 +116,16 @@
                             <div>节点ID：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Index}}</div>
                             <div>节点名称：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Name}}</div>
                             <div>参与人员：人员{{currentPerson}}
-                                <label>
-                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="1">参与执行</el-radio>
-                                </label>
-                                <label>
-                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="2">自动执行</el-radio>
-                                </label>
+                                <el-radio-group v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" @change="AutoPlayChange">
+                                    <el-radio :label="'1'">参与执行</el-radio>
+                                    <el-radio :label="'2'">自动执行</el-radio>
+                                </el-radio-group>
+<!--                                <label>-->
+<!--                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="1">参与执行</el-radio>-->
+<!--                                </label>-->
+<!--                                <label>-->
+<!--                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="2">自动执行</el-radio>-->
+<!--                                </label>-->
                             </div>
                         </div>
                         <div class="step start" data-title="开始">

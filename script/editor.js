@@ -255,6 +255,7 @@ const Editor = {
 
             // FIXME: 可能需要深拷贝
             fileDataArr.forEach(item => {
+                // FIXME: 新增人员会导致currentPersonJson 为空 将已存在人员信息被置空
                 // if (item.personId && item.personId === this.oldPerson) {
                 //     item.json.ProcessConfigure = oldPersonJson;
                 // }
@@ -422,6 +423,16 @@ const Editor = {
             console.log(processTmpJson1);
             // fileDataArr.push({name: 'ProcessConfig.xml', json: processTmpJson1})
             return processTmpJson1;
+        },
+        AutoPlayChange(val) {
+            console.log(this.currentPerson)
+            let oldPersonJson = JSON.parse(JSON.stringify(this.currentPersonJson));
+            fileDataArr.forEach(item => {
+                if (item.personId && item.personId === this.currentPerson) {
+                    item.json.ProcessConfigure = oldPersonJson;
+                }
+
+            })
         },
 
         AddPerson() {
@@ -765,7 +776,8 @@ const Editor = {
 
             // 定义流程节点模板
             myDiagram.nodeTemplateMap.add("Process",
-                $(go.Node, "Table", this.nodeStyle(),
+                $(go.Node, "Table",
+                    this.nodeStyle(),
                     {
                         click: function(e, obj) {
                             let nodeKey = obj.part.data.key;
@@ -839,7 +851,7 @@ const Editor = {
                                             // position: 'top-left',
                                             message: '该索引已存在,请重新设置',
                                             // duration: 0
-                                        });
+                                          });
                                         return false
                                     }
                                 },
@@ -898,7 +910,8 @@ const Editor = {
                         computesBoundsAfterDrag: true,
                         layout:$(go.GridLayout,
                             {
-                                wrappingWidth: Infinity, alignment: go.GridLayout.Position,
+                                wrappingWidth: Infinity,
+                                alignment: go.GridLayout.Position,
                                 cellSize: new go.Size(1, 1), spacing: new go.Size(4, 4)
                             })
                     },
@@ -946,6 +959,11 @@ const Editor = {
                                     alignment: go.Spot.Right,
                                     editable: true,
                                     margin: 5,
+                                    textEdited: function(textBlock, previousText, currentText){
+                                        self.editorVal = myDiagram.model.toJson();
+                                        // TODO: 更改组名称信息
+                                        self.updateProcessFile();
+                                    },
                                     font: "bold 16px sans-serif",
                                     stroke: "#006080"
                                 },
@@ -1143,7 +1161,7 @@ const Editor = {
                 // 将节点位置信息 Node.location 同节点模型数据中 "loc" 属性绑定：
                 // 节点位置信息从 节点模型 "loc" 属性获取, 并由静态方法 Point.parse 解析.
                 // 如果节点位置改变了, 会自动更新节点模型中"loc"属性, 并由 Point.stringify 方法转化为字符串
-                new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+                // new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
                 {
                     // 节点位置 Node.location 定位在节点的中心
                     locationSpot: go.Spot.Center
