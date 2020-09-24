@@ -1046,6 +1046,7 @@ Vue.component('process-info', {
         },
         // 解析事件数据
         parseEventData(str) {
+            debugger;
             this.targetData = []
             // 获取类型和方法
             let classAndMethod = str.split('#')[0].slice(0, -1).split('_')
@@ -1075,14 +1076,22 @@ Vue.component('process-info', {
             // 含有#obj
             if (this.hasObj) {
                 if (/[\|\+]/.test(obj)) { // 说明是有多个对象
+                    // FIXME: 无法判断是与还是或
                     if (/\|/.test(obj)) { // 或
                         this.AnimationEvent.TargetObject.TypeRadio = 3
                         this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 或中无序
                         this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.repeat(/\|/g, ',')
                     } else { // 与
                         this.AnimationEvent.TargetObject.TypeRadio = 2
-                        this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 与中无序
-                        this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.repeat(/\+/g, ',')
+                        this.AnimationEvent.TargetObject.AndObjects.AndRadio = 1 // 与中无序
+                        let tmp = [];
+                        let start = obj.split('+')[0];
+                        let end = obj.split('+')[1];
+                        for (let i = start; i<= end; i++) {
+                            tmp.push(i);
+                        }
+                        // this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = obj.repeat(/\+/g, ',')
+                        this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = tmp.toString();
                     }
                 } else {
                     this.AnimationEvent.TargetObject.TypeRadio = 1
@@ -1158,16 +1167,18 @@ Vue.component('process-info', {
                 let TargetObject = AnimationEvent.TargetObject
                 let TypeRadio = TargetObject.TypeRadio
                 let AndObjects = TargetObject.AndObjects
+                let OrObjects = TargetObject.OrObjects
                 if (TypeRadio == 1) {
                     obj = `#obj${TargetObject.SingleObject}#obj`
                 } else if (TypeRadio == 2) {
+                    // FIXME: 不能区分与或 需要额外参数
                     if (AndObjects.AndRadio == 1) {
                         obj = `#obj${AndObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
                     } else {
                         obj = `#obj${AndObjects.SqcObject1}+${AndObjects.SqcObject2}#obj`
                     }
                 } else if (TypeRadio == 3) {
-                    if (OrObjects.AndRadio == 1) {
+                    if (OrObjects.OrRadio == 1) {
                         obj = `#obj${OrObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
                     } else {
                         obj = `#obj${OrObjects.SqcObject1}+${OrObjects.SqcObject2}#obj`
