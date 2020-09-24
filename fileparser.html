@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <style>
+        .dataDiv {
+            width: 48%;\
+            margin: 10px 10px;
+            padding: 0;
+            border: 1px dashed red;
+            min-height: 800px;
+        }
+
+        #fileContent {
+            float: left;
+        }
+
+        #parseContent {
+            float: right;
+            background-color: lightblue;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <span><input type="file" onchange="upload(this)" /></span>
+        <span><button onclick="parse()">解析</button></span>
+        <span><button onclick="save()">保存</button></span>
+    </div>
+    <div class="dataDiv" id="fileContent"></div>
+    <div class="dataDiv" id="parseContent"></div>
+</body>
+
+</html>
+
+<script src="lib/FileSaver.min.js"></script>
+<script type="text/javascript">
+    var filecontent;
+    var arrJson = [];
+
+    function upload(input) {
+        if (window.FileReader) {
+            var file = input.files[0];
+            filename = file.name.split(".")[0];
+            var reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById("fileContent").innerText = this.result;
+                filecontent = this.result;
+            }
+            reader.readAsText(file);
+        } else {
+            alert('error');
+        }
+    }
+
+    function parse() {
+        var pos1 = filecontent.indexOf("        #region UtilityName");
+        //var pos2 = filecontent.indexOf("        #region 特殊字符");
+        var pos2 = filecontent.indexOf("\n    }");
+        var fileData = filecontent.substring(pos1, pos2);
+        var arrSource = fileData.split("\r\n");
+        var arrTarget = []
+        var target = '';
+        var code = [];
+        var text = [];
+
+        arrSource.forEach(element => {
+            //
+            if (element.indexOf("public static") >= 0 ||
+                element.indexOf("public const") >= 0 ||
+                (element.indexOf("        ///") >= 0 && element.indexOf("summary") == -1) ||
+                element.indexOf("#region") >= 0 ||
+                element.indexOf("#endregion") >= 0
+            ) {
+                // 获取 <summary> 中间的值
+                pos1 = element.lastIndexOf('/');
+                if (pos1 >= 0) {
+                    pos2 = element.length;
+                    target += element.substring(pos1 + 1, pos2) + '|';
+                }
+                // 获取 静态类
+                pos1 = element.indexOf('"');
+                if (pos1 >= 0) {
+                    pos2 = element.length;
+                    target += element.substring(pos1 + 1, pos2 - 2) + '\n';
+                }
+            }
+        });
+        target = target.replace(/ /g, '');
+        //document.getElementById("parseContent").innerText = target;
+
+        var subArr = [];
+        var i = 0;
+        arrTarget = target.split('\n')
+        subArr = arrTarget[0].split('|');
+        // 第一条记录不能放在循环内，否则不能把对应的children装入
+        arrJson.push({
+            'code': subArr[1],
+            'text': subArr[0].replace('类名', '工具'),
+            'children': []
+        });
+        arrTarget.splice(0, 1);
+        arrTarget.forEach(element => {
+            if (element != '') {
+                subArr = element.split('|');
+                //根据“类名”关键字区分类
+                if (subArr[0].indexOf('类名') > 0) {
+                    arrJson.push({
+                        'code': subArr[1],
+                        'text': subArr[0].replace('类名', '工具'),
+                        'children': []
+                    });
+                    i++;
+                } else {
+                    if (subArr.length == 3) {
+                        var params = subArr[1].split(';');
+                        //需要处理参数，待定
+                        if (params.toString() === '#null') {
+                            arrJson[i].children.push({
+                                'code': subArr[2],
+                                'text': subArr[0],
+                                'obj': 0,
+                                'par': 0,
+                                'dotw': 0,
+                                'abled': true
+                            });
+                        } else {
+                            let obj = 2;
+                            let par = 2;
+                            let dotw = 2;
+                            if (!params.includes('#obj')) {
+                                obj = 0;
+                            }
+
+                            if (!params.includes('#dotw')) {
+                                dotw = 0;
+                            }
+
+                            if (params.toString().search("#par") == -1) {
+                                par = 0;
+                            }
+                            arrJson[i].children.push({
+                                'code': subArr[2],
+                                'text': subArr[0],
+                                'obj': obj,
+                                'par': par,
+                                'dotw': dotw
+                            });
+                        }
+
+                    } else {
+
+                        var params = subArr[1].split(';');
+                        let obj = 2;
+                        let par = 2;
+                        let dotw = 2;
+                        if (!params.includes('#obj')) {
+                            obj = 0;
+                        }
+
+                        if (!params.includes('#dotw')) {
+                            dotw = 0;
+                        }
+
+                        if (params.toString().search("#par") == -1) {
+                            par = 0;
+                        }
+                        // FIXME: code 为 subArr[3]
+                        arrJson[i].children.push({
+                            'code': subArr[1],
+                            'text': subArr[3],
+                            'obj': obj,
+                            'par': par,
+                            'dotw': dotw
+                        });
+
+                    };
+                }
+            }
+
+        });
+
+        //console.log(JSON.stringify(arrJson))
+        document.getElementById("parseContent").innerText = JSON.stringify(arrJson);
+    }
+
+    function save() {
+        file = 'classmethod' + '.js';
+        var content = 'classmethod=' + JSON.stringify(arrJson)
+
+        var blob = new Blob([content], {
+            type: "text/plain;charset=utf-8"
+        });
+        saveAs(blob, file);
+    }
+</script>

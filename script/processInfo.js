@@ -277,21 +277,33 @@ let template = `
                     <div class="input target">
                         <div class="target-item">
                             <el-radio v-model="StepEvent.TargetObject.TypeRadio" :label="1">单</el-radio>
-                            <el-input v-model="StepEvent.TargetObject.SingleObject" placeholder="仅输入一个目标"></el-input>
+                            <el-input v-model="StepEvent.TargetObject.SingleObject" 
+                                @focus="focusTypeRadio(1,1)"
+                                @change="updateStepParam('1')"
+                             placeholder="仅输入一个目标"></el-input>
                         </div>
                         <div class="target-item">
                             <el-radio v-model="StepEvent.TargetObject.TypeRadio" :label="2">或</el-radio>
                             <div>
                                 <div class="target-sub-item">
                                     <el-radio v-model="StepEvent.TargetObject.OrObjects.OrRadio" :label="1">无序</el-radio>
-                                    <el-input v-model="StepEvent.TargetObject.OrObjects.NoSqcObjects" placeholder="多个目标逗号（英文）分隔"></el-input>
+                                    <el-input v-model="StepEvent.TargetObject.OrObjects.NoSqcObjects" 
+                                    @focus="focusTypeRadio(1,2);focusStepSubRadio(1,1)"
+                                    @change="updateStepParam('21')"
+                                    placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
                                 <div class="target-sub-item">
                                     <el-radio v-model="StepEvent.TargetObject.OrObjects.OrRadio" :label="2">有序</el-radio>
                                     <div class="range">
-                                        <el-input v-model="StepEvent.TargetObject.OrObjects.SqcObject1" placeholder="开始"></el-input>
+                                        <el-input v-model="StepEvent.TargetObject.OrObjects.SqcObject1" 
+                                        @focus="focusTypeRadio(1,2);focusStepSubRadio(1,2)"
+                                        @change="orderStepChange('2')"
+                                        placeholder="开始"></el-input>
                                         <span>至</span>
-                                        <el-input v-model="StepEvent.TargetObject.OrObjects.SqcObject2" placeholder="结束"></el-input>
+                                        <el-input v-model="StepEvent.TargetObject.OrObjects.SqcObject2" 
+                                        @focus="focusTypeRadio(1,2);focusStepSubRadio(1,2)"
+                                        @change="orderStepChange('2')"
+                                        placeholder="结束"></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -304,21 +316,29 @@ let template = `
                     <div class="input target">
                         <div class="target-item">
                             <el-radio v-model="StepEvent.MaskObject.TypeRadio" :label="1">单</el-radio>
-                            <el-input v-model="StepEvent.MaskObject.SingleObject" placeholder="仅输入一个目标"></el-input>
+                            <el-input v-model="StepEvent.MaskObject.SingleObject" 
+                             @focus="focusTypeRadio(2,1)"
+                             placeholder="仅输入一个目标"></el-input>
                         </div>
                         <div class="target-item">
                             <el-radio v-model="StepEvent.MaskObject.TypeRadio" :label="2">或</el-radio>
                             <div>
                                 <div class="target-sub-item">
                                     <el-radio v-model="StepEvent.MaskObject.OrObjects.OrRadio" :label="1">无序</el-radio>
-                                    <el-input v-model="StepEvent.MaskObject.OrObjects.NoSqcObjects" placeholder="多个目标逗号（英文）分隔"></el-input>
+                                    <el-input v-model="StepEvent.MaskObject.OrObjects.NoSqcObjects" 
+                                    @focus="focusTypeRadio(2,2);focusStepSubRadio(2,1)"
+                                    placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
                                 <div class="target-sub-item">
                                     <el-radio v-model="StepEvent.MaskObject.OrObjects.OrRadio" :label="2">有序</el-radio>
                                     <div class="range">
-                                        <el-input v-model="StepEvent.MaskObject.OrObjects.SqcObject1" placeholder="开始"></el-input>
+                                        <el-input v-model="StepEvent.MaskObject.OrObjects.SqcObject1" 
+                                         @focus="focusTypeRadio(2,2);focusStepSubRadio(2,2)"
+                                         placeholder="开始"></el-input>
                                         <span>至</span>
-                                        <el-input v-model="StepEvent.MaskObject.OrObjects.SqcObject2" placeholder="结束"></el-input>
+                                        <el-input v-model="StepEvent.MaskObject.OrObjects.SqcObject2" 
+                                        @focus="focusTypeRadio(2,2);focusStepSubRadio(2,2)"
+                                        placeholder="结束"></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -408,13 +428,21 @@ Vue.component('process-info', {
             eventItemIndex: -1, // 当前事件列表选中的索引
             NewMethodName: [], // 方法
             //控件禁用状态：初始只有类型和方法均不可用
+            // eventCtrlDisable: {
+            //     selectCtrl: false, //类、方法下拉框
+            //     radioMain: true, //主单选按钮
+            //     singleObj: true, //单选物体
+            //     nonSingleObj: true, //非单选物体
+            //     par: true, //参数表
+            //     dotw: true, //dotw
+            // },
             eventCtrlDisable: {
                 selectCtrl: false, //类、方法下拉框
-                radioMain: true, //主单选按钮
-                singleObj: true, //单选物体
-                nonSingleObj: true, //非单选物体
-                par: true, //参数表
-                dotw: true, //dotw
+                radioMain: false, //主单选按钮
+                singleObj: false, //单选物体
+                nonSingleObj: false, //非单选物体
+                par: false, //参数表
+                dotw: false, //dotw
             },
             AnimationEvent: { // 信息
                 ClassName: '', //类名
@@ -467,6 +495,8 @@ Vue.component('process-info', {
                 StepParam: [], // 参数
                 ShowMode: '', // 展示模式
                 TriggerMode: '', // 触发模型
+                ColliderScaleArr: [],
+                ColliderModeArr: [],
             },
             // 事件对象信息表数据
             targetData: [],
@@ -487,6 +517,10 @@ Vue.component('process-info', {
             if (this.step) {
                 EventBus.$on('StepEvent',res => {
                     this.StepEvent = res;
+                });
+                EventBus.$on('StepInfo',res => {
+                    console.log(res)
+                    this.stepInfo = res;
                 });
             }
             // console.log(EventBus)
@@ -519,8 +553,8 @@ Vue.component('process-info', {
                         }
                     },
                     StepParam: [], // 参数
-                        ShowMode: '', // 展示模式
-                        TriggerMode: '', // 触发模型
+                    ShowMode: '', // 展示模式
+                    TriggerMode: '', // 触发模型
                 };
                 this.formateStepEvent()
             } else {
@@ -529,7 +563,6 @@ Vue.component('process-info', {
             }
         },
         'AnimationEvent.TargetObject.TypeRadio'(newV) { // 主单选
-            // console.log('主', newV)
             let AndRadio = this.AnimationEvent.TargetObject.AndObjects.AndRadio,
                 OrRadio = this.AnimationEvent.TargetObject.OrObjects.OrRadio
             if (newV == '1') { // 选择单
@@ -555,9 +588,26 @@ Vue.component('process-info', {
                 this.updateParam('3' + newV)
             }
         },
+        // 'StepEvent.TargetObject.TypeRadio'(newV) { // 主单选
+        //     // console.log(newV)
+        //     let OrRadio = this.StepEvent.TargetObject.OrObjects.OrRadio
+        //     if (newV == '1') { // 选择单
+        //         this.updateStepParam('1')
+        //     } else {
+        //         if (newV == '2' && OrRadio) { // 选择或
+        //             this.updateStepParam('2' + OrRadio)
+        //         }
+        //     }
+        // },
+        // 'StepEvent.TargetObject.OrObjects.OrRadio'(newV) { // 或单选
+        //     if (this.StepEvent.TargetObject.TypeRadio == 2 && newV != 0) {
+        //         this.updateStepParam('2' + newV)
+        //     }
+        // },
         'StepEvent': {
             handler(newObj, oldObj) {
                 if (this.type === 'step') {
+                    console.log(newObj)
                     EventBus.$emit('StepEvent', newObj);
                 }
             },
@@ -566,12 +616,6 @@ Vue.component('process-info', {
     },
     mounted() {
         this.rowDrop()
-        // if (this.step) {
-        //     EventBus.$on('updateStepInfo',res => {
-        //         this.stepInfo = res;
-        //     });
-        // }
-
     },
     methods: {
         // 事件表拖动行排序
@@ -624,6 +668,30 @@ Vue.component('process-info', {
                     break
             }
         },
+        // 进行状态,根据目标更新参数
+        updateStepParam(type) { // 1：单选，21：或无序，22：或有序
+            // // 如果没有参数就不设置参数
+            // if (!this.hasPar) {
+            //     return
+            // }
+            // console.log(type)
+            switch (type) {
+                case '1':
+                    // 没有值参数设置为[]
+                    this.StepEvent.StepParam = this.StepEvent.TargetObject.SingleObject ? [{
+                        ObjectName: this.StepEvent.TargetObject.SingleObject, //目标
+                        ColliderMode: 'mesh', // 磁盘类型
+                        ColliderScale: '' // 磁盘大小
+                    }] : []
+                    break
+                case '21':
+                    this.StepEvent.StepParam = this.stepObj2par(this.StepEvent.TargetObject.OrObjects.NoSqcObjects)
+                    break
+                case '22':
+                    this.StepEvent.StepParam = this.stepObj2par(this.StepEvent.TargetObject.OrObjects.SqcObject1, this.StepEvent.TargetObject.OrObjects.SqcObject2)
+                    break
+            }
+        },
         // 根据目标设置参数
         obj2par(str1, str2) {
             if (!!str2) {
@@ -653,6 +721,32 @@ Vue.component('process-info', {
                 })) : []
             }
         },
+        stepObj2par(str1, str2) {
+            if (!!str2) {
+                if (!!str1) {
+                    let start = +(str1.substr(str1.lastIndexOf('_') + 1)),
+                        end = +(str2.substr(str2.lastIndexOf('_') + 1)),
+                        str = str1.substring(0, str1.lastIndexOf('_') + 1)
+                    par = []
+                    for (let i = start; i <= end; i++) {
+                        par.push({
+                            ObjectName: str + i, //目标
+                            ColliderMode: 'mesh', // 磁盘类型
+                            ColliderScale: '' // 磁盘大小
+                        })
+                    }
+                    return par
+                } else {
+                    return []
+                }
+            } else {
+                return str1 ? str1.split(',').map(item => ({
+                    ObjectName: item, //目标
+                    ColliderMode: 'mesh', // 磁盘类型
+                    ColliderScale: '' // 磁盘大小
+                })) : []
+            }
+        },
         // 有序blur
         orderChange(radio) {
             let radioMap = {
@@ -669,6 +763,22 @@ Vue.component('process-info', {
                 }
             } else {
                 this.targetData = []
+            }
+        },
+        orderStepChange(radio) {
+            let radioMap = {
+                '2': 'OrObjects'
+            }
+            let start = this.StepEvent.TargetObject[radioMap[radio]].SqcObject1,
+                end = this.StepEvent.TargetObject[radioMap[radio]].SqcObject2
+            if (!!start && !!end) { // 只有开始和结束都有才执行
+                if (start.substring(0, start.lastIndexOf('_') + 1) != end.substring(0, end.lastIndexOf('_') + 1)) {
+                    this.$alert('有序对象1和对象2的名称前缀不一致，请检查', '提示', { type: 'warning' });
+                } else {
+                    this.updateStepParam(radio + '2')
+                }
+            } else {
+                this.StepEvent.StepParam = []
             }
         },
         // 重置绑定信息
@@ -753,7 +863,7 @@ Vue.component('process-info', {
         // 组装格式化进行步骤数据
         formateStepEvent() {
             let stepInfo = this.info
-            console.log('stepInfo', stepInfo);
+            // console.log('stepInfo', stepInfo);
             // 工具
             let [ToolType] = stepInfo._TriggerObject.split('|')
             // 目标
@@ -821,10 +931,9 @@ Vue.component('process-info', {
         // 保存时 反序列 进行步骤的数据
         ParseeStepEvent(stepEvent) {
             // let  = this.StepEvent;
-            console.log(stepEvent)
+            // console.log(stepEvent)
             let stepInfo = {};
 
-            // 排除
             // TargetObject
             let obj = '';
             let TargetObject = stepEvent.TargetObject
@@ -838,7 +947,12 @@ Vue.component('process-info', {
                     if (OrObjects.OrRadio == 1) {
                         obj = stepEvent.ToolType + '|' + OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
-                        obj = `#obj${OrObjects.SqcObject1}+${OrObjects.SqcObject2}#obj`
+                        // FIXME: 有序 需要处理
+                        let tmp = [];
+                        for (let i = OrObjects.SqcObject1; i<= OrObjects.SqcObject2; i++) {
+                            tmp.push(i);
+                        }
+                        obj =  stepEvent.ToolType + '|' + tmp.toString().replace(/\,/g, '|');
                     }
                 }
             }
@@ -855,6 +969,7 @@ Vue.component('process-info', {
                     if (OrObjects.OrRadio == 1) {
                         maskObj = OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
+                        // FIXME: 有序 需要处理
                         maskObj = `${OrObjects.SqcObject1}|${OrObjects.SqcObject2}`
                     }
                 }
@@ -868,9 +983,9 @@ Vue.component('process-info', {
             let ColliderScale = []
             let ObjectName = []
             this.StepEvent.StepParam.forEach(item => {
-                ColliderMode.push[item.ColliderMode]
-                ColliderScale.push[item.ColliderScale]
-                ObjectName.push[item.ObjectName]
+                ColliderMode.push(item.ColliderMode)
+                ColliderScale.push(item.ColliderScale)
+                ObjectName.push(item.ObjectName)
             })
             // 参数--目标名称
             stepInfo._ObjectName = ObjectName.join('|');
@@ -882,7 +997,7 @@ Vue.component('process-info', {
             // 触发类型
             stepInfo._TriggerMode = this.StepEvent.TriggerMode;
             this.stepInfo = stepInfo;
-            // this.$emit('updateStepInfo', stepInfo)
+            EventBus.$emit('StepInfo', stepInfo)
         },
 
         // 事件列表最后一行合并
@@ -1085,6 +1200,9 @@ Vue.component('process-info', {
                 }
                 // 进行中 的步骤
                 if (this.step) {
+                    // console.log('保存',this.StepEvent)
+                    // let stepInfo = this.ParseeStepEvent(this.StepEvent)
+                    // console.log('保存',this.stepInfo)
                     Object.assign(this.info, this.stepInfo)
                 }
 
@@ -1117,7 +1235,7 @@ Vue.component('process-info', {
         // 保存
         submit() {
             if (this.step) {
-                // console.log(this.StepEvent)
+                console.log('submit',this.StepEvent)
                 this.ParseeStepEvent(this.StepEvent);
             }
             this.json2str('save')
@@ -1321,6 +1439,41 @@ Vue.component('process-info', {
                     this.AnimationEvent.TargetObject.OrObjects.OrRadio = 0;
                 }
             }
+
+        },
+        // 进行
+        // type=1(目标)，type=2(排除)
+        focusTypeRadio(type, radioNum) {
+            if (type == 1) {
+                this.StepEvent.TargetObject.TypeRadio = radioNum;
+                if (radioNum == 1) {
+                    this.StepEvent.TargetObject.OrObjects.OrRadio = 0;
+                }
+            } else {
+                this.StepEvent.MaskObject.TypeRadio = radioNum;
+                if (radioNum == 1) {
+                    this.StepEvent.MaskObject.OrObjects.OrRadio = 0;
+                }
+            }
+        },
+        // type=1(目标)，type=2(排除)
+        focusStepSubRadio(type, radioNum) {
+            if (type == 1) {
+                this.StepEvent.TargetObject.OrObjects.OrRadio = radioNum;
+             // if (this.StepEvent.TargetObject.TypeRadio == 2) {
+             //     this.StepEvent.TargetObject.OrObjects.OrRadio = radioNum;
+             // } else {
+             //     this.StepEvent.TargetObject.OrObjects.OrRadio = 0;
+             // }
+            } else {
+                this.StepEvent.MaskObject.OrObjects.OrRadio = radioNum;
+                // if (this.StepEvent.MaskObject.TypeRadio == 2) {
+                //     this.StepEvent.MaskObject.OrObjects.OrRadio = radioNum;
+                // } else {
+                //     this.StepEvent.MaskObject.OrObjects.OrRadio = 0;
+                // }
+            }
+
 
         },
         //输入框获得焦点后变更对应单选框（无序、有序）

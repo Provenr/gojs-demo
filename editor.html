@@ -136,8 +136,9 @@
                     </el-col>
                     <el-col :span="8">
                         <div class="step step-event" data-title="进行">
-                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" type="step"
-                            @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
+                            <process-info v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo"
+                              type="step"
+                              @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>
                         </div>
                         <div class="step" data-title="辅助进行">
                             <process-info :step="true" v-if="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" :info="currentPersonJson.ProcessInfo[currentNodeIndex].StepEventInfo" @update="value => updateCurrentNode('StepEventInfo', value)"></process-info>

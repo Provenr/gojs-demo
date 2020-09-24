@@ -15,157 +15,167 @@
 </head>
 
 <body>
-    <!-- app Start -->
-    <div id="app">
-        <el-row :gutter="10">
-            <!-- 左侧窗口区域 -->
-            <!-- <el-col :md="8">
+<!-- app Start -->
+<div id="app">
+    <el-row :gutter="10">
+        <!-- 左侧窗口区域 -->
+        <!-- <el-col :md="8">
+            <div class="grid-content">
+                <div class="title bg-lightseagreen">动画预览区</div>
+                <div class="area-holder"></div>
+            </div>
+            <div class="grid-content">
+                <div class="title bg-limegreen">流程预览区</div>
+                <div class="area-holder"></div>
+            </div>
+        </el-col> -->
+
+        <!-- form表单跨越两个区域 -->
+        <!-- Begin of el-form -->
+        <el-form ref="ModelObject" :model="ModelObject" label-width="80px">
+            <!-- 中部窗口区域1 -->
+            <el-col :md="8">
                 <div class="grid-content">
-                    <div class="title bg-lightseagreen">动画预览区</div>
-                    <div class="area-holder"></div>
-                </div>
-                <div class="grid-content">
-                    <div class="title bg-limegreen">流程预览区</div>
-                    <div class="area-holder"></div>
-                </div>
-            </el-col> -->
+                    <div class="title bg-lightblue">动画基本信息</div>
 
-            <!-- form表单跨越两个区域 -->
-            <!-- Begin of el-form -->
-            <el-form ref="ModelObject" :model="ModelObject" label-width="80px">
-                <!-- 中部窗口区域1 -->
-                <el-col :md="8">
-                    <div class="grid-content">
-                        <div class="title bg-lightblue">动画基本信息</div>
+                    <div class="area-holder">
+                        <el-form-item label="主资源包">
+                            <el-input v-model="ModelObject.AnimationName" prefix-icon="el-icon-edit"
+                                      suffix-icon="el-icon-date"></el-input>
+                        </el-form-item>
+                        <el-form-item label="附加资源">
+                            <el-input v-model="ModelObject.CameraName" prefix-icon="el-icon-edit"
+                                      suffix-icon="el-icon-date"></el-input>
+                        </el-form-item>
+                        <el-form-item label="动画模型">
+                            <el-input v-model="ModelObject.AnimationModel" prefix-icon="el-icon-edit"
+                                      suffix-icon="el-icon-date"></el-input>
+                        </el-form-item>
+                        <el-form-item label="动画内容">
+                            <el-input v-model="ModelObject.AnimationContent" prefix-icon="el-icon-edit"
+                                      suffix-icon="el-icon-date"></el-input>
+                        </el-form-item>
+                        <el-form-item label="无动画">
+                            <el-input v-model="ModelObject.NoAnimation" prefix-icon="el-icon-edit"
+                                      suffix-icon="el-icon-date"></el-input>
+                        </el-form-item>
 
-                        <div class="area-holder">
-                            <el-form-item label="主资源包">
-                                <el-input v-model="ModelObject.AnimationName" prefix-icon="el-icon-edit" suffix-icon="el-icon-date"></el-input>
-                            </el-form-item>
-                            <el-form-item label="附加资源">
-                                <el-input v-model="ModelObject.CameraName" prefix-icon="el-icon-edit" suffix-icon="el-icon-date"></el-input>
-                            </el-form-item>
-                            <el-form-item label="动画模型">
-                                <el-input v-model="ModelObject.AnimationModel" prefix-icon="el-icon-edit" suffix-icon="el-icon-date"></el-input>
-                            </el-form-item>
-                            <el-form-item label="动画内容">
-                                <el-input v-model="ModelObject.AnimationContent" prefix-icon="el-icon-edit" suffix-icon="el-icon-date"></el-input>
-                            </el-form-item>
-                            <el-form-item label="无动画">
-                                <el-input v-model="ModelObject.NoAnimation" prefix-icon="el-icon-edit" suffix-icon="el-icon-date"></el-input>
-                            </el-form-item>
+                        <!-- 片段信息 -->
 
-                            <!-- 片段信息 -->
+                        <el-form-item label="片段信息">
+                            <div class="clip-table">
+                                <el-table :data="tableData" border>
+                                    <el-table-column prop="Name" label="片段名称">
+                                    </el-table-column>
+                                    <el-table-column prop="ClipFrameStart" label="起始帧">
+                                    </el-table-column>
+                                    <el-table-column prop="ClipFrameEnd" label="结束帧">
+                                    </el-table-column>
+                                    <el-table-column prop="TriggerObject" label="触发物体">
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-form-item>
 
-                            <el-form-item label="片段信息">
-                                <div class="clip-table">
-                                    <el-table :data="tableData" border>
-                                        <el-table-column prop="Name" label="片段名称">
-                                        </el-table-column>
-                                        <el-table-column prop="ClipFrameStart" label="起始帧">
-                                        </el-table-column>
-                                        <el-table-column prop="ClipFrameEnd" label="结束帧">
-                                        </el-table-column>
-                                        <el-table-column prop="TriggerObject" label="触发物体">
-                                        </el-table-column>
-                                    </el-table>
-                                </div>
-                            </el-form-item>
-
-
-                        </div>
 
                     </div>
-                    <div class="grid-content">
-                        <div class="title bg-mediumorchid">片段基本信息</div>
-                        <div class="area-holder">
-                            <el-container>
-                                <!-- 流程图 -->
-                                <el-aside width="60px">
-                                    <div id="clipName" class="circle-chart bg-lightseagreen">名称</div>
-                                    <div id="clipStart" class="circle-chart bg-lightseagreen font-small">起始帧</div>
-                                    <div id="clipEnd" class="circle-chart bg-lightseagreen font-small">结束帧</div>
-                                    <div id="clipSpeed" class="circle-chart bg-lightseagreen">速度</div>
-                                    <div id="clipTrigger" class="circle-chart bg-lightseagreen">触发</div>
-                                </el-aside>
-                                <!-- 流程数据 -->
-                                <el-main>
-                                    <!-- 名称 -->
-                                    <el-form-item class="clip-info-form-item" id="clip-name">
-                                        <el-input v-model="AnimationClip.Name" @change="ctrlChange(1)" :disabled="eventCtrlDisable.clipInfoArea"></el-input>
-                                    </el-form-item>
-                                    <!-- 起始帧 -->
-                                    <el-form-item class="clip-info-form-item" id="clip-start">
-                                        <el-input v-model="AnimationClip.ClipFrameStart" @change="ctrlChange(2)" :disabled="eventCtrlDisable.clipInfoArea">
-                                        </el-input>
-                                    </el-form-item>
-                                    <!-- 结束帧 -->
-                                    <el-form-item class="clip-info-form-item" id="clip-end">
-                                        <el-input v-model="AnimationClip.ClipFrameEnd" @change="ctrlChange(2)" :disabled="eventCtrlDisable.clipInfoArea">
-                                        </el-input>
-                                    </el-form-item>
-                                    <!-- 速度 -->
-                                    <el-form-item class="clip-info-form-item">
-                                        <div id="clip-speed">
-                                            <el-slider v-model="AnimationClip.Speed" :max="2.0" :step="0.5" @change="speedChange()" :disabled="eventCtrlDisable.clipInfoArea">
-                                            </el-slider>
-                                            </span>
-                                        </div>
-                                        <div id="clip-speed-label">{{AnimationClip.Speed}}</div>
-                                    </el-form-item>
 
-                                    <!-- 触发物体 -->
-                                    <div class="clip-trigger-objects">
-                                        <div>
+                </div>
+                <div class="grid-content">
+                    <div class="title bg-mediumorchid">片段基本信息</div>
+                    <div class="area-holder">
+                        <el-container>
+                            <!-- 流程图 -->
+                            <el-aside width="60px">
+                                <div id="clipName" class="circle-chart bg-lightseagreen">名称</div>
+                                <div id="clipStart" class="circle-chart bg-lightseagreen font-small">起始帧</div>
+                                <div id="clipEnd" class="circle-chart bg-lightseagreen font-small">结束帧</div>
+                                <div id="clipSpeed" class="circle-chart bg-lightseagreen">速度</div>
+                                <div id="clipTrigger" class="circle-chart bg-lightseagreen">触发</div>
+                            </el-aside>
+                            <!-- 流程数据 -->
+                            <el-main>
+                                <!-- 名称 -->
+                                <el-form-item class="clip-info-form-item" id="clip-name">
+                                    <el-input v-model="AnimationClip.Name" @change="ctrlChange(1)"
+                                              :disabled="eventCtrlDisable.clipInfoArea"></el-input>
+                                </el-form-item>
+                                <!-- 起始帧 -->
+                                <el-form-item class="clip-info-form-item" id="clip-start">
+                                    <el-input v-model="AnimationClip.ClipFrameStart" @change="ctrlChange(2)"
+                                              :disabled="eventCtrlDisable.clipInfoArea">
+                                    </el-input>
+                                </el-form-item>
+                                <!-- 结束帧 -->
+                                <el-form-item class="clip-info-form-item" id="clip-end">
+                                    <el-input v-model="AnimationClip.ClipFrameEnd" @change="ctrlChange(2)"
+                                              :disabled="eventCtrlDisable.clipInfoArea">
+                                    </el-input>
+                                </el-form-item>
+                                <!-- 速度 -->
+                                <el-form-item class="clip-info-form-item">
+                                    <div id="clip-speed">
+                                        <el-slider v-model="AnimationClip.Speed" :max="2.0" :step="0.5"
+                                                   @change="speedChange()" :disabled="eventCtrlDisable.clipInfoArea">
+                                        </el-slider>
+                                        </span>
+                                    </div>
+                                    <div id="clip-speed-label">{{AnimationClip.Speed}}</div>
+                                </el-form-item>
+
+                                <!-- 触发物体 -->
+                                <div class="clip-trigger-objects">
+                                    <div>
                                             <span>
                                                 <el-form-item class="clip-info-form-item">
                                                     <el-radio v-model="AnimationClip.TriggerObject.TriggerRadio"
-                                                        :label="1" :disabled="eventCtrlDisable.clipInfoArea">单
+                                                              :label="1" :disabled="eventCtrlDisable.clipInfoArea">单
                                                     </el-radio>
                                                 </el-form-item>
                                             </span>
-                                            <span>
+                                        <span>
                                                 <el-form-item class="clip-info-form-item">
                                                     <el-input v-model="AnimationClip.TriggerObject.SingleObject"
-                                                        @focus="focusMainRadio(0,1)" @change="ctrlChange(1)"
-                                                        :disabled="eventCtrlDisable.clipInfoArea" placeholder="仅输入一个物体">
+                                                              @focus="focusMainRadio(0,1)" @change="ctrlChange(1)"
+                                                              :disabled="eventCtrlDisable.clipInfoArea"
+                                                              placeholder="仅输入一个物体">
                                                     </el-input>
                                                 </el-form-item>
                                             </span>
-                                        </div>
+                                    </div>
 
-                                        <!-- 与 -->
-                                        <div>
+                                    <!-- 与 -->
+                                    <div>
                                             <span style="vertical-align: middle;">
                                                 <div>
                                                     <el-form-item class="clip-info-form-item">
                                                         <el-radio v-model="AnimationClip.TriggerObject.TriggerRadio"
-                                                            :label="2" :disabled="eventCtrlDisable.clipInfoArea">与
+                                                                  :label="2" :disabled="eventCtrlDisable.clipInfoArea">与
                                                         </el-radio>
                                                     </el-form-item>
                                                 </div>
                                             </span>
 
-                                            <span>
+                                        <span>
                                                 <div class="clip-trigger-objects-sub">
                                                     <div>
                                                         <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationClip.TriggerObject.AndObjects.AndRadio"
-                                                                    :label="1"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">无序
+                                                                        v-model="AnimationClip.TriggerObject.AndObjects.AndRadio"
+                                                                        :label="1"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">无序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                                             <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.AndObjects.NoSqcObjects"
-                                                                    @focus="focusMainRadio(0,2);focusSubRadio(0,1)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea"
-                                                                    placeholder="多个目标逗号（英文）分隔">
+                                                                        v-model="AnimationClip.TriggerObject.AndObjects.NoSqcObjects"
+                                                                        @focus="focusMainRadio(0,2);focusSubRadio(0,1)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea"
+                                                                        placeholder="多个目标逗号（英文）分隔">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -175,29 +185,29 @@
                                             <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationClip.TriggerObject.AndObjects.AndRadio"
-                                                                    :label="2"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">有序
+                                                                        v-model="AnimationClip.TriggerObject.AndObjects.AndRadio"
+                                                                        :label="2"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">有序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                                             <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.AndObjects.SqcObject1"
-                                                                    @focus="focusMainRadio(0,2);focusSubRadio(0,2)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">
+                                                                        v-model="AnimationClip.TriggerObject.AndObjects.SqcObject1"
+                                                                        @focus="focusMainRadio(0,2);focusSubRadio(0,2)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>至
                                             <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.AndObjects.SqcObject2"
-                                                                    @focus="focusMainRadio(0,2);focusSubRadio(0,2)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">
+                                                                        v-model="AnimationClip.TriggerObject.AndObjects.SqcObject2"
+                                                                        @focus="focusMainRadio(0,2);focusSubRadio(0,2)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -205,39 +215,39 @@
                                     </div>
                                     </span>
 
-                        </div>
+                                    </div>
 
-                        <!-- 或 -->
-                        <div>
+                                    <!-- 或 -->
+                                    <div>
                             <span>
                                                 <div>
                                                     <el-form-item class="clip-info-form-item">
                                                         <el-radio v-model="AnimationClip.TriggerObject.TriggerRadio"
-                                                            :label="3" :disabled="eventCtrlDisable.clipInfoArea">或
+                                                                  :label="3" :disabled="eventCtrlDisable.clipInfoArea">或
                                                         </el-radio>
                                                     </el-form-item>
                                                 </div>
                                             </span>
-                            <span>
+                                        <span>
                                                 <div class="clip-trigger-objects-sub">
                                                     <div>
                                                         <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationClip.TriggerObject.OrObjects.OrRadio"
-                                                                    :label="1"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">无序
+                                                                        v-model="AnimationClip.TriggerObject.OrObjects.OrRadio"
+                                                                        :label="1"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">无序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                             <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.OrObjects.NoSqcObjects"
-                                                                    @focus="focusMainRadio(0,3);focusSubRadio(0,1)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea"
-                                                                    placeholder="多个目标逗号（英文）分隔">
+                                                                        v-model="AnimationClip.TriggerObject.OrObjects.NoSqcObjects"
+                                                                        @focus="focusMainRadio(0,3);focusSubRadio(0,1)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea"
+                                                                        placeholder="多个目标逗号（英文）分隔">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -247,31 +257,31 @@
                             <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationClip.TriggerObject.OrObjects.OrRadio"
-                                                                    :label="2"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea">有序
+                                                                        v-model="AnimationClip.TriggerObject.OrObjects.OrRadio"
+                                                                        :label="2"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea">有序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                             <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.OrObjects.SqcObject1"
-                                                                    @focus="focusMainRadio(0,3);focusSubRadio(0,2)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea"
-                                                                    @input="change($event)">
+                                                                        v-model="AnimationClip.TriggerObject.OrObjects.SqcObject1"
+                                                                        @focus="focusMainRadio(0,3);focusSubRadio(0,2)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea"
+                                                                        @input="change($event)">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>至
                             <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationClip.TriggerObject.OrObjects.SqcObject2"
-                                                                    @focus="focusMainRadio(0,3);focusSubRadio(0,2)"
-                                                                    @change="ctrlChange(1)"
-                                                                    :disabled="eventCtrlDisable.clipInfoArea"
-                                                                    @input="change($event)">
+                                                                        v-model="AnimationClip.TriggerObject.OrObjects.SqcObject2"
+                                                                        @focus="focusMainRadio(0,3);focusSubRadio(0,2)"
+                                                                        @change="ctrlChange(1)"
+                                                                        :disabled="eventCtrlDisable.clipInfoArea"
+                                                                        @input="change($event)">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -279,207 +289,220 @@
                     </div>
                     </span>
 
-    </div>
+                                    </div>
 
-    </div>
+                                </div>
 
-    <div style="height: 10px;"></div>
-    </el-main>
-    </el-container>
+                                <div style="height: 10px;"></div>
+                            </el-main>
+                        </el-container>
 
-    </div>
-    </div>
-    </el-col>
-
-    <!-- 树 -->
-    <el-col :md="6">
-
-        <div class="grid-content">
-            <div class="title bg-lightseagreen">片段节点信息</div>
-            <div class="area-holder">
-
-                <!-- 带选择查询 -->
-                <el-form-item>
-                    <div class="search-box">
-                        <el-input placeholder="请输入内容" v-model="ModelObject.ClipSearch.SearchText" class="input-with-select">
-                            <el-select v-model="ModelObject.ClipSearch.SelectType" slot="prepend" placeholder="请选择">
-                                <el-option label="A" value="1">A</el-option>
-                                <el-option label="B" value="2">B</el-option>
-                                <el-option label="C" value="3">C</el-option>
-                            </el-select>
-                            <el-button slot="append" icon="el-icon-search"></el-button>
-                        </el-input>
                     </div>
-                </el-form-item>
-                <!-- 片段节点树 -->
-                <el-form-item>
-                    <div class="custom-tree-container clip-tree" style="overflow: auto;">
-                        <div>
-                            <el-tree :data="treeNodes" ref="vuetree" node-key="id" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" highlight-current @click.stop.native>
+                </div>
+            </el-col>
+
+            <!-- 树 -->
+            <el-col :md="6">
+
+                <div class="grid-content">
+                    <div class="title bg-lightseagreen">片段节点信息</div>
+                    <div class="area-holder">
+
+                        <!-- 带选择查询 -->
+                        <el-form-item>
+                            <div class="search-box">
+                                <el-input placeholder="请输入内容" v-model="ModelObject.ClipSearch.SearchText"
+                                          class="input-with-select">
+                                    <el-select v-model="ModelObject.ClipSearch.SelectType" slot="prepend"
+                                               placeholder="请选择">
+                                        <el-option label="A" value="1">A</el-option>
+                                        <el-option label="B" value="2">B</el-option>
+                                        <el-option label="C" value="3">C</el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="el-icon-search"></el-button>
+                                </el-input>
+                            </div>
+                        </el-form-item>
+                        <!-- 片段节点树 -->
+                        <el-form-item>
+                            <div class="custom-tree-container clip-tree" style="overflow: auto;">
+                                <div>
+                                    <el-tree :data="treeNodes" ref="vuetree" node-key="id" @node-click="handleNodeClick"
+                                             default-expand-all :expand-on-click-node="false" highlight-current
+                                             @click.stop.native>
                                 <span class="custom-tree-node" slot-scope="{ node, data }">
                                                 <span>
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        @click.stop="() => append(data, 9)" v-if="data.id&lt;2">
+                                                               @click.stop="() => append(data, 9)" v-if="data.id&lt;2">
                                                         <div class="el-icon-first-aid-kit" title="添加部分"></div>
                                                     </el-button>
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        v-if="data.id>1">
+                                                               v-if="data.id>1">
                                                     </el-button>
                                                 </span>
                                 <span id="node-label"><i class="el-icon-lightning" style="color: red;"
-                                                        v-if="data.id>100000"></i>&nbsp;{{ node.label }}</span>
+                                                         v-if="data.id>100000"></i>&nbsp;{{ node.label }}</span>
                                 <span>
 
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        @click.stop="() => append(data, 0)" v-if="data.id&lt;1000">
+                                                               @click.stop="() => append(data, 0)"
+                                                               v-if="data.id&lt;1000">
                                                         <div class="el-icon-circle-plus" title="添加片段"></div>
                                                     </el-button>
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        @click.stop="() => append(data, 1)"
-                                                        v-if="data.id>1000&&data.id&lt;10000">
+                                                               @click.stop="() => append(data, 1)"
+                                                               v-if="data.id>1000&&data.id&lt;10000">
                                                         <div class="el-icon-film" title="添加帧">
                                                         </div>
                                                     </el-button>
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        @click.stop="() => append(data, 2)"
-                                                        v-if="data.id>10000&&data.id&lt;100000">
+                                                               @click.stop="() => append(data, 2)"
+                                                               v-if="data.id>10000&&data.id&lt;100000">
                                                         <div class="el-icon-key" title="添加事件">
                                                         </div>
                                                     </el-button>
                                                     <el-button type="text" style="width: 10px;" size="large"
-                                                        @click.stop="() => remove(node, data)" v-if="data.id>1">
+                                                               @click.stop="() => remove(node, data)" v-if="data.id>1">
                                                         <div class="el-icon-delete-solid" title="删除"></div>
                                                     </el-button>
                                                 </span>
                                 </span>
-                            </el-tree>
-                        </div>
-                    </div>
-                </el-form-item>
+                                    </el-tree>
+                                </div>
+                            </div>
+                        </el-form-item>
 
-                <!-- 保存按钮 -->
-                <el-form-item style="margin-bottom: 10px;">
+                        <!-- 保存按钮 -->
+                        <el-form-item style="margin-bottom: 10px;">
                     <span style="display: inline-block;">
                                     <el-button class="small-button" type="primary" plain @click="onSubmit">保存
                                     </el-button>
                                 </span>
-                    <span style="display: inline-block;">
+                            <span style="display: inline-block;">
                                     <el-upload action="alert" :auto-upload="false" :on-change="loadJsonFile"
-                                        accept=".xml">
+                                               accept=".xml">
                                         <el-button type="success" class="small-button" plain
-                                            :disabled="eventCtrlDisable.importBtn">
+                                                   :disabled="eventCtrlDisable.importBtn">
                                             导入</el-button>
                                     </el-upload>
                                 </span>
-                    <span style="display: inline-block;">
+                            <span style="display: inline-block;">
                                     <el-button class="small-button" type="warning" plain @click="onNewBuild">新建
                                     </el-button>
                                 </span>
 
-                </el-form-item>
-            </div>
-        </div>
-    </el-col>
-
-    <!-- 右侧窗口区域 -->
-    <el-col :md="10">
-        <div class="grid-content">
-            <div class="title bg-limegreen">事件基本信息</div>
-            <div class="area-holder">
-                <el-container>
-                    <!-- 流程图 -->
-                    <el-aside width="60px">
-                        <div id="eventFrameNo" class="circle-chart">帧数</div>
-                        <div id="eventType" class="circle-chart">类型</div>
-                        <div id="eventMethod" class="circle-chart">方法</div>
-                        <div id="eventTarget" class="circle-chart" ref="refEventTarget">目标</div>
-                        <div id="eventValueArray" class="circle-chart" ref="refEventValueArray">数值</div>
-                        <div id="eventTimeElapsed" class="circle-chart" ref="refEventTimeElapsed">用时</div>
-                        <div id="eventSlowMotion" class="circle-chart" ref="refEventSlowMotion">缓动</div>
-                        <div id="eventLoop" class="circle-chart" ref="refEventLoop">循环</div>
-                        <div id="eventTimes" class="circle-chart" ref="refEventTimes">次数</div>
-                    </el-aside>
-
-                    <!-- 流程内容 -->
-                    <el-main>
-
-                        <!-- 帧数 -->
-                        <el-form-item class="clip-info-form-item" id="frame-no">
-                            <el-input v-model="AnimationEvent.FrameNo" @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.frameNo"></el-input>
                         </el-form-item>
+                    </div>
+                </div>
+            </el-col>
+
+            <!-- 右侧窗口区域 -->
+            <el-col :md="10">
+                <div class="grid-content">
+                    <div class="title bg-limegreen">事件基本信息</div>
+                    <div class="area-holder">
+                        <el-container>
+                            <!-- 流程图 -->
+                            <el-aside width="60px">
+                                <div id="eventFrameNo" class="circle-chart">帧数</div>
+                                <div id="eventType" class="circle-chart">类型</div>
+                                <div id="eventMethod" class="circle-chart">方法</div>
+                                <div id="eventTarget" class="circle-chart" ref="refEventTarget">目标</div>
+                                <div id="eventValueArray" class="circle-chart" ref="refEventValueArray">数值</div>
+                                <div id="eventTimeElapsed" class="circle-chart" ref="refEventTimeElapsed">用时</div>
+                                <div id="eventSlowMotion" class="circle-chart" ref="refEventSlowMotion">缓动</div>
+                                <div id="eventLoop" class="circle-chart" ref="refEventLoop">循环</div>
+                                <div id="eventTimes" class="circle-chart" ref="refEventTimes">次数</div>
+                            </el-aside>
+
+                            <!-- 流程内容 -->
+                            <el-main>
+
+                                <!-- 帧数 -->
+                                <el-form-item class="clip-info-form-item" id="frame-no">
+                                    <el-input v-model="AnimationEvent.FrameNo" @change="ctrlEventChange(1)"
+                                              :disabled="eventCtrlDisable.frameNo"></el-input>
+                                </el-form-item>
 
 
-                        <!-- 类型 -->
-                        <el-form-item class="clip-info-form-item" id="event-class">
-                            <el-select v-model="AnimationEvent.ClassName" placeholder="请选择" @change="selectChange" style="width: 100%;" :disabled="eventCtrlDisable.selectCtrl">
-                                <el-option v-for="item in AnimationEvent.OptionItems" :key="item.code" :label="item.text" :value="item.code">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                                <!-- 类型 -->
+                                <el-form-item class="clip-info-form-item" id="event-class">
+                                    <el-select v-model="AnimationEvent.ClassName" placeholder="请选择"
+                                               @change="selectChange" style="width: 100%;"
+                                               :disabled="eventCtrlDisable.selectCtrl">
+                                        <el-option v-for="item in AnimationEvent.OptionItems" :key="item.code"
+                                                   :label="item.text" :value="item.code">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
 
 
-                        <!-- 方法 与类型联动 -->
-                        <el-form-item class="clip-info-form-item" id="event-method">
-                            <el-select v-model="AnimationEvent.MethodName" placeholder="请选择" @change="methodSelectChange" style="width: 100%;" :disabled="eventCtrlDisable.selectCtrl">
-                                <el-option v-for="item in AnimationEvent.NewMethodName" :key="item.code" :label="item.text" :value="item.code">
-                                </el-option>
-                            </el-select>
+                                <!-- 方法 与类型联动 -->
+                                <el-form-item class="clip-info-form-item" id="event-method">
+                                    <el-select v-model="AnimationEvent.MethodName" placeholder="请选择"
+                                               @change="methodSelectChange" style="width: 100%;"
+                                               :disabled="eventCtrlDisable.selectCtrl">
+                                        <el-option v-for="item in AnimationEvent.NewMethodName" :key="item.code"
+                                                   :label="item.text" :value="item.code">
+                                        </el-option>
+                                    </el-select>
 
-                        </el-form-item>
+                                </el-form-item>
 
 
-                        <!-- 目标 -->
-                        <div class="clip-trigger-objects event-target">
-                            <div>
+                                <!-- 目标 -->
+                                <div class="clip-trigger-objects event-target">
+                                    <div>
                                 <span>
                                                 <el-form-item class="clip-info-form-item">
                                                     <el-radio v-model="AnimationEvent.TargetObject.TypeRadio" :label="1"
-                                                        :disabled="eventCtrlDisable.radioMain">单
+                                                              :disabled="eventCtrlDisable.radioMain">单
                                                     </el-radio>
                                                 </el-form-item>
                                             </span>
-                                <span>
+                                        <span>
                                                 <el-form-item class="clip-info-form-item">
                                                     <el-input v-model="AnimationEvent.TargetObject.SingleObject"
-                                                        @focus="focusMainRadio(1,1)" @change="ctrlEventChange(2)"
-                                                        :disabled="eventCtrlDisable.singleObj" placeholder="仅输入一个目标">
+                                                              @focus="focusMainRadio(1,1)" @change="ctrlEventChange(2)"
+                                                              :disabled="eventCtrlDisable.singleObj"
+                                                              placeholder="仅输入一个目标">
                                                     </el-input>
                                                 </el-form-item>
                                             </span>
-                            </div>
+                                    </div>
 
-                            <!-- 与 -->
-                            <div>
+                                    <!-- 与 -->
+                                    <div>
                                 <span>
                                                 <div>
                                                     <el-form-item class="clip-info-form-item">
                                                         <el-radio v-model="AnimationEvent.TargetObject.TypeRadio"
-                                                            :label="2" :disabled="eventCtrlDisable.radioMain">与
+                                                                  :label="2" :disabled="eventCtrlDisable.radioMain">与
                                                         </el-radio>
                                                     </el-form-item>
                                                 </div>
                                             </span>
 
-                                <span>
+                                        <span>
                                                 <div class="clip-trigger-objects-sub">
                                                     <div>
                                                         <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationEvent.TargetObject.AndObjects.AndRadio"
-                                                                    :label="1"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">无序
+                                                                        v-model="AnimationEvent.TargetObject.AndObjects.AndRadio"
+                                                                        :label="1"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">无序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                                 <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.AndObjects.NoSqcObjects"
-                                                                    @focus="focusMainRadio(1,2);focusSubRadio(1,1)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj"
-                                                                    placeholder="多个目标逗号（英文）分隔">
+                                                                        v-model="AnimationEvent.TargetObject.AndObjects.NoSqcObjects"
+                                                                        @focus="focusMainRadio(1,2);focusSubRadio(1,1)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj"
+                                                                        placeholder="多个目标逗号（英文）分隔">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -489,31 +512,31 @@
                                 <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationEvent.TargetObject.AndObjects.AndRadio"
-                                                                    :label="2"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">有序
+                                                                        v-model="AnimationEvent.TargetObject.AndObjects.AndRadio"
+                                                                        :label="2"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">有序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                                 <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.AndObjects.SqcObject1"
-                                                                    @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj"
-                                                                    @input="change($event)">
+                                                                        v-model="AnimationEvent.TargetObject.AndObjects.SqcObject1"
+                                                                        @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj"
+                                                                        @input="change($event)">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>至
                                 <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.AndObjects.SqcObject2"
-                                                                    @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj"
-                                                                    @input="change($event)">
+                                                                        v-model="AnimationEvent.TargetObject.AndObjects.SqcObject2"
+                                                                        @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj"
+                                                                        @input="change($event)">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -521,39 +544,39 @@
                         </div>
                         </span>
 
-            </div>
+                                    </div>
 
-            <!-- 或 -->
-            <div>
+                                    <!-- 或 -->
+                                    <div>
                 <span>
                                                 <div>
                                                     <el-form-item class="clip-info-form-item">
                                                         <el-radio v-model="AnimationEvent.TargetObject.TypeRadio"
-                                                            :label="3" :disabled="eventCtrlDisable.radioMain">或
+                                                                  :label="3" :disabled="eventCtrlDisable.radioMain">或
                                                         </el-radio>
                                                     </el-form-item>
                                                 </div>
                                             </span>
-                <span>
+                                        <span>
                                                 <div class="clip-trigger-objects-sub">
                                                     <div>
                                                         <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationEvent.TargetObject.OrObjects.OrRadio"
-                                                                    :label="1"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">无序
+                                                                        v-model="AnimationEvent.TargetObject.OrObjects.OrRadio"
+                                                                        :label="1"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">无序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                 <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.OrObjects.NoSqcObjects"
-                                                                    @focus="focusMainRadio(1,3);focusSubRadio(1,1)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj"
-                                                                    placeholder="多个目标逗号（英文）分隔">
+                                                                        v-model="AnimationEvent.TargetObject.OrObjects.NoSqcObjects"
+                                                                        @focus="focusMainRadio(1,3);focusSubRadio(1,1)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj"
+                                                                        placeholder="多个目标逗号（英文）分隔">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -563,29 +586,29 @@
                 <span>
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-radio
-                                                                    v-model="AnimationEvent.TargetObject.OrObjects.OrRadio"
-                                                                    :label="2"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">有序
+                                                                        v-model="AnimationEvent.TargetObject.OrObjects.OrRadio"
+                                                                        :label="2"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">有序
                                                                 </el-radio>
                                                             </el-form-item>
                                                         </span>
                 <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.OrObjects.SqcObject1"
-                                                                    @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">
+                                                                        v-model="AnimationEvent.TargetObject.OrObjects.SqcObject1"
+                                                                        @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>至
                 <span class="short-input">
                                                             <el-form-item class="clip-info-form-item">
                                                                 <el-input
-                                                                    v-model="AnimationEvent.TargetObject.OrObjects.SqcObject2"
-                                                                    @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
-                                                                    @change="ctrlEventChange(2)"
-                                                                    :disabled="eventCtrlDisable.nonSingleObj">
+                                                                        v-model="AnimationEvent.TargetObject.OrObjects.SqcObject2"
+                                                                        @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
+                                                                        @change="ctrlEventChange(2)"
+                                                                        :disabled="eventCtrlDisable.nonSingleObj">
                                                                 </el-input>
                                                             </el-form-item>
                                                         </span>
@@ -593,97 +616,103 @@
         </div>
         </span>
 
-        </div>
+                                    </div>
 
-        </div>
+                                </div>
 
-        <!-- 数值 -->
+                                <!-- 数值 -->
 
-        <el-form-item class="clip-info-form-item">
-            <div class="event-value-array">
-                <!-- 可编辑表格 -->
-                <el-table :data="targetData" border @cell-click="cellClick">
-                    <el-table-column label="目标">
-                        <template slot-scope="scope">
-                                                        <span>{{ scope.row.Target }}</span>
-                                                    </template>
-                    </el-table-column>
-                    <el-table-column label="起始值">
-                        <template slot-scope="scope">
-                                                        <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
-                                                            @blur="loseFcous(scope.$index, scope.row)"
-                                                            :disabled="eventCtrlDisable.par"> </el-input>
-                                                        <span v-else>{{ scope.row.StartValue }}</span>
-                                                    </template>
-                    </el-table-column>
-                    <el-table-column label="结束值">
-                        <template slot-scope="scope">
-                                                        <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
-                                                            @blur="loseFcous(scope.$index, scope.row)"
-                                                            :disabled="eventCtrlDisable.par"> </el-input>
-                                                        <span v-else>{{ scope.row.EndValue }}</span>
-                                                    </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-        </el-form-item>
+                                <el-form-item class="clip-info-form-item">
+                                    <div class="event-value-array">
+                                        <!-- 可编辑表格 -->
+                                        <el-table :data="targetData" border @cell-click="cellClick">
+                                            <el-table-column label="目标">
+                                                <template slot-scope="scope">
+                                                    <span>{{ scope.row.Target }}</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column label="起始值">
+                                                <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.StartValue" v-if="scope.row.seen"
+                                                              @blur="loseFcous(scope.$index, scope.row)"
+                                                              :disabled="eventCtrlDisable.par"></el-input>
+                                                    <span v-else>{{ scope.row.StartValue }}</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column label="结束值">
+                                                <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.EndValue" v-if="scope.row.seen"
+                                                              @blur="loseFcous(scope.$index, scope.row)"
+                                                              :disabled="eventCtrlDisable.par"></el-input>
+                                                    <span v-else>{{ scope.row.EndValue }}</span>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </div>
+                                </el-form-item>
 
 
-
-        <!-- 耗时 -->
-        <div class="duration">
+                                <!-- 耗时 -->
+                                <div class="duration">
             <span class="short-input">
                                             <el-form-item class="clip-info-form-item" id="clip-name">
                                                 <el-input v-model="AnimationEvent.DurationMinute"
-                                                    @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw">
+                                                          @change="ctrlEventChange(1)"
+                                                          :disabled="eventCtrlDisable.dotw">
                                                 </el-input>
                                             </el-form-item>
                                         </span>分
-            <span class="short-input">
+                                    <span class="short-input">
                                             <el-form-item class="clip-info-form-item" id="clip-name">
                                                 <el-input v-model="AnimationEvent.DurationSecond"
-                                                    @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw">
+                                                          @change="ctrlEventChange(1)"
+                                                          :disabled="eventCtrlDisable.dotw">
                                                 </el-input>
                                             </el-form-item>
                                         </span>秒
-        </div>
+                                </div>
 
 
-        <!-- 缓动 -->
-        <el-form-item class="clip-info-form-item" id="event-slow-motion">
-            <el-input v-model="AnimationEvent.PlayType" @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw"></el-input>
-        </el-form-item>
+                                <!-- 缓动 -->
+                                <el-form-item class="clip-info-form-item" id="event-slow-motion">
+                                    <el-input v-model="AnimationEvent.PlayType" @change="ctrlEventChange(1)"
+                                              :disabled="eventCtrlDisable.dotw"></el-input>
+                                </el-form-item>
 
 
-        <!-- 循环 -->
-        <el-form-item class="clip-info-form-item" id="event-loop">
-            <el-select v-model="AnimationEvent.LoopType" placeholder="请选择" @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw" style="width:100%;">
-                <el-option v-for="item in loopTypeOptions" :key="item.code" :label="item.text" :value="item.code">
-                </el-option>
-            </el-select>
+                                <!-- 循环 -->
+                                <el-form-item class="clip-info-form-item" id="event-loop">
+                                    <el-select v-model="AnimationEvent.LoopType" placeholder="请选择"
+                                               @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw"
+                                               style="width:100%;">
+                                        <el-option v-for="item in loopTypeOptions" :key="item.code" :label="item.text"
+                                                   :value="item.code">
+                                        </el-option>
+                                    </el-select>
 
-        </el-form-item>
+                                </el-form-item>
 
 
-        <!-- 次数 -->
-        <el-form-item class="clip-info-form-item" id="event-times">
-            <el-input v-model="AnimationEvent.LoopTimes" @change="ctrlEventChange(1)" :disabled="eventCtrlDisable.dotw"></el-input>
-        </el-form-item>
+                                <!-- 次数 -->
+                                <el-form-item class="clip-info-form-item" id="event-times">
+                                    <el-input v-model="AnimationEvent.LoopTimes" @change="ctrlEventChange(1)"
+                                              :disabled="eventCtrlDisable.dotw"></el-input>
+                                </el-form-item>
 
-        <div style="height: 30px;"></div>
-        </el-main>
-        </el-container>
-        </div>
-        </div>
-    </el-col>
+                                <div style="height: 30px;"></div>
+                            </el-main>
+                        </el-container>
+                    </div>
+                </div>
+            </el-col>
 
-    </el-form>
-    <!-- End of el-form -->
+        </el-form>
+        <!-- End of el-form -->
 
     </el-row>
 
-    </div>
-    <!-- app End -->
+</div>
+<!-- app End -->
 </body>
 
 </html>
