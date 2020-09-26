@@ -101,6 +101,7 @@ let template = `
                                         v-model="AnimationEvent.TargetObject.AndObjects.NoSqcObjects"
                                         @focus="focusMainRadio(1,2);focusSubRadio(1,1)"
                                         @change="updateParam('21')"
+                                         @blur="updateParam('21')"
                                         :disabled="eventCtrlDisable.nonSingleObj"
                                         placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
@@ -114,6 +115,7 @@ let template = `
                                             v-model="AnimationEvent.TargetObject.AndObjects.SqcObject1"
                                             @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
                                             @change="orderChange('2')"
+                                             @blur="orderChange('2')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="开始"></el-input>
                                         <span>至</span>
@@ -121,6 +123,7 @@ let template = `
                                             v-model="AnimationEvent.TargetObject.AndObjects.SqcObject2"
                                             @focus="focusMainRadio(1,2);focusSubRadio(1,2)"
                                             @change="orderChange('2')"
+                                             @blur="orderChange('2')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="结束"></el-input>
                                     </div>
@@ -143,6 +146,7 @@ let template = `
                                         v-model="AnimationEvent.TargetObject.OrObjects.NoSqcObjects"
                                          @focus="focusMainRadio(1,3);focusSubRadio(1,1)"
                                         @change="updateParam('31')"
+                                        @blur="updateParam('31')"
                                         :disabled="eventCtrlDisable.nonSingleObj"
                                         placeholder="多个目标逗号（英文）分隔"></el-input>
                                 </div>
@@ -156,6 +160,7 @@ let template = `
                                             v-model="AnimationEvent.TargetObject.OrObjects.SqcObject1"
                                             @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
                                             @change="orderChange('3')"
+                                            @blur="orderChange('3')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="开始"></el-input>
                                         <span>至</span>
@@ -163,6 +168,7 @@ let template = `
                                             v-model="AnimationEvent.TargetObject.OrObjects.SqcObject2"
                                             @focus="focusMainRadio(1,3);focusSubRadio(1,2)"
                                             @change="orderChange('3')"
+                                            @blur="orderChange('3')"
                                             :disabled="eventCtrlDisable.nonSingleObj"
                                             placeholder="结束"></el-input>
                                     </div>
@@ -476,7 +482,7 @@ Vue.component('process-info', {
                     TypeRadio: '', //主单选按钮
                     SingleObject: '', //单物体
                     OrObjects: {
-                        OrRadio: '', //或单选按钮
+                        OrRadio: '', //或有序1 无序2单选按钮
                         NoSqcObjects: '', //无序
                         SqcObject1: '', //有序1
                         SqcObject2: '' //有序2
@@ -567,27 +573,28 @@ Vue.component('process-info', {
                 OrRadio = this.AnimationEvent.TargetObject.OrObjects.OrRadio
             if (newV == '1') { // 选择单
                 this.updateParam('1')
-            } else {
-                if (newV == '2' && AndRadio) { // 选择与
-                    this.updateParam('2' + AndRadio)
-                }
-                if (newV == '3' && OrRadio) { // 选择或
-                    this.updateParam('3' + OrRadio)
-                }
             }
+            // else {
+            //     if (newV == '2' && AndRadio) { // 选择与
+            //         this.updateParam('2' + AndRadio)
+            //     }
+            //     if (newV == '3' && OrRadio) { // 选择或
+            //         this.updateParam('3' + OrRadio)
+            //     }
+            // }
         },
-        'AnimationEvent.TargetObject.AndObjects.AndRadio'(newV) { // 与单选
-            // console.log('与', newV)
-            if (this.AnimationEvent.TargetObject.TypeRadio == 2 && newV != 0) {
-                this.updateParam('2' + newV)
-            }
-        },
-        'AnimationEvent.TargetObject.OrObjects.OrRadio'(newV) { // 或单选
-            // console.log('或', newV)
-            if (this.AnimationEvent.TargetObject.TypeRadio == 3 && newV != 0) {
-                this.updateParam('3' + newV)
-            }
-        },
+        // 'AnimationEvent.TargetObject.AndObjects.AndRadio'(newV) { // 与单选
+        //     // console.log('与', newV)
+        //     if (this.AnimationEvent.TargetObject.TypeRadio == 2 && newV != 0) {
+        //         this.updateParam('2' + newV)
+        //     }
+        // },
+        // 'AnimationEvent.TargetObject.OrObjects.OrRadio'(newV) { // 或单选
+        //     // console.log('或', newV)
+        //     if (this.AnimationEvent.TargetObject.TypeRadio == 3 && newV != 0) {
+        //         this.updateParam('3' + newV)
+        //     }
+        // },
         // 'StepEvent.TargetObject.TypeRadio'(newV) { // 主单选
         //     // console.log(newV)
         //     let OrRadio = this.StepEvent.TargetObject.OrObjects.OrRadio
@@ -638,6 +645,7 @@ Vue.component('process-info', {
         // 根据目标更新参数
         updateParam(type) { // 1：单选，21：与无序，22：与有序，31：或无序，32：或有序
             // 如果没有参数就不设置参数
+            console.log(this.AnimationEvent.TargetObject)
             if (!this.hasPar) {
                 return
             }
@@ -721,6 +729,17 @@ Vue.component('process-info', {
                 })) : []
             }
         },
+        // 目标参数转换
+        paramsObjToStr(str1, str2, type, obj=true){
+            let start = +(str1.substr(str1.lastIndexOf('_') + 1)),
+                end = +(str2.substr(str2.lastIndexOf('_') + 1)),
+                str = str1.substring(0, str1.lastIndexOf('_') + 1)
+            let param = [];
+            for (let i = start; i <= end; i++) {
+                param.push(str + i);
+            }
+            return  obj ? `#obj${param.join(type)}#obj` : `${param.join(type)}`;
+        },
         stepObj2par(str1, str2) {
             if (!!str2) {
                 if (!!str1) {
@@ -758,6 +777,8 @@ Vue.component('process-info', {
             if (!!start && !!end) { // 只有开始和结束都有才执行
                 if (start.substring(0, start.lastIndexOf('_') + 1) != end.substring(0, end.lastIndexOf('_') + 1)) {
                     this.$alert('有序对象1和对象2的名称前缀不一致，请检查', '提示', { type: 'warning' });
+                } else if(start > end){
+                    this.$alert('起始值不能大于结束值');
                 } else {
                     this.updateParam(radio + '2')
                 }
@@ -947,12 +968,13 @@ Vue.component('process-info', {
                     if (OrObjects.OrRadio == 1) {
                         obj = stepEvent.ToolType + '|' + OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
-                        // FIXME: 有序 需要处理
-                        let tmp = [];
-                        for (let i = OrObjects.SqcObject1; i<= OrObjects.SqcObject2; i++) {
-                            tmp.push(i);
-                        }
-                        obj =  stepEvent.ToolType + '|' + tmp.toString().replace(/\,/g, '|');
+                        let tmp = this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
+                        obj =  stepEvent.ToolType + '|' + tmp;
+                        // let tmp = [];
+                        // for (let i = OrObjects.SqcObject1; i<= OrObjects.SqcObject2; i++) {
+                        //     tmp.push(i);
+                        // }
+                        // obj =  stepEvent.ToolType + '|' + tmp.toString().replace(/\,/g, '|');
                     }
                 }
             }
@@ -969,8 +991,7 @@ Vue.component('process-info', {
                     if (OrObjects.OrRadio == 1) {
                         maskObj = OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
-                        // FIXME: 有序 需要处理
-                        maskObj = `${OrObjects.SqcObject1}|${OrObjects.SqcObject2}`
+                        maskObj = this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
                     }
                 }
             }
@@ -1041,12 +1062,25 @@ Vue.component('process-info', {
         eventClick(row) {
             this.eventItemIndex = this.eventList.indexOf(row)
             this.$refs.eventTable.setCurrentRow(row)
+            this.blankCtrl();
             this.parseEventData(row.code)
             // this.eventCtrlDisable.selectCtrl = true
         },
+        // 设置目标有序 无序
+        // @params type +与 |或
+        judgeOrder(obj, type) {
+            var andArr = obj.split(type);
+            var len = andArr.length;
+            var numStart = parseInt(andArr[0].replace(/[^0-9]/ig, ''));
+            var numEnd = parseInt(andArr[len - 1].replace(/[^0-9]/ig, ''));
+            if ((numEnd - numStart + 1) != len) {
+                return '1&' + andArr.toString();
+            } else {
+                return '2&' + andArr.toString();
+            }
+        },
         // 解析事件数据
         parseEventData(str) {
-            debugger;
             this.targetData = []
             // 获取类型和方法
             let classAndMethod = str.split('#')[0].slice(0, -1).split('_')
@@ -1079,19 +1113,29 @@ Vue.component('process-info', {
                     // FIXME: 无法判断是与还是或
                     if (/\|/.test(obj)) { // 或
                         this.AnimationEvent.TargetObject.TypeRadio = 3
-                        this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 或中无序
-                        this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.repeat(/\|/g, ',')
+                        let objArr = this.judgeOrder(obj, '|').split('&');
+                        if (objArr[0] == 2) { // 有序
+                            this.AnimationEvent.TargetObject.OrObjects.OrRadio = 2;
+                            let sqlObj = objArr[1].split(',');
+                            this.AnimationEvent.TargetObject.OrObjects.SqcObject1 = sqlObj[0];
+                            this.AnimationEvent.TargetObject.OrObjects.SqcObject2 = sqlObj[sqlObj.length - 1]
+                        } else {
+                            this.AnimationEvent.TargetObject.OrObjects.OrRadio = 1 // 或中无序
+                            this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = obj.replace(/\|/g, ',')
+                        }
                     } else { // 与
                         this.AnimationEvent.TargetObject.TypeRadio = 2
-                        this.AnimationEvent.TargetObject.AndObjects.AndRadio = 1 // 与中无序
-                        let tmp = [];
-                        let start = obj.split('+')[0];
-                        let end = obj.split('+')[1];
-                        for (let i = start; i<= end; i++) {
-                            tmp.push(i);
+                        let objArr = this.judgeOrder(obj, '+').split('&');
+                        if (objArr[0] == 2) { // 有序
+                            this.AnimationEvent.TargetObject.AndObjects.AndRadio = 2;
+                            let sqlObj = objArr[1].split(',');
+                            this.AnimationEvent.TargetObject.AndObjects.SqcObject1 = sqlObj[0];
+                            this.AnimationEvent.TargetObject.AndObjects.SqcObject2 = sqlObj[sqlObj.length - 1]
+                        } else {
+                            this.AnimationEvent.TargetObject.AndObjects.AndRadio = 1 // 与中无序
+                            this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = obj.replace(/\+/g, ',')
                         }
-                        // this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = obj.repeat(/\+/g, ',')
-                        this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = tmp.toString();
+
                     }
                 } else {
                     this.AnimationEvent.TargetObject.TypeRadio = 1
@@ -1120,7 +1164,7 @@ Vue.component('process-info', {
             // 含有#par
             if (this.hasPar) {
                 let pars = par.split('|')
-                let objs = obj.split('|')
+                let objs = /\|/.test(obj) ? obj.split('|') : obj.split('+')
                 pars.forEach((item, index) => {
                     this.targetData.push({
                         'seen': false, //可见性
@@ -1149,11 +1193,19 @@ Vue.component('process-info', {
             }
             // 是否可操作
             // TODO: 需要按照配置文件判定是否可操作
-            this.eventCtrlDisable.radioMain = !obj
-            this.eventCtrlDisable.singleObj = !obj
-            this.eventCtrlDisable.nonSingleObj = !obj
-            this.eventCtrlDisable.par = !par
-            this.eventCtrlDisable.dotw = !dotw
+            // this.eventCtrlDisable.radioMain = !obj
+            // this.eventCtrlDisable.singleObj = !obj
+            // this.eventCtrlDisable.nonSingleObj = !obj
+            let fundMethod = this.NewMethodName.find(item => {
+                return item.code == classAndMethod[1];
+            })
+            if (fundMethod.abled) {
+                this.setCtrlDisable(fundMethod.obj, fundMethod.par, fundMethod.dotw, abled = true);
+            } else {
+                this.setCtrlDisable(fundMethod.obj, fundMethod.par, fundMethod.dotw, abled = false);
+            }
+            // this.eventCtrlDisable.par = !par
+            // this.eventCtrlDisable.dotw = !dotw
             console.log(this.eventCtrlDisable)
         },
         // AnimationEvent json格式的转换成字符串形式的，EventList里Event格式
@@ -1170,18 +1222,27 @@ Vue.component('process-info', {
                 let OrObjects = TargetObject.OrObjects
                 if (TypeRadio == 1) {
                     obj = `#obj${TargetObject.SingleObject}#obj`
-                } else if (TypeRadio == 2) {
-                    // FIXME: 不能区分与或 需要额外参数
+                } else if (TypeRadio == 2) { // 与 +
                     if (AndObjects.AndRadio == 1) {
-                        obj = `#obj${AndObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
+                        obj = `#obj${AndObjects.NoSqcObjects.replace(/\,/g, '+')}#obj`
                     } else {
-                        obj = `#obj${AndObjects.SqcObject1}+${AndObjects.SqcObject2}#obj`
+                        obj = this.paramsObjToStr(AndObjects.SqcObject1, AndObjects.SqcObject2, '+');
+                        // let str1 = AndObjects.SqcObject1;
+                        // let str2 = AndObjects.SqcObject2;
+                        // let start = +(str1.substr(str1.lastIndexOf('_') + 1)),
+                        //     end = +(str2.substr(str2.lastIndexOf('_') + 1)),
+                        //     str = str1.substring(0, str1.lastIndexOf('_') + 1)
+                        // let param = [];
+                        // for (let i = start; i <= end; i++) {
+                        //     param.push(str + i);
+                        // }
+                        // obj = `#obj${param.join('+')}#obj`
                     }
-                } else if (TypeRadio == 3) {
+                } else if (TypeRadio == 3) { // 或 |
                     if (OrObjects.OrRadio == 1) {
                         obj = `#obj${OrObjects.NoSqcObjects.replace(/\,/g, '|')}#obj`
                     } else {
-                        obj = `#obj${OrObjects.SqcObject1}+${OrObjects.SqcObject2}#obj`
+                        obj = this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|');
                     }
                 }
             }
@@ -1507,8 +1568,22 @@ Vue.component('process-info', {
                     this.AnimationEvent.TargetObject.AndObjects.AndRadio = 0;
                 }
             }
-
-
+        },
+        //清空事件区域控件中数值
+        blankCtrl() {
+            this.AnimationEvent.ClassName = '';
+            this.AnimationEvent.MethodName = '';
+            this.AnimationEvent.TargetObject.TypeRadio = 0;
+            this.AnimationEvent.TargetObject.AndObjects.AndRadio = 0;
+            this.AnimationEvent.TargetObject.OrObjects.OrRadio = 0;
+            this.AnimationEvent.TargetObject.SingleObject = '';
+            this.AnimationEvent.TargetObject.AndObjects.NoSqcObjects = '';
+            this.AnimationEvent.TargetObject.AndObjects.SqcObject1 = '';
+            this.AnimationEvent.TargetObject.AndObjects.SqcObject2 = '';
+            this.AnimationEvent.TargetObject.OrObjects.NoSqcObjects = '';
+            this.AnimationEvent.TargetObject.OrObjects.SqcObject1 = '';
+            this.AnimationEvent.TargetObject.OrObjects.SqcObject2 = '';
+            this.targetData = [{ 'seen': false, 'Target': '', "StartValue": '默认', 'EndValue': '' }]
         }
     },
 
