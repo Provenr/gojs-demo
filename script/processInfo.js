@@ -885,14 +885,14 @@ Vue.component('process-info', {
         formateStepEvent() {
             let stepInfo = this.info
             // console.log('stepInfo', stepInfo);
-            // 工具
-            let [ToolType] = stepInfo._TriggerObject.split('|')
+            // 工具  目标
+            let [ToolType, TargetObject] = stepInfo._TriggerObject.split('|')
             // 目标
-            let TargetObject = stepInfo._TriggerObject.substr(stepInfo._TriggerObject.indexOf('|') + 1)
+            // let TargetObject = stepInfo._TriggerObject.substr(stepInfo._TriggerObject.indexOf('|') + 1)
             // 排除
-            let MaskObject = stepInfo._MaskColliderObject
+            let MaskObject = stepInfo._MaskColliderObject ? stepInfo._MaskColliderObject.split('|')[1] : null
             // 目标名称
-            let ObjectName = stepInfo._ObjectName.split('|')
+            // let ObjectName = stepInfo._ObjectName.split('|')
             // 磁盘类型
             let ColliderMode = stepInfo._ColliderMode.split('|')
             // 磁盘大小
@@ -902,29 +902,35 @@ Vue.component('process-info', {
             // 展示模式
             let ShowMode = stepInfo._ShowMode
             // 参数组合
-            let StepParam = ObjectName.map((item, index) => {
-                return {
-                    ObjectName: item,
-                    ColliderMode: ColliderMode[index],
-                    ColliderScale: ColliderScale[index]
-                }
-            })
+            let StepParam = [];
             // 目标
             if (TargetObject) {
+                let TargetObjectArr = [];
                 if (TargetObject.includes('|')) { // 或，默认为无序
+                    TargetObjectArr = TargetObject.split('|');
                     this.StepEvent.TargetObject.TypeRadio = 2
                     this.StepEvent.TargetObject.OrObjects.OrRadio = 1
                     this.StepEvent.TargetObject.OrObjects.NoSqcObjects = TargetObject.replace(/\|/g, ',')
                     // 单置空
                     this.StepEvent.TargetObject.SingleObject = ''
                 } else { // 单
+                    TargetObjectArr = [TargetObject];
                     this.StepEvent.TargetObject.TypeRadio = 1
                     this.StepEvent.TargetObject.SingleObject = TargetObject
                     // 或置空
                     this.StepEvent.TargetObject.OrObjects.OrRadio = ''
                     this.StepEvent.TargetObject.OrObjects.NoSqcObjects = ''
                 }
+                // 参数组合
+                StepParam = TargetObjectArr.map((item, index) => {
+                    return {
+                        ObjectName: item,
+                        ColliderMode: ColliderMode[index],
+                        ColliderScale: ColliderScale[index]
+                    }
+                })
             }
+
             // 排除
             if (MaskObject && MaskObject != 'null') {
                 if (MaskObject.includes('|')) { // 或，默认为无序
@@ -986,12 +992,12 @@ Vue.component('process-info', {
             OrObjects = MaskObject.OrObjects
             if (TypeRadio) {
                 if (TypeRadio == 1) {
-                    maskObj = MaskObject.SingleObject;
+                    maskObj = stepEvent.ToolType + '|' + MaskObject.SingleObject;
                 } else if (TypeRadio == 2) {
                     if (OrObjects.OrRadio == 1) {
-                        maskObj = OrObjects.NoSqcObjects.replace(/\,/g, '|');
+                        maskObj = stepEvent.ToolType + '|' + OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
-                        maskObj = this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
+                        maskObj = stepEvent.ToolType + '|' + this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
                     }
                 }
             }
@@ -1002,14 +1008,15 @@ Vue.component('process-info', {
             // 参数
             let ColliderMode = []
             let ColliderScale = []
-            let ObjectName = []
+            let ObjectName = ['T']
             this.StepEvent.StepParam.forEach(item => {
                 ColliderMode.push(item.ColliderMode)
                 ColliderScale.push(item.ColliderScale)
-                ObjectName.push(item.ObjectName)
+                ObjectName.push('M')
             })
             // 参数--目标名称
             stepInfo._ObjectName = ObjectName.join('|');
+            stepInfo._ObjectType = ObjectName.join('|');
             // 参数--磁盘类型
             stepInfo._ColliderMode = ColliderMode.join('|');
             // 参数--磁盘大小
