@@ -894,9 +894,9 @@ Vue.component('process-info', {
             // 目标名称
             // let ObjectName = stepInfo._ObjectName.split('|')
             // 磁盘类型
-            let ColliderMode = stepInfo._ColliderMode.split('|')
+            let ColliderMode = stepInfo._ColliderMode.split('|').splice(0,1)
             // 磁盘大小
-            let ColliderScale = stepInfo._ColliderScale.split('|')
+            let ColliderScale = stepInfo._ColliderScale.split('|').splice(0,1)
             // 触发类型
             let TriggerMode = stepInfo._TriggerMode
             // 展示模式
@@ -1006,8 +1006,8 @@ Vue.component('process-info', {
             // 展示模式
             stepInfo._ShowMode = this.StepEvent.ShowMode;
             // 参数
-            let ColliderMode = []
-            let ColliderScale = []
+            let ColliderMode = ['mesh']
+            let ColliderScale = ['1,1,1']
             let ObjectName = ['T']
             this.StepEvent.StepParam.forEach(item => {
                 ColliderMode.push(item.ColliderMode)
