@@ -83,7 +83,7 @@ function setPersonNodeTmpJson (id, name) {
             _TriggerMode: "0",
             _TriggerObject: ""
         },
-        _AutoPlay: "1",
+        _AutoPlay: "0",
         _Index: id,
         _Name: name
     }
@@ -153,7 +153,7 @@ let personTmpJson = { // 人员模板数据
                     _TriggerObject: ""
                 },
                 _TEST: 'Template',
-                _AutoPlay: "",
+                _AutoPlay: "0",
                 _Index: "",
                 _Name: ""
             }
@@ -528,9 +528,9 @@ const Editor = {
         // 设置当前节点的执行方式
         setAutoPlay() {
             if (this.currentPersonJson.ProcessInfo.length == 0) return false;
-            if (this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '1'
-            && this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '2') {
-                this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay = '2'
+            if (this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '0'
+            && this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay != '1') {
+                this.currentPersonJson.ProcessInfo[this.currentNodeIndex]._AutoPlay = '1'
             }
         },
         // 初始化

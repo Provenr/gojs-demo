@@ -117,8 +117,8 @@
                             <div>节点名称：{{currentPersonJson.ProcessInfo[currentNodeIndex]._Name}}</div>
                             <div>参与人员：人员{{currentPerson}}
                                 <el-radio-group v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" @change="AutoPlayChange">
-                                    <el-radio :label="'1'">参与执行</el-radio>
-                                    <el-radio :label="'2'">自动执行</el-radio>
+                                    <el-radio :label="'0'">参与执行</el-radio>
+                                    <el-radio :label="'1'">自动执行</el-radio>
                                 </el-radio-group>
 <!--                                <label>-->
 <!--                                    <el-radio v-model="currentPersonJson.ProcessInfo[currentNodeIndex]._AutoPlay" label="1">参与执行</el-radio>-->

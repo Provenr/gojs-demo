@@ -956,7 +956,7 @@ Vue.component('process-info', {
         },
 
         // 保存时 反序列 进行步骤的数据
-        ParseeStepEvent(stepEvent) {
+        ParseStepEvent(stepEvent) {
             // let  = this.StepEvent;
             // console.log(stepEvent)
             let stepInfo = {};
@@ -986,22 +986,22 @@ Vue.component('process-info', {
             }
             stepInfo._TriggerObject = obj;
             // MaskObject
-            let maskObj = '';
+            let maskObj = null;
             let MaskObject = stepEvent.MaskObject
             TypeRadio = MaskObject.TypeRadio
             OrObjects = MaskObject.OrObjects
             if (TypeRadio) {
                 if (TypeRadio == 1) {
-                    maskObj = stepEvent.ToolType + '|' + MaskObject.SingleObject;
+                    maskObj = MaskObject.SingleObject;
                 } else if (TypeRadio == 2) {
                     if (OrObjects.OrRadio == 1) {
-                        maskObj = stepEvent.ToolType + '|' + OrObjects.NoSqcObjects.replace(/\,/g, '|');
+                        maskObj = OrObjects.NoSqcObjects.replace(/\,/g, '|');
                     } else {
-                        maskObj = stepEvent.ToolType + '|' + this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
+                        maskObj = this.paramsObjToStr(OrObjects.SqcObject1, OrObjects.SqcObject2, '|', false);
                     }
                 }
             }
-            stepInfo._MaskColliderObject = maskObj;
+            stepInfo._MaskColliderObject = maskObj ? maskObj: null;
 
             // 展示模式
             stepInfo._ShowMode = this.StepEvent.ShowMode;
@@ -1280,7 +1280,7 @@ Vue.component('process-info', {
                 // 进行中 的步骤
                 if (this.step) {
                     // console.log('保存',this.StepEvent)
-                    // let stepInfo = this.ParseeStepEvent(this.StepEvent)
+                    // let stepInfo = this.ParseStepEvent(this.StepEvent)
                     // console.log('保存',this.stepInfo)
                     Object.assign(this.info, this.stepInfo)
                 }
@@ -1315,7 +1315,7 @@ Vue.component('process-info', {
         submit() {
             if (this.step) {
                 console.log('submit',this.StepEvent)
-                this.ParseeStepEvent(this.StepEvent);
+                this.ParseStepEvent(this.StepEvent);
             }
             this.json2str('save')
         },
