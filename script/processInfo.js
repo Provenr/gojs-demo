@@ -886,17 +886,17 @@ Vue.component('process-info', {
             let stepInfo = this.info
             // console.log('stepInfo', stepInfo);
             // 工具  目标
-            let [ToolType, TargetObject] = stepInfo._TriggerObject.split('|')
+            let [ToolType] = stepInfo._TriggerObject.split('|')
             // 目标
-            // let TargetObject = stepInfo._TriggerObject.substr(stepInfo._TriggerObject.indexOf('|') + 1)
+            let TargetObject = stepInfo._TriggerObject.substr(stepInfo._TriggerObject.indexOf('|') + 1)
             // 排除
             let MaskObject = stepInfo._MaskColliderObject ? stepInfo._MaskColliderObject.split('|')[1] : null
             // 目标名称
             // let ObjectName = stepInfo._ObjectName.split('|')
             // 磁盘类型
-            let ColliderMode = stepInfo._ColliderMode.split('|').splice(0,1)
+            let ColliderMode = stepInfo._ColliderMode.substr(stepInfo._ColliderMode.indexOf('|') + 1).split('|')
             // 磁盘大小
-            let ColliderScale = stepInfo._ColliderScale.split('|').splice(0,1)
+            let ColliderScale = stepInfo._ColliderScale.substr(stepInfo._ColliderScale.indexOf('|') + 1).split('|')
             // 触发类型
             let TriggerMode = stepInfo._TriggerMode
             // 展示模式
