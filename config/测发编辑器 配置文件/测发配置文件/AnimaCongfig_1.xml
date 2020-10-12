@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AnimationConfigure Name="JXBAniamtion" Version="1.0">
+  <ModelObject AnimationName="JXB" CameraName="">
+  <ModelObject ModelName="NoAnima" />
+  <ModelObject ModelName="NoAnima2"/>
+  </ModelObject>
+  <AnimationClip ID="1" Name="拆喷水管" ClipFrame="0_80" Speed="1" TriggerObject="Needle_Part_PS" TriggerObjectMove="JXB|1.014658,1.902845,-0.00706172|1.9557,1.11426,1.176019|0,0,315.5982|90,44.40176,0~JXB|0.2345998,0.7191449,2.320638|1.175642,-1.21344,-0.007680817|86.11788,173.3653,187.2295|356.144,179.5508,193.8793">
+    <Event Content="10_UI_TextContent_#objHintTxt#obj#par.#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="10_Object_MoveObject_#objPlayer#obj#parTarget#par#dotw3#1#1#0#dotw" />
+    <Event Content="20_Material_ReplaceMaterial_#objPlayer#obj#parMetal_Yellow#par" />
+    <Event Content="30_Object_RotateObject_#objPlayer#obj#parTarget#par#dotw3#1#1#0#dotw" />
+    <Event Content="50_Object_ScaleObject_#objPlayer#obj#parTarget#par#dotw3#1#1#0#dotw" />
+    <Event Content="50_Effect_CreatFire_#objFireSmookToUse#obj#parJXB!Arm_Part_01_01#par" />
+    <Event Content="60_Material_OpenTransparency_#objPlayer#obj" />
+    <Event Content="60_Effect_Openmulti_#objFireSmookToUse#obj" />
+    <Event Content="80_Effect_Playmulti_#objFireSmookToUse#obj" />
+  </AnimationClip>
+  <AnimationClip ID="2" Name="拆喷管螺丝" ClipFrame="80_200" Speed="1" TriggerObject="Arm_Part_07_01+Arm_Part_07_03+Arm_Part_07_04+Arm_Part_07_02" TriggerObjectMove="JXB|0.9056923,1.96578,0.04782343|1.846734,1.059374,1.238954|315,90,270|0,45,0~JXB|0.7173334,0.7030841,2.280966|1.658375,-1.173768,-0.02374161|270.2518,270.01,311.7679|0,359.7462,221.7777+JXB|0.8859887,1.982116,-0.06126928|1.827031,1.168467,1.25529|315,90,270|0,45,0~JXB|0.6828667,0.7032962,2.280972|1.623909,-1.173774,-0.02352936|270.2625,270.0087,311.769|0,359.7362,221.7777+JXB|0.9040087,1.964096,-0.0612694|1.845051,1.168467,1.23727|315,90,270|0,45,0~JXB|0.6438797,0.7032306,2.280892|1.584921,-1.173694,-0.02359512|270.2579,270.0103,311.7675|0,359.7406,221.7777+JXB|0.8876724,1.983799,0.04782355|1.828714,1.059374,1.256974|315,90,270|0,45,0~JXB|0.6080182,0.7032155,2.280904|1.54906,-1.173706,-0.02361008|270.2617,270.0082,311.7693|0,359.7373,221.7777">
+    <Event Content="90_Material_CloseTransparency_#objPlayer#obj" />
+    <Event Content="90_UI_TextFade_#objHintTxt#obj#par1#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="90_UI_TextContent_#objHintTxt#obj#par我是拆喷管螺丝的事件#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="150_Material_SetColor_#objPlayer#obj#parMetal_Yellow!EFF7FF#par" />
+    <Event Content="150_UI_ImageColor_#objHintImg#obj#parFF0000#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="150_Effect_Stopmulti_#objFireSmookToUse#obj" />
+    <Event Content="150_Material_ReplaceTexture_#objPlayer#obj#parMetal_Yellow!12321#par" />
+  </AnimationClip>
+  <AnimationClip ID="3" Name="喷管固定器" ClipFrame="200_270" Speed="1" TriggerObject="Needle_Part_PGGDQ" TriggerObjectMove="JXB|0.924873,1.995357,-0.006251216|1.865915,1.113449,1.268532|0,0,316.144|90,43.85606,0~JXB|0.6226845,0.7681964,2.221572|1.563726,-1.114374,0.0413707|84.79652,89.73596,90.00036|0.0239485,174.7965,180.2633">
+    <Event Content="200_Material_SetAllShader_#objPlayer#obj#parEngine_WireframeMode#par" />
+    <Event Content="200_UI_TextContent_#objHintTxt#obj#par.#par#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              dotw0.8#1#1#0#dotw" />
+    <Event Content="200_UI_TextColor_#objHintTxt#obj#parFF0000#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="4" Name="喷管固定器底座" ClipFrame="270_350" Speed="1" TriggerObject="Arm_Part_GDQDZ" TriggerObjectMove="JXB|0.8567548,1.937656,-0.008663177|1.797797,1.115861,1.21083|0,-0.001476116,315.1447|90,44.85421,0~JXB|0.2070831,0.7700222,2.213837|1.148125,-1.106639,0.04319656|0,-0.001480297,90.20042|90,269.7996,0">
+    <Event Content="270_UI_TextContent_#objHintTxt#obj#par我是喷管固定器底座的事件#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="270_UI_TextColor_#objHintTxt#obj#parFFFFFF#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="5" Name="水流调节器" ClipFrame="350_430" Speed="1" TriggerObject="Needle_Part_SLTJQ" TriggerObjectMove="JXB|0.5141406,2.411933,0.03071237|1.455182,1.076485,1.685107|1.057679,12.49547,322.0887|77.46057,94.87719,56.85004~JXB|0.4730835,0.7286117,2.064793|1.414125,-0.9575952,0.001786041|293.5339,0.4707825,4.047118|23.53302,0.2050299,4.560608">
+    <Event Content="350_UI_TextContent_#objHintTxt#obj#par我是水流调节器的事件#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="350_UI_ImageColor_#objHintImg#obj#parFFFFFF#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="6" Name="角度微调螺丝" ClipFrame="430_510" Speed="1" TriggerObject="Arm_Part_06_01" TriggerObjectMove="JXB|0.7296245,1.890027,-0.007061481|1.670666,1.114259,1.163201|315,90,270|0,44.99999,0~JXB|0.3729309,0.709334,2.081029|1.313973,-0.9738305,-0.01749161|62.67389,270,90|0,207.3261,0">
+    <Event Content="430_UI_TextContent_#objHintTxt#obj#par我是角度微调螺丝的事件#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="430_UI_Scale_#objHintImg#obj#par2,2#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="7" Name="角度微调器" ClipFrame="510_580" Speed="1" TriggerObject="Arm_Part_06_JDWTQ" TriggerObjectMove="JXB|0.7320093,1.887686,-0.006905437|1.673051,1.114103,1.160861|0,0,316.1253|90,43.87466,0~JXB|0.1488038,0.7169096,2.078521|1.089846,-0.9713232,-0.009916076|78.97421,89.99998,337.5839|0,168.9742,67.58394">
+    <Event Content="510_UI_TextContent_#objHintTxt#obj#par我是角度微调器的事件#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="510_UI_Scale_#objHintImg#obj#par1,1#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="8" Name="固定微调器底座" ClipFrame="580_660" Speed="1" TriggerObject="Arm_Part_WTQDZ" TriggerObjectMove="JXB|0.6364828,1.885728,-0.007061481|1.577525,1.114259,1.158903|0.000311737,-0.0005590394,313.987|90,46.01283,0~JXB|0.6652755,0.7648317,1.926208|1.606317,-0.8190103,0.03800598|0.1914355,357.0879,89.3353|87.0816,266.2373,355.5774">
+    <Event Content="580_UI_TextContent_#objHintTxt#obj#par我是固定微调器底座#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="9" Name="前臂左侧螺丝" ClipFrame="660_755" Speed="1" TriggerObject="Arm_Part_04_04+Arm_Part_04_02+Arm_Part_04_03+Arm_Part_04_01" TriggerObjectMove="JXB|0.3438828,1.968507,0.09789157|1.284925,1.009306,1.241681|315,90,270|0,44.99999,0~JXB|0.5218155,0.7066171,1.956033|1.462857,-0.8488342,-0.02020859|0,135,180|315,90.00001,270+JXB|0.2468944,2.065495,0.09789145|1.187936,1.009306,1.33867|315,90,270|0,44.99999,0~JXB|0.4828147,0.7054672,1.954989|1.423856,-0.8477905,-0.02135849|0,135,180|315,90.00001,270+JXB|0.2248478,1.849472,0.09789133|1.16589,1.009306,1.122646|315,90,270|0,44.99999,0~JXB|0.4378198,0.7062661,1.954467|1.378862,-0.8472686,-0.02055954|0,135,180|315,90.00001,270+JXB|0.1278595,1.94646,0.09789157|1.068901,1.009306,1.219635|315,90,270|0,44.99999,0~JXB|0.3967314,0.7063381,1.951336|1.337773,-0.8441375,-0.02048752|0,135,180|315,90.00001,270">
+    <Event Content="660_UI_TextContent_#objHintTxt#obj#par我是前臂左侧螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="10" Name="前臂左盖" ClipFrame="755_840" Speed="1" TriggerObject="Arm_Part_041" TriggerObjectMove="JXB|0.2538495,1.975872,0.07937539|1.194891,1.027822,1.249047|315,89.99998,270|0,44.99999,0~JXB|0.577726,0.7302967,1.744795|1.518768,-0.637597,0.003471069|0.1887,89.69153,0.1242842|0.3084699,90.1887,90.12531">
+    <Event Content="755_UI_TextContent_#objHintTxt#obj#par我是前臂左盖#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="11" Name="前臂右侧螺丝" ClipFrame="840_945" Speed="1" TriggerObject="Arm_Part_04_07+Arm_Part_04_08+Arm_Part_04_05+Arm_Part_04_06" TriggerObjectMove="JXB|0.3438828,1.968507,-0.1120144|1.284925,1.219212,1.241682|315,90,270|0,44.99999,0~JXB|0.7073562,0.7062398,1.61869|1.648398,-0.5114914,-0.02058578|0,44.99999,0|45.00002,90,90+JXB|0.2248478,1.849472,-0.1120144|1.16589,1.219212,1.122646|315,90,270|0,44.99999,0~JXB|0.6670468,0.7047862,1.615454|1.608089,-0.5082559,-0.02203934|0,44.99999,0|45.00002,90,90+JXB|0.1278595,1.94646,-0.1120144|1.068901,1.219212,1.219635|315,90,270|0,44.99999,0~JXB|0.6272457,0.705685,1.613692|1.568287,-0.5064935,-0.02114059|0,44.99999,0|45.00002,90,90+JXB|0.2468944,2.065495,-0.1120143|1.187936,1.219212,1.33867|315,90,270|0,44.99999,0~JXB|0.5883262,0.7051642,1.614875|1.529368,-0.507677,-0.02166138|0,44.99999,0|45.00002,90,90">
+    <Event Content="840_UI_TextContent_#objHintTxt#obj#par我是前臂右侧螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="12" Name="前臂旋转装置" ClipFrame="945_1020" Speed="1" TriggerObject="Arm_Part_QBXZZZ" TriggerObjectMove="JXB|0.3331264,2.054747,-0.00706172|1.274168,1.114259,1.327922|270,0,0|0,0,0~JXB|-0.1749121,0.7792618,2.244821|0.7661297,-1.137623,0.05243606|1.557623,327.1041,2.406388|57.07134,267.1337,270">
+    <Event Content="945_UI_TextContent_#objHintTxt#obj#par我是前臂旋转装置#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="13" Name="前臂右盖" ClipFrame="1020_1100" Speed="1" TriggerObject="Arm_Part_04" TriggerObjectMove="JXB|0.2538495,1.975872,-0.09349835|1.194891,1.200696,1.249047|315,90,270|0,44.99999,0~JXB|0.1386826,0.7303306,1.879037|1.079724,-0.7718384,0.003504944|0,90,180|0,90.00001,270">
+    <Event Content="1020_UI_TextContent_#objHintTxt#obj#par我是前臂右盖#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="14" Name="延长管道" ClipFrame="1100_1170" Speed="1" TriggerObject="Cable_Custom_YCGGD" TriggerObjectMove="JXB|-0.08707654,2.233178,0.1514148|0.8539653,0.955783,1.506352|0,0,37.58123|90,322.4188,0~JXB|-0.4595314,0.729256,1.831348|0.4815105,-0.7241495,0.00243042|55.79993,326.0242,5.463002|27.78287,200.7963,224.6357">
+    <Event Content="1100_UI_TextContent_#objHintTxt#obj#par我是延长管道#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="15" Name="延长管道固定器" ClipFrame="1170_1250" Speed="1" TriggerObject="Midle_Part_03_YCGGDGDQ" TriggerObjectMove="JXB|-0.5653104,1.77479,0.1510718|0.3757314,0.956126,1.047964|-0.0001834303,-0.0002197384,315|90,44.99968,0~JXB|-0.3085846,0.7387844,1.721659|0.6324572,-0.6144604,0.01195877|271.9758,68.6552,201.7889|0.7190092,1.840323,270.4556">
+    <Event Content="1170_UI_TextContent_#objHintTxt#obj#par我是延长管道固定器#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="16" Name="旋转臂微调器" ClipFrame="1250_1330" Speed="1" TriggerObject="Arm_Part_XZBWTQ" TriggerObjectMove="JXB|0.07691491,1.799029,-0.007061362|1.017957,1.114259,1.072203|0,0,315|90,45.00001,0~JXB|-0.5423083,0.772858,2.287757|0.3987335,-1.180559,0.04603226|1.549986,179.0343,90.23918|271.826,148.0839,122.1683">
+    <Event Content="1250_UI_TextContent_#objHintTxt#obj#par我是旋转臂微调器#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="17" Name="旋转臂螺丝" ClipFrame="1330_1435" Speed="1" TriggerObject="Arm_Part_03_17+Arm_Part_03_16+Arm_Part_03_12+Arm_Part_03_13+Arm_Part_03_18+Arm_Part_03_19+Arm_Part_03_15+Arm_Part_03_14" TriggerObjectMove="JXB|-0.04171944,1.587068,0.03787506|0.8993224,1.069323,0.8602423|315,90,270|0,45,0~JXB|-0.1252242,0.7091593,1.899812|0.8158176,-0.7926138,-0.01766632|270.683,89.99915,309.6646|0,0.6830105,39.66365+JXB|-0.06044608,1.605794,0.062181|0.8805957,1.045017,0.878969|315,90,270|0,45,0~JXB|-0.1545954,0.709186,1.900174|0.7864464,-0.7929754,-0.01763962|270.6833,89.99886,309.6647|0,0.6831474,39.66365+JXB|-0.1199072,1.665256,0.05857646|0.8211346,1.048621,0.9384301|315,90,270|0,45,0~JXB|-0.1828873,0.709156,1.898623|0.7581545,-0.7914242,-0.01766968|270.683,89.99957,309.6641|0,0.6831134,39.66365+JXB|-0.1370943,1.682443,0.03209305|0.8039476,1.075105,0.9556171|315,90,270|0,45,0~JXB|-0.2135788,0.7091606,1.897223|0.727463,-0.7900244,-0.0176651|270.6824,89.99943,309.6643|0,0.6830793,39.66365+JXB|-0.03917068,1.584519,-0.04621589|0.9018711,1.153414,0.8576934|315,90,270|0,45,0~JXB|-0.1266876,0.709174,1.868373|0.8143542,-0.7611752,-0.01765167|270.6824,89.99915,309.6645|0,0.6830465,39.66364+JXB|-0.05635768,1.601706,-0.07269919|0.8846841,1.179897,0.8748805|315,90,270|0,45,0~JXB|-0.1577372,0.7092165,1.865923|0.7833046,-0.758725,-0.0176091|270.6824,89.99915,309.6646|0,0.6830111,39.66364+JXB|-0.1158189,1.661167,-0.07630384|0.825223,1.183502,0.9343417|315,90,270|0,45,0~JXB|-0.1839582,0.7091906,1.866925|0.7570837,-0.7597268,-0.01763504|270.6827,89.99828,309.6653|0,0.683155,39.66364+JXB|-0.1345456,1.679894,-0.05199778|0.8064963,1.159196,0.9530685|315,90,270|0,45,0~JXB|-0.2126932,0.7091787,1.867648|0.7283486,-0.7604501,-0.01764694|270.6824,89.99915,309.6644|0,0.6831303,39.66364">
+    <Event Content="1330_UI_TextContent_#objHintTxt#obj#par我是旋转臂螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="18" Name="旋转臂" ClipFrame="1435_1510" Speed="1" TriggerObject="Arm_Part_XZB" TriggerObjectMove="JXB|-0.3656669,1.280861,0|0.575375,1.107198,0.5540358|0,0,0|90,0,0~JXB|-0.3656669,1.280861,0|0.575375,1.107198,0.5540358|0,0,0|90,0,0">
+    <Event Content="1435_UI_TextContent_#objHintTxt#obj#par我是旋转臂#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="19" Name="旋转臂底座" ClipFrame="1510_1580" Speed="1" TriggerObject="Arm_Part_03_03" TriggerObjectMove="JXB|-0.1466826,1.574931,-0.007061362|0.7943592,1.114259,0.8481051|315,90,270|0,45,0~JXB|-0.720359,0.7394271,2.277992|0.2206828,-1.170794,0.01260147|270.0396,0.04745616,0|0,0.04745616,0">
+    <Event Content="1510_UI_TextContent_#objHintTxt#obj#par我是旋转臂底座#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="20" Name="前置管道连接器" ClipFrame="1580_1660" Speed="1" TriggerObject="Midle_Part_QZGDLJQ" TriggerObjectMove="JXB|-0.5824579,1.761302,0.2102336|0.3585839,0.8969643,1.034477|0,0,45.16693|90,314.8331,0~JXB|-0.6929064,0.7205611,2.088217|0.2481354,-0.981019,-0.006264496|85.38599,172.414,173.955|355.4264,179.3896,181.5654">
+    <Event Content="1580_UI_TextContent_#objHintTxt#obj#par我是前置管道连接器#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="21" Name="副装置增压器" ClipFrame="1660_1730" Speed="1" TriggerObject="Midle_Part_FZZZYQ" TriggerObjectMove="JXB|-0.5689,1.572003,0.2486048|0.3721418,0.8585931,0.8451778|0,0,0|89.98022,0,0~JXB|-0.4957433,0.7241328,1.922195|0.4452986,-0.8149966,-0.002692871|0,0,270|90,90,0">
+    <Event Content="1660_UI_TextContent_#objHintTxt#obj#par我是副装置增压器#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="22" Name="增压固定板" ClipFrame="1730_1800" Speed="1" TriggerObject="Midle_Part_ZYGDB" TriggerObjectMove="JXB|-0.5432957,1.700253,0.2090763|0.3977461,0.8981216,0.9734274|0,0,46.66511|90,313.3349,0~JXB|-0.3703941,0.708777,1.752352|0.5706478,-0.6451541,-0.01804855|353.2834,358.4986,102.6316|83.11835,347.4567,90.0002">
+    <Event Content="1730_UI_TextContent_#objHintTxt#obj#par我是增压固定板#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="23" Name="增压器" ClipFrame="1800_1880" Speed="1" TriggerObject="Midle_Part_ZYQ" TriggerObjectMove="JXB|-0.5832242,1.568394,0.2116084|0.3578176,0.8955896,0.8415685|0,0,0|90,0,0~JXB|-0.6062193,0.744577,1.902971|0.3348225,-0.7957727,0.01775131|90,314.8316,0|0,180,225.1684">
+    <Event Content="1800_UI_TextContent_#objHintTxt#obj#par我是增压器#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="24" Name="增压器固定装置" ClipFrame="1880_1960" Speed="1" TriggerObject="Midle_Part_02" TriggerObjectMove="JXB|-0.5677611,1.553319,0.1681967|0.3732807,0.9390012,0.826494|270,0,0|0,0,0~JXB|-0.9403259,0.7140376,2.297849|0.0007159424,-1.190651,-0.01278809|0.0139104,315.5268,0.2493358|45.52681,269.9802,270.2352">
+    <Event Content="1880_UI_TextContent_#objHintTxt#obj#par我是增压器固定装置#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="25" Name="增压固定器链接" ClipFrame="1960_2050" Speed="1" TriggerObject="Midle_Part_08" TriggerObjectMove="JXB|-0.5065889,1.492147,0.08842051|0.4344529,1.018777,0.7653218|270,0,0|0,0,0~JXB|-0.8499272,0.7668125,2.109994|0.09111466,-1.002796,0.03998687|355.4088,224.8152,184.606|315,276.5,90.00001">
+    <Event Content="1960_UI_TextContent_#objHintTxt#obj#par我是增压固定器链接#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="26" Name="增压器底座螺丝" ClipFrame="2050_2175" Speed="1" TriggerObject="Midle_Part_04_04+Midle_Part_04_06+Midle_Part_04_08+Midle_Part_04_05+Midle_Part_04_07+Midle_Part_04_10+Midle_Part_04_09+Midle_Part_04_03+Midle_Part_04_02+Midle_Part_04_01" TriggerObjectMove="JXB|-0.3768637,1.533707,0.01221299|0.5641782,1.094985,0.8068817|270,0,0|0,0,0~JXB|-0.8029819,0.701677,2.03656|0.13806,-0.9293615,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.4135821,1.496989,0.01221287|0.5274597,1.094985,0.7701631|270,0,0|0,0,0~JXB|-0.8130226,0.701677,2.020541|0.1280193,-0.9133429,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.3858755,1.521688,-0.0239464|0.5551663,1.131144,0.794862|270,0,0|0,0,0~JXB|-0.8222669,0.701677,2.03656|0.1187749,-0.9293615,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.413582,1.496989,0.03660023|0.5274598,1.070598,0.7701631|270,0,0|0,0,0~JXB|-0.8316612,0.701677,2.019929|0.1093806,-0.9127307,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.3858755,1.521688,-0.009311318|0.5551664,1.116509,0.794862|270,0,0|0,0,0~JXB|-0.8408729,0.701677,2.03656|0.1001689,-0.9293615,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.417385,1.490178,-0.009311199|0.5236568,1.116509,0.7633525|270,0,0|0,0,0~JXB|-0.852819,0.701677,2.019933|0.08822281,-0.912735,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.417385,1.490178,-0.0239464|0.5236568,1.131144,0.7633525|270,0,0|0,0,0~JXB|-0.8607683,0.701677,2.03656|0.08027359,-0.9293615,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.3768637,1.533707,0.03660047|0.5641782,1.070597,0.8068817|270,0,0|0,0,0~JXB|-0.8814287,0.701677,2.037148|0.05961319,-0.9299493,-0.02514862|314,90,270|0,43.99999,0+JXB|-0.448927,1.481717,0.09077919|0.4921148,1.016419,0.7548919|270,0,0|0,0,0~JXB|-0.8720887,0.7026559,2.019728|0.06895309,-0.9125299,-0.02416977|314,90,270|0,43.99999,0+JXB|-0.4973854,1.433259,0.09077942|0.4436564,1.016419,0.7064335|270,0,0|0,0,0~JXB|-0.9000514,0.7020584,2.035508|0.04099045,-0.9283099,-0.0247673|314,90,270|0,43.99999,0">
+    <Event Content="2050_UI_TextContent_#objHintTxt#obj#par我是增压器底座螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="27" Name="增压器底板" ClipFrame="2175_2250" Speed="1" TriggerObject="Midle_Part_04" TriggerObjectMove="JXB|-0.4315599,1.485721,-0.003305316|0.509482,1.110503,0.7588952|270,0,0|0,0,0~JXB|-0.9297487,0.7147118,1.896488|0.01129318,-0.7892895,-0.0121138|315,90,270|0,44.99999,0">
+    <Event Content="2175_UI_TextContent_#objHintTxt#obj#par我是增压器底板#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="28" Name="旋转臂螺丝" ClipFrame="2250_2375" Speed="1" TriggerObject="Arm_Part_01_07+Arm_Part_01_08+Arm_Part_01_04+Arm_Part_01_05+Arm_Part_01_02+Arm_Part_01_06+Arm_Part_01_03+Arm_Part_01_01" TriggerObjectMove="JXB|-0.4082615,1.238881,-0.2627012|0.5327803,1.369899,0.5120556|270,0,0|0,0,0~JXB|-0.8695896,0.7092348,1.795468|0.07145218,-0.6882696,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.4260229,1.281761,-0.2627012|0.5150189,1.369899,0.554936|270,0,0|0,0,0~JXB|-0.8924711,0.7092348,1.758488|0.04857071,-0.6512896,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.3047393,1.281761,-0.2627014|0.6363025,1.369899,0.554936|270,0,0|0,0,0~JXB|-0.8477455,0.7092348,1.758488|0.09329636,-0.6512896,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.3225008,1.238881,-0.2627014|0.618541,1.369899,0.5120556|270,0,0|0,0,0~JXB|-0.8935608,0.7092348,1.714292|0.04748108,-0.6070941,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.3653811,1.342403,-0.2627012|0.5756608,1.369899,0.6155779|270,0,0|0,0,0~JXB|-0.8456694,0.7092348,1.713748|0.09537247,-0.6065494,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.3653811,1.22112,-0.2627013|0.5756607,1.369899,0.494294|270,0,0|0,0,0~JXB|-0.8946504,0.7092348,1.66744|0.04639145,-0.5602414,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.3225007,1.324642,-0.2627013|0.6185411,1.369899,0.5978163|270,0,0|0,0,0~JXB|-0.8467079,0.7092348,1.671798|0.09433395,-0.5645999,-0.01759079|0,0,0|89.98022,0,0+JXB|-0.4082615,1.324642,-0.2627012|0.5327803,1.369899,0.5978162|270,0,0|0,0,0~JXB|-0.8723136,0.7092348,1.629848|0.06872818,-0.5226501,-0.01759079|0,0,0|89.98022,0,0">
+    <Event Content="2250_UI_TextContent_#objHintTxt#obj#par我是旋转臂螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="29" Name="旋转臂" ClipFrame="2375_2490" Speed="1" TriggerObject="Arm_Part_XZB" TriggerObjectMove="JXB|-0.3656669,1.280861,0|0.575375,1.107198,0.5540358|0,0,0|90,0,0~JXB|-1.137329,0.8781351,2.19949|-0.1962871,-1.092292,0.1513095|0,0,134.3104|90,225.6896,0">
+    <Event Content="2375_UI_TextContent_#objHintTxt#obj#par我是旋转臂#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="30" Name="大臂螺丝" ClipFrame="2490_2605" Speed="1" TriggerObject="Arm_Part_010_02+Arm_Part_010_01+Arm_Part_010_04" TriggerObjectMove="JXB|0.2970307,0.7236068,-0.2851149|1.238073,1.392313,-0.003218689|270,0,0|0,0,0~JXB|-0.4936936,0.7042165,1.807777|0.4473482,-0.7005789,-0.0226091|0,0,0|89.98022,0,0+JXB|0.1597428,0.7235809,-0.2851149|1.100785,1.392313,-0.003244476|270,0,0|0,0,0~JXB|-0.5204868,0.7035451,1.809156|0.420555,-0.7019574,-0.02328049|0,0,0|89.98022,0,0+JXB|0.1597683,0.5862932,-0.285115|1.10081,1.392313,-0.1405322|270,0,0|0,0,0~JXB|-0.5216334,0.7032582,1.784787|0.4194084,-0.6775888,-0.02356735|0,0,0|89.98022,0,0">
+    <Event Content="2490_UI_TextContent_#objHintTxt#obj#par我是大臂螺丝#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="31" Name="大臂盖" ClipFrame="2605_2730" Speed="1" TriggerObject="Arm_Part_010_05" TriggerObjectMove="JXB|0.2283962,0.6549465,-0.2666292|1.169438,1.373827,-0.07187889|270,0,0|0,0,0~JXB|-1.164242,0.7222608,1.878922|-0.2231999,-0.7717233,-0.004564819|0,113.3539,180|336.6461,89.99998,270">
+    <Event Content="2605_UI_TextContent_#objHintTxt#obj#par我是大臂盖#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="32" Name="机械大臂" ClipFrame="2730_2910" Speed="1" TriggerObject="Arm_Part_01_DB" TriggerObjectMove="JXB|0.2278883,0.6548391,-0.2628148|1.16893,1.370013,-0.07198631|0,0,0|89.98022,0,0~JXB|-1.936786,0.7165284,2.269464|-0.9957443,-1.162266,-0.01029724|270.6324,301.2677,330.9296|0.3285942,359.4589,272.1958">
+    <Event Content="2730_UI_TextContent_#objHintTxt#obj#par我是机械大臂#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="33" Name="旋转底座掉环" ClipFrame="2910_3020" Speed="1" TriggerObject="Base_Part_03_01" TriggerObjectMove="JXB|-0.01230919,0.707773,0.1348618|0.9287326,0.9723362,-0.01905243|270,0,0|0,0,0~JXB|-0.9618856,0.7402367,1.745153|-0.02084381,-0.6379547,0.0134111|270.0198,271.0013,0|0,0,271.0013">
+    <Event Content="2910_UI_TextContent_#objHintTxt#obj#par我是旋转底座掉环#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="34" Name="旋转底座" ClipFrame="3020_3200" Speed="1" TriggerObject="Base_Part_03_XZDZ" TriggerObjectMove="JXB|0.001104534,0.3308856,0.002721548|0.9421464,1.104477,-0.3959397|270,0,0|0,0,0~JXB|-2.236483,0.7955624,1.919356|-1.295442,-0.8121576,0.06873672|270,50.16233,0|0,0,50.16233">
+    <Event Content="3020_UI_TextContent_#objHintTxt#obj#par我是旋转底座#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="3199_UI_TextContent_#objHintTxt#obj#par我已经完成了拆装优秀#par#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationStage>
+    <Sort Index="1" ClipFrame="0_350" GroupName="拆前置喷头" TriggerObject="button" />
+    <Sort Index="2" ClipFrame="350_660" GroupName="拆碰头转换装置" TriggerObject="button" />
+    <Sort Index="3" ClipFrame="660_1100" GroupName="拆前臂" TriggerObject="button" />
+    <Sort Index="4" ClipFrame="1100_1250" GroupName="延长管" TriggerObject="button" />
+    <Sort Index="5" ClipFrame="1250_1580" GroupName="拆旋转臂" TriggerObject="button" />
+    <Sort Index="6" ClipFrame="1580_2250" GroupName="管道增压器" TriggerObject="button" />
+    <Sort Index="7" ClipFrame="2250_2910" GroupName="拆机械大臂" TriggerObject="button" />
+    <Sort Index="8" ClipFrame="2910_3200" GroupName="拆旋转底座" TriggerObject="button" />
+  </AnimationStage>
+  <AnimationInit>
+    <Information Name="JXB" Content="False|-0.9410418,0.7268255,1.107198|270,0,0" />
+    <Information Name="Arm_Part_01_01" Content="True|-0.4082615,1.324642,-0.2627012|270,0,0" />
+    <Information Name="Arm_Part_01_02" Content="True|-0.3653811,1.342403,-0.2627012|270,0,0" />
+    <Information Name="Arm_Part_01_03" Content="True|-0.3225007,1.324642,-0.2627013|270,0,0" />
+    <Information Name="Arm_Part_01_04" Content="True|-0.3047393,1.281761,-0.2627014|270,0,0" />
+    <Information Name="Arm_Part_01_05" Content="True|-0.3225008,1.238881,-0.2627014|270,0,0" />
+    <Information Name="Arm_Part_01_06" Content="True|-0.3653811,1.22112,-0.2627013|270,0,0" />
+    <Information Name="Arm_Part_01_07" Content="True|-0.4082615,1.238881,-0.2627012|270,0,0" />
+    <Information Name="Arm_Part_01_08" Content="True|-0.4260229,1.281761,-0.2627012|270,0,0" />
+    <Information Name="Arm_Part_01_DB" Content="False|0.2278883,0.6548391,-0.2628148|0,0,0" />
+    <Information Name="Arm_Part_01" Content="True|-0.03576958,0.9355482,-0.1976079|270,0,0" />
+    <Information Name="Arm_Part_03_03" Content="True|-0.1466826,1.574931,-0.007061362|315,90,270" />
+    <Information Name="Arm_Part_03_11" Content="False|-0.3657264,1.281683,0.009728074|315,90,270" />
+    <Information Name="Arm_Part_03_12" Content="True|-0.1199072,1.665256,0.05857646|315,90,270" />
+    <Information Name="Arm_Part_03_13" Content="True|-0.1370943,1.682443,0.03209305|315,90,270" />
+    <Information Name="Arm_Part_03_14" Content="True|-0.1345456,1.679894,-0.05199778|315,90,270" />
+    <Information Name="Arm_Part_03_15" Content="True|-0.1158189,1.661167,-0.07630384|315,90,270" />
+    <Information Name="Arm_Part_03_16" Content="True|-0.06044608,1.605794,0.062181|315,90,270" />
+    <Information Name="Arm_Part_03_17" Content="True|-0.04171944,1.587068,0.03787506|315,90,270" />
+    <Information Name="Arm_Part_03_18" Content="True|-0.03917068,1.584519,-0.04621589|315,90,270" />
+    <Information Name="Arm_Part_03_19" Content="True|-0.05635768,1.601706,-0.07269919|315,90,270" />
+    <Information Name="Arm_Part_04" Content="True|0.2538495,1.975872,-0.09349835|315,90,270" />
+    <Information Name="Arm_Part_04_01" Content="True|0.1278595,1.94646,0.09789157|315,90,270" />
+    <Information Name="Arm_Part_04_02" Content="True|0.2468944,2.065495,0.09789145|315,90,270" />
+    <Information Name="Arm_Part_04_03" Content="True|0.2248478,1.849472,0.09789133|315,90,270" />
+    <Information Name="Arm_Part_04_04" Content="True|0.3438828,1.968507,0.09789157|315,90,270" />
+    <Information Name="Arm_Part_04_05" Content="True|0.1278595,1.94646,-0.1120144|315,90,270" />
+    <Information Name="Arm_Part_04_06" Content="True|0.2468944,2.065495,-0.1120143|315,90,270" />
+    <Information Name="Arm_Part_04_07" Content="True|0.3438828,1.968507,-0.1120144|315,90,270" />
+    <Information Name="Arm_Part_04_08" Content="True|0.2248478,1.849472,-0.1120144|315,90,270" />
+    <Information Name="Arm_Part_06_01" Content="True|0.7296245,1.890027,-0.007061481|315,90,270" />
+    <Information Name="Arm_Part_06_JDWTQ" Content="False|0.7320093,1.887686,-0.006905437|0,0,316.1253" />
+    <Information Name="Arm_Part_06_08" Content="True|0.7688732,1.955234,-0.007061481|315,90.00002,270" />
+    <Information Name="Arm_Part_07_01" Content="True|0.9056923,1.96578,0.04782343|315,90,270" />
+    <Information Name="Arm_Part_07_02" Content="True|0.8876724,1.983799,0.04782355|315,90,270" />
+    <Information Name="Arm_Part_07_03" Content="True|0.8859887,1.982116,-0.06126928|315,90,270" />
+    <Information Name="Arm_Part_07_04" Content="True|0.9040087,1.964096,-0.0612694|315,90,270" />
+    <Information Name="Arm_Part_010_01" Content="True|0.1597428,0.7235809,-0.2851149|270,0,0" />
+    <Information Name="Arm_Part_010_02" Content="True|0.2970307,0.7236068,-0.2851149|270,0,0" />
+    <Information Name="Arm_Part_010_03" Content="True|0.2970563,0.5863188,-0.2851149|270,0,0" />
+    <Information Name="Arm_Part_010_04" Content="True|0.1597683,0.5862932,-0.285115|270,0,0" />
+    <Information Name="Arm_Part_010_05" Content="True|0.2283962,0.6549465,-0.2666292|270,0,0" />
+    <Information Name="Arm_Part_041" Content="True|0.2538495,1.975872,0.07937539|315,89.99998,270" />
+    <Information Name="Arm_Part_GDQDZ" Content="False|0.8567548,1.937656,-0.008663177|0,-0.001476116,315.1447" />
+    <Information Name="Arm_Part_07" Content="True|0.8412979,1.949603,-0.007061958|315,89.99853,270" />
+    <Information Name="Arm_Part_QBXZZZ" Content="False|0.3331264,2.054747,-0.00706172|270,0,0" />
+    <Information Name="Arm_Part_05" Content="True|0.4299577,2.023518,-0.007061481|270,0,0" />
+    <Information Name="Arm_Part_QXZB" Content="False|-0.08904034,1.632685,-0.002717853|0,0,315.1062" />
+    <Information Name="Arm_Part_03" Content="True|-0.02484727,1.696766,-0.007061481|315,89.99999,270" />
+    <Information Name="Arm_Part_WTQDZ" Content="False|0.6364828,1.885728,-0.007061481|0.000311737,-0.0005590394,313.987" />
+    <Information Name="Arm_Part_06" Content="True|0.6400926,1.892328,-0.007061601|315,89.99915,270.0004" />
+    <Information Name="Arm_Part_XZB" Content="False|-0.3656669,1.280861,0|0,0,0" />
+    <Information Name="Arm_Part_02" Content="True|-0.3052218,1.402001,0.02518463|270,0,0" />
+    <Information Name="Arm_Part_XZBWTQ" Content="False|0.07691491,1.799029,-0.007061362|0,0,315" />
+    <Information Name="Arm_Part_03_01" Content="True|0.1327704,1.854974,-0.007091045|315,90,270" />
+    <Information Name="Base_Part_01" Content="True|0,0.1189708,0|270,0,0" />
+    <Information Name="Base_Part_01_01" Content="True|0,0.224905,-0.1950883|270,0,0" />
+    <Information Name="Base_Part_01_02" Content="True|0.1950883,0.224905,0|270,0,0" />
+    <Information Name="Base_Part_01_03" Content="True|0,0.224905,0.1950883|270,0,0" />
+    <Information Name="Base_Part_01_04" Content="True|-0.1950883,0.224905,0|270,0,0" />
+    <Information Name="Base_Part_01_05" Content="True|-0.1923704,0.07742709,-0.1923705|270,0,0" />
+    <Information Name="Base_Part_01_06" Content="True|-0.1923704,0.07742715,0.1923705|270,0,0" />
+    <Information Name="Base_Part_01_07" Content="True|0.1923704,0.07742715,0.1923705|270,0,0" />
+    <Information Name="Base_Part_01_008" Content="True|0.1923704,0.07742709,-0.1923703|270,0,0" />
+    <Information Name="Base_Part_02" Content="True|0,0.168236,0|270,0,0" />
+    <Information Name="Base_Part_03_01" Content="True|-0.01230919,0.707773,0.1348618|270,0,0" />
+    <Information Name="Base_Part_03_XZDZ" Content="False|0.001104534,0.3308856,0.002721548|270,0,0" />
+    <Information Name="Base_Part_03" Content="True|-0.06550133,0.5255798,-0.04308391|270,0,0" />
+    <Information Name="Box003" Content="True|0.7310226,0,2.204926|270,0,0" />
+    <Information Name="Cable_Custom_04" Content="False|-1.105747,0.7329761,0.201089|0,0,0" />
+    <Information Name="Cable_Custom_YCGGD" Content="False|-0.08707654,2.233178,0.1514148|0,0,37.58123" />
+    <Information Name="Cable_Custom_03" Content="True|0.1953353,2.336567,0.1244432|315,90.00001,270" />
+    <Information Name="Midle_Part_02" Content="True|-0.5677611,1.553319,0.1681967|270,0,0" />
+    <Information Name="Midle_Part_03_YCGGDGDQ" Content="False|-0.5653104,1.77479,0.1510718|-0.0001834303,-0.0002197384,315" />
+    <Information Name="Midle_Part_03" Content="True|-0.3354369,2.000296,0.1557078|270,-0.0002424721,0" />
+    <Information Name="Midle_Part_04" Content="True|-0.4315599,1.485721,-0.003305316|270,0,0" />
+    <Information Name="Midle_Part_04_01" Content="True|-0.4973854,1.433259,0.09077942|270,0,0" />
+    <Information Name="Midle_Part_04_02" Content="True|-0.448927,1.481717,0.09077919|270,0,0" />
+    <Information Name="Midle_Part_04_03" Content="True|-0.3768637,1.533707,0.03660047|270,0,0" />
+    <Information Name="Midle_Part_04_04" Content="True|-0.3768637,1.533707,0.01221299|270,0,0" />
+    <Information Name="Midle_Part_04_05" Content="True|-0.413582,1.496989,0.03660023|270,0,0" />
+    <Information Name="Midle_Part_04_06" Content="True|-0.4135821,1.496989,0.01221287|270,0,0" />
+    <Information Name="Midle_Part_04_07" Content="True|-0.3858755,1.521688,-0.009311318|270,0,0" />
+    <Information Name="Midle_Part_04_08" Content="True|-0.3858755,1.521688,-0.0239464|270,0,0" />
+    <Information Name="Midle_Part_04_09" Content="True|-0.417385,1.490178,-0.0239464|270,0,0" />
+    <Information Name="Midle_Part_04_10" Content="True|-0.417385,1.490178,-0.009311199|270,0,0" />
+    <Information Name="Midle_Part_08" Content="True|-0.5065889,1.492147,0.08842051|270,0,0" />
+    <Information Name="Midle_Part_FZZZYQ" Content="False|-0.5689,1.572003,0.2486048|0,0,0" />
+    <Information Name="Midle_Part_06" Content="True|-0.5695876,1.587278,0.2635622|270,0,0" />
+    <Information Name="Midle_Part_QZGDLJQ" Content="False|-0.5824579,1.761302,0.2102336|0,0,45.16693" />
+    <Information Name="Midle_Part_03_01" Content="True|-0.5535235,1.826041,0.1958025|270,0,0" />
+    <Information Name="Midle_Part_ZYGDB" Content="False|-0.5432957,1.700253,0.2090763|0,0,46.66511" />
+    <Information Name="Midle_Part_01" Content="True|-0.5631518,1.735492,0.1935079|270,0,0" />
+    <Information Name="Midle_Part_ZYQ" Content="False|-0.5832242,1.568394,0.2116084|0,0,0" />
+    <Information Name="Midle_Part_02_01" Content="True|-0.7197995,1.605638,0.1680915|270,0,0" />
+    <Information Name="Needle_Part_PGGDQ" Content="False|0.924873,1.995357,-0.006251216|0,0,316.144" />
+    <Information Name="Needle_Part_01" Content="True|0.8589891,2.058585,-0.007061481|315,270,89.99998" />
+    <Information Name="Needle_Part_PS" Content="False|1.014658,1.902845,-0.00706172|0,0,315.5982" />
+    <Information Name="Needle_Part_01_01" Content="True|1.149992,1.695424,-0.00706172|315,270,90.00001" />
+    <Information Name="Needle_Part_SLTJQ" Content="False|0.5141406,2.411933,0.03071237|1.057679,12.49547,322.0887" />
+    <Information Name="Needle_Part_02" Content="True|0.6025863,2.316291,0.01060295|270,0,0" />
+  </AnimationInit>
+</AnimationConfigure>

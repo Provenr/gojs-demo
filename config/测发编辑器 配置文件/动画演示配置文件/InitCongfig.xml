@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<InitModelScene  CongfigName="test" Version="1.0">
+  <!--摄像机初始化-->
+  <Events Content="Camera_SetCameraRotate_#obj-42,21,2#obj#par2,20,2#par" />
+  <Events Content="Camera_SetLimitBound_#obj18,11,40#obj#par-0.5,6.3,-0.7#par" />
+  <Events Content="Camera_SetMoveTarget_#objHq_Ltcx_Dh#obj#par0.3,2.5,-0.5#par" />
+  
+  <Events Content="Object_AddScene_#objscenes_house#obj" />
+  <Events Content="Object_ChildHide_#objHq_Dpcs+HQ_Dp_Lt_3#obj" />
+  <Events Content="Object_ChildShow_#objHq_Ltgh_Dh+HQ_Jss_01+Tool_Car_2_shib_1+ACC_Wooden_Pallet_shib_1+ACC_Wooden_Pallet_shib_2+Tool_jack_2_1+Tool_jack_2_2#obj" />
+  <Events Content="UI_TextContent_#objAngleLabel#obj#par固定视角#par#dotw0.8#1#1#0#dotw" />
+  <Events Content="UI_SliderValue_#objAngleSlider#obj#par1#par#dotw0.8#1#1#0#dotw" />
+  
+  <Events Content="Camera_Patent_#objMain Camera#obj#parCamera001#par" />
+  <Events Content="Camera_CloseCameraControl_#objMain Camera#obj" />
+  <Events Content="Camera_CloseCameraMouseControl_#objMain Camera#obj" />
+  <Events Content="Object_HideObj_#objComponents#obj" />
+
+
+</InitModelScene>

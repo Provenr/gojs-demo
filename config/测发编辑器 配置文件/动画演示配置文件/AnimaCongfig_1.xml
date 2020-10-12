@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AnimationConfigure Name="Take 001" Version="1.0">
+  <ModelObject AnimationName="Hq_Ltcx_Dh" CameraName="Camera001" >
+  <ModelObject ModelName="NoAnima" />
+  <ModelObject ModelName="NoAnima2"/>
+  </ModelObject>
+  <AnimationClip ID="1" Name="Ltgh-ys-01" ClipFrame="0_360" Speed="1" TriggerObject="Tool_OpenSpanner_shib_1" TriggerObjectMove="Hq_Ltcx_Dh|-1.726973,1.008922,4.532062|-1.726973,1.008922,4.532062|270,356,0|270,356,0~Hq_Ltcx_Dh|-1.726973,1.008922,4.532062|-1.726973,1.008922,4.532062|270,356,0|270,356,0">
+    <Event Content="75_Material_OpenFlash_#objTool_OpenSpanner_shib_1#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="1_UI_TextContent_#objSubtitleText#obj#par使用开口扳手拆下车轮闭锁阀与轮胎连接螺栓。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="1_Speak_Open_#par使用开口扳手拆下车轮闭锁阀与轮胎连接螺栓。#par" />
+    <Event Content="90_Material_CloseFlash_#objTool_OpenSpanner_shib_1#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="125_Material_OpenFlash_#objHQ_Dp_Lt_1_12#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="150_Material_CloseFlash_#objHQ_Dp_Lt_1_12#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="2" Name="Ltgh-ys-02" ClipFrame="360_880" Speed="1" TriggerObject="Tool_Jackhammer" TriggerObjectMove="Hq_Ltcx_Dh|-2.769315,0.2627924,0.8950117|-2.769315,0.2627924,0.8950117|270,0,0|270,0,0~Hq_Ltcx_Dh|-2.769315,0.2627924,0.8950117|-2.769315,0.2627924,0.8950117|270,0,0|270,0,0">
+    <Event Content="425_Material_OpenFlash_#objTool_Jackhammer#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="360_UI_TextContent_#objSubtitleText#obj#par使用风炮机依次拆下轮胎与轮毂的连接螺母。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="360_Speak_Open_#par使用风炮机依次拆下轮胎与轮毂的连接螺母。#par" />
+    <Event Content="450_Material_CloseFlash_#objTool_Jackhammer#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="525_Material_OpenFlash_#objHQ_Dp_Lt_1_1+HQ_Dp_Lt_1_2+HQ_Dp_Lt_1_3+HQ_Dp_Lt_1_4+HQ_Dp_Lt_1_5+HQ_Dp_Lt_1_6+HQ_Dp_Lt_1_7+HQ_Dp_Lt_1_8+HQ_Dp_Lt_1_9+HQ_Dp_Lt_1_10+HQ_Dp_Lt_1_11#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="575_Material_CloseFlash_#objHQ_Dp_Lt_1_1+HQ_Dp_Lt_1_2+HQ_Dp_Lt_1_3+HQ_Dp_Lt_1_4+HQ_Dp_Lt_1_5+HQ_Dp_Lt_1_6+HQ_Dp_Lt_1_7+HQ_Dp_Lt_1_8+HQ_Dp_Lt_1_9+HQ_Dp_Lt_1_10+HQ_Dp_Lt_1_11#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="3" Name="Ltgh-ys-03" ClipFrame="880_1000" Speed="1" TriggerObject="Tool_Manual_Forklift2" TriggerObjectMove="Hq_Ltcx_Dh|-4.167927,0.04385684,3.081162|-4.167927,0.04385684,3.081162|270,0,0|270,0,0~Hq_Ltcx_Dh|-4.167927,0.04385684,3.081162|-4.167927,0.04385684,3.081162|270,0,0|270,0,0">
+    <Event Content="940_Material_OpenFlash_#objTool_Manual_Forklift2#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="880_UI_TextContent_#objSubtitleText#obj#par将轮胎运送车移动至轮胎下方。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="880_Speak_Open_#par将轮胎运送车移动至轮胎下方。#par" />
+    <Event Content="990_Material_CloseFlash_#objTool_Manual_Forklift2#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="4" Name="Ltgh-ys-04" ClipFrame="1000_1140" Speed="1" TriggerObject="Tool_Manual_Forklift2_7" TriggerObjectMove="Tool_Manual_Forklift2|-4.760675,0.2264841,3.110318|-0.592748,-0.02915625,0.1826272|270,0,0|0,0,0~Tool_Manual_Forklift2|-4.760675,0.2264841,3.110318|-0.592748,-0.02915625,0.1826272|270,0,0|0,0,0">
+    <Event Content="1030_Material_OpenFlash_#objTool_Manual_Forklift2_7#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="1000_UI_TextContent_#objSubtitleText#obj#par操作轮胎运送车对轮胎进行托举。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="1000_Speak_Open_#par操作轮胎运送车对轮胎进行托举。#par" />
+    <Event Content="1080_Material_CloseFlash_#objTool_Manual_Forklift2_7#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="5" Name="Ltgh-ys-05" ClipFrame="1140_1280" Speed="1" TriggerObject="HQ_Dp_Lt_1" TriggerObjectMove="Hq_Ltcx_Dh|-1.055,0.7499509,3.076411|-1.055,0.7499509,3.076411|271.0187,180.2899,179.9044|271.0187,180.2899,179.9044~Hq_Ltcx_Dh|-1.055,0.7499509,3.076411|-1.055,0.7499509,3.076411|271.0187,180.2899,179.9044|271.0187,180.2899,179.9044">
+    <Event Content="1150_Material_OpenFlash_#objHQ_Dp_Lt_1#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="1140_UI_TextContent_#objSubtitleText#obj#par侧倾轮胎使其安放在轮胎运送车上。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="1140_Speak_Open_#par侧倾轮胎使其安放在轮胎运送车上。#par" />
+    <Event Content="1200_Material_CloseFlash_#objHQ_Dp_Lt_1#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationClip ID="6" Name="Ltgh-ys-06" ClipFrame="1280_1600" Speed="1" TriggerObject="Tool_Manual_Forklift2" TriggerObjectMove="Hq_Ltcx_Dh|-4.167927,0.04385684,3.081162|-4.167927,0.04385684,3.081162|270,0,0|270,0,0~Hq_Ltcx_Dh|-4.167927,0.04385684,3.081162|-4.167927,0.04385684,3.081162|270,0,0|270,0,0">
+    <Event Content="1310_Material_OpenFlash_#objTool_Manual_Forklift2#obj#dotw0.8#1#1#0#dotw" />
+    <Event Content="1280_UI_TextContent_#objSubtitleText#obj#par移出轮胎运送车，并将拆下轮胎放置平稳处。#par#dotw0.8#1#1#0#dotw" />
+    <Event Content="1280_Speak_Open_#par移出轮胎运送车，并将拆下轮胎放置平稳处。#par" />
+    <Event Content="1360_Material_CloseFlash_#objTool_Manual_Forklift2#obj#dotw0.8#1#1#0#dotw" />
+  </AnimationClip>
+  <AnimationStage>
+    <Sort Index="1" ClipFrame="0_1600" GroupName="轮胎拆卸动画" TriggerObject="button" />
+  </AnimationStage>
+  <AnimationInit>
+    <Information Name="Hq_Ltcx_Dh" Content="False|0,0,0|0,0,0" />
+    <Information Name="Camera001" Content="False|-6.171732,2.526715,16.14083|354,338,0" />
+    <Information Name="Main Camera" Content="False|-6.171732,2.526715,16.14083|6.000008,158,0" />
+    <Information Name="Camera001.Target" Content="False|-0.1908018,0.8486335,1.337541|354,338,0" />
+    <Information Name="HQ_Dp_Lt_1" Content="True|-1.055,0.7499509,3.076411|271.0187,180.2899,179.9044" />
+    <Information Name="HQ_Dp_Lt_1_1" Content="True|-1.158133,0.965448,3.133445|310,180,180" />
+    <Information Name="HQ_Dp_Lt_1_2" Content="True|-1.158133,0.9074402,3.233196|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_3" Content="True|-1.158133,0.8074688,3.292055|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_4" Content="True|-1.158133,0.6923672,3.292214|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_5" Content="True|-1.158133,0.5927057,3.235071|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_6" Content="True|-1.158133,0.5343775,3.136336|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_7" Content="True|-1.158133,0.5338798,3.020066|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_8" Content="True|-1.158133,0.5907731,2.92035|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_9" Content="True|-1.158133,0.689711,2.862743|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_10" Content="True|-1.158133,0.8055132,2.861097|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_11" Content="True|-1.158133,0.9067384,2.918684|270,0,0" />
+    <Information Name="HQ_Dp_Lt_1_12" Content="True|-1.142091,0.959982,3.019985|285.2927,182.7852,192.4225" />
+    <Information Name="HQ_Dp_Lt_1_13" Content="True|-1.12037,0.9686286,3.00971|270,0,0" />
+    <Information Name="HQ_Dp_Lt_3" Content="True|-4.185634,0.694401,-1.949986|271.0266,270.2207,179.8164" />
+    <Information Name="Tool_Jackhammer" Content="True|-2.769315,0.2627924,0.8950117|270,0,0" />
+    <Information Name="Tool_Jackhammer_1" Content="True|-2.293724,0.2209054,0.8911694|298.0003,0,0" />
+    <Information Name="Tool_Manual_Forklift2" Content="True|-4.167927,0.04385684,3.081162|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_1" Content="True|-4.885887,0.1789755,3.496237|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_2" Content="True|-4.91608,0.07758935,3.498077|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_3" Content="True|-4.885887,0.1789755,2.666654|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_4" Content="True|-4.91608,0.07758929,2.664814|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_5" Content="True|-4.724772,0.1159213,3.081021|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_6" Content="True|-4.723404,0.1974223,3.081351|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_7" Content="True|-4.760675,0.2264841,3.110318|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_8" Content="True|-3.549513,0.06801222,3.403249|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_9" Content="True|-3.549513,0.06801213,2.759642|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_10" Content="True|-4.599938,0.6066722,3.145278|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_11" Content="True|-4.167927,0.04385684,3.081162|270,0,0" />
+    <Information Name="Tool_Manual_Forklift2_12" Content="True|-4.6938,1.07172,3.082955|275,90,270" />
+    <Information Name="Tool_OpenSpanner_shib_1" Content="True|-1.726973,1.008922,4.532062|270,356,0" />
+  </AnimationInit>
+</AnimationConfigure>

@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProcessConfigure ID="1" Name="拆机械臂">
+    <ProcessInfo Index="1" Name="拆喷水管" BackIndex="">
+        <!-- TODO:跳转节点-->
+        <ProcessBranch Index="1-1"/>
+<!--        <ProcessBranch Index="1-2"/>-->
+    </ProcessInfo>
+    <ProcessInfo Index="1-1" Name="拆喷管螺丝" BackIndex="">
+        <ProcessBranch Index="1-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="1-2" Name="喷管固定器" BackIndex="">
+        <!--<ProcessBranch Index="1-3" />-->
+    </ProcessInfo>
+    <ProcessInfo Index="1-3" Name="喷管固定器底座" BackIndex="">
+        <ProcessBranch Index="2"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="2" Name="水流调节器" BackIndex="">
+        <ProcessBranch Index="2-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="2-1" Name="角度微调螺丝" BackIndex="">
+        <ProcessBranch Index="2-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="2-2" Name="角度微调器" BackIndex="">
+        <ProcessBranch Index="2-3"/>
+    </ProcessInfo>
+    <ProcessInfo Index="2-3" Name="固定微调器底座" BackIndex="">
+        <ProcessBranch Index="3"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="3" Name="前臂左侧螺丝" BackIndex="">
+        <ProcessBranch Index="3-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="3-1" Name="前臂左盖" BackIndex="">
+        <ProcessBranch Index="3-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="3-2" Name="前臂右侧螺丝" BackIndex="">
+        <ProcessBranch Index="3-3"/>
+    </ProcessInfo>
+    <ProcessInfo Index="3-3" Name="前臂旋转装置" BackIndex="">
+        <ProcessBranch Index="3-4"/>
+    </ProcessInfo>
+    <ProcessInfo Index="3-4" Name="前臂右盖" BackIndex="">
+        <ProcessBranch Index="4"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="4" Name="延长管道" BackIndex="">
+        <ProcessBranch Index="4-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="4-1" Name="延长管道固定器" BackIndex="">
+        <ProcessBranch Index="5"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="5" Name="旋转臂微调器" BackIndex="">
+        <ProcessBranch Index="5-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="5-1" Name="旋转臂螺丝" BackIndex="">
+        <ProcessBranch Index="5-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="5-2" Name="旋转臂" BackIndex="">
+        <ProcessBranch Index="5-3"/>
+    </ProcessInfo>
+    <ProcessInfo Index="5-3" Name="旋转臂" BackIndex="">
+        <ProcessBranch Index="6"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6" Name="前置管道连接器" BackIndex="">
+        <ProcessBranch Index="6-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-1" Name="副装置增压器" BackIndex="">
+        <ProcessBranch Index="6-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-2" Name="增压固定板" BackIndex="">
+        <ProcessBranch Index="6-3"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-3" Name="增压器" BackIndex="">
+        <ProcessBranch Index="6-4"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-4" Name="增压器固定装置" BackIndex="">
+        <ProcessBranch Index="6-5"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-5" Name="增压固定器链接" BackIndex="">
+        <ProcessBranch Index="6-6"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-6" Name="增压器底座螺丝" BackIndex="">
+        <ProcessBranch Index="6-7"/>
+    </ProcessInfo>
+    <ProcessInfo Index="6-7" Name="增压器底座螺丝" BackIndex="">
+        <ProcessBranch Index="7"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="7" Name="旋转臂螺丝" BackIndex="">
+        <ProcessBranch Index="7-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="7-1" Name="旋转臂" BackIndex="">
+        <ProcessBranch Index="7-2"/>
+    </ProcessInfo>
+    <ProcessInfo Index="7-2" Name="大臂螺丝" BackIndex="">
+        <ProcessBranch Index="7-3"/>
+    </ProcessInfo>
+    <ProcessInfo Index="7-3" Name="大臂盖" BackIndex="">
+        <ProcessBranch Index="7-4"/>
+    </ProcessInfo>
+    <ProcessInfo Index="7-4" Name="机械大臂" BackIndex="">
+        <ProcessBranch Index="8"/>
+    </ProcessInfo>
+
+    <ProcessInfo Index="8" Name="旋转底座掉环" BackIndex="">
+        <ProcessBranch Index="8-1"/>
+    </ProcessInfo>
+    <ProcessInfo Index="8-1" Name="旋转底座" BackIndex="">
+    </ProcessInfo>
+
+    <!-- TODO:节点打组 框选 右键打组 ProcessSection表示节点组合-->
+    <BigProcessConfigure>
+        <BigProcessInfo Index="1" ProcessSection="1,1-1,1-2" Name="拆前置喷头"/>
+    </BigProcessConfigure>
+
+</ProcessConfigure>

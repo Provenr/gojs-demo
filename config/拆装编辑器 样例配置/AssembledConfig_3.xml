@@ -1,0 +1,1126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProcessConfigure Name="机械臂拆卸操作3" PersonNumber="5" AssembleModel="JXB3">
+    <ProcessInfo Index="1" Name="拆喷水管" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="拆喷水管" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="0" MaskColliderObject="null" NextDelay="0">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objNeedle_Part_PS#obj"/>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par拆喷水管#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="拆喷水管进行" TriggerObject="1|Needle_Part_PS" ObjectType="T|M"
+                       ObjectName="扳手|喷水管" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="0"
+                       MaskColliderObject="null" NextDelay="0">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objNeedle_Part_PS#obj"/>
+                <Event Content="AssembledExtend_PlayModel_#objJXB,1#obj"/>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par拆喷水管#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par拆喷水管用手旋转喷水管前端进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="拆喷水管结束" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="0" MaskColliderObject="null" NextDelay="3">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par拆喷水管#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par拆除中#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="1-1" Name="拆喷水管" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="拆喷管螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="0" MaskColliderObject="null" NextDelay="0">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="拆喷管螺丝"
+                       TriggerObject="6|Arm_Part_07_01|Arm_Part_07_03|Arm_Part_07_04|Arm_Part_07_02"
+                       ObjectType="T|M|M|M|M" ObjectName="扳手|螺丝|螺丝|螺丝|螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="0">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="拆喷管螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="4.4">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="1-2" Name="喷管固定器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="喷管固定器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="喷管固定器" TriggerObject="1|Needle_Part_PGGDQ" ObjectType="T|M"
+                       ObjectName="扳手|喷管固定器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.4">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="喷管固定器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="1-3" Name="喷管固定器底座" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="喷管固定器底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="喷管固定器底座" TriggerObject="1|Arm_Part_GDQDZ" ObjectType="T|M"
+                       ObjectName="扳手|喷管固定器底座" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="喷管固定器底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="2" Name="水流调节器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="水流调节器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="水流调节器" TriggerObject="1|Needle_Part_SLTJQ" ObjectType="T|M"
+                       ObjectName="扳手|水流调节器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.4">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="水流调节器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="2-1" Name="角度微调螺丝" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="角度微调螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="角度微调螺丝" TriggerObject="6|Arm_Part_06_01" ObjectType="T|M"
+                       ObjectName="扳手|角度微调螺丝" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="角度微调螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="2-2" Name="角度微调器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="角度微调器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="角度微调器" TriggerObject="1|Arm_Part_06_JDWTQ" ObjectType="T|M"
+                       ObjectName="扳手|角度微调器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="角度微调器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="2-3" Name="固定微调器底座" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="固定微调器底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="固定微调器底座" TriggerObject="1|Arm_Part_WTQDZ" ObjectType="T|M"
+                       ObjectName="扳手|固定微调器底座" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.1,0.1,0.1" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="固定微调器底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="3" Name="前臂左侧螺丝" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="前臂左侧螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前臂左侧螺丝"
+                       TriggerObject="6|Arm_Part_04_04|Arm_Part_04_02|Arm_Part_04_03|Arm_Part_04_01"
+                       ObjectType="T|M|M|M|M" ObjectName="扳手|前臂左侧螺丝|前臂左侧螺丝|前臂左侧螺丝|前臂左侧螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="3.4">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前臂左侧螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="3-1" Name="前臂左盖" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="前臂左盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前臂左盖" TriggerObject="1|Arm_Part_041" ObjectType="T|M" ObjectName="扳手|前臂左盖"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前臂左盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="3-2" Name="前臂右侧螺丝" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="前臂右侧螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objArm_Part_04_07#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_04_08#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_04_05#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_04_06#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右侧螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择螺丝刀进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前臂右侧螺丝"
+                       TriggerObject="6|Arm_Part_04_07|Arm_Part_04_08|Arm_Part_04_05|Arm_Part_04_06"
+                       ObjectType="T|M|M|M|M" ObjectName="扳手|前臂左侧螺丝|前臂左侧螺丝|前臂左侧螺丝|前臂左侧螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="3.8">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objArm_Part_04_07#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_04_08#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_04_05#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_04_06#obj"/>
+
+                <Event Content="AssembledExtend_PlayModel_#objJXB,11#obj"/>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右侧螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前臂右侧螺丝#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前臂右侧螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右侧螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前臂右侧螺丝#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="3-3" Name="前臂旋转装置" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="前臂旋转装置" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前臂旋转装置" TriggerObject="1|Arm_Part_QBXZZZ" ObjectType="T|M"
+                       ObjectName="扳手|前臂左盖" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前臂旋转装置" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="3-4" Name="前臂右盖" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="前臂右盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objArm_Part_04#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右盖#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前臂右盖" TriggerObject="1|Arm_Part_04" ObjectType="T|M" ObjectName="扳手|前臂右盖"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objArm_Part_04#obj"/>
+
+                <Event Content="AssembledExtend_PlayModel_#objJXB,13#obj"/>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右盖#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前臂右盖#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前臂右盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前臂右盖#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前臂右盖#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="4" Name="延长管道" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="延长管道" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="延长管道" TriggerObject="1|Cable_Custom_YCGGD" ObjectType="T|M"
+                       ObjectName="扳手|延长管道" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="延长管道" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="4-1" Name="延长管道固定器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="延长管道固定器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="延长管道固定器" TriggerObject="1|Midle_Part_03_YCGGDGDQ" ObjectType="T|M"
+                       ObjectName="扳手|延长管道固定器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="延长管道固定器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="5" Name="旋转臂微调器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="旋转臂微调器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转臂微调器" TriggerObject="1|Arm_Part_XZBWTQ" ObjectType="T|M"
+                       ObjectName="扳手|旋转臂微调器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转臂微调器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="5-1" Name="旋转臂螺丝" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="旋转臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转臂螺丝"
+                       TriggerObject="1|Arm_Part_03_17|Arm_Part_03_16|Arm_Part_03_12|Arm_Part_03_13|Arm_Part_03_18|Arm_Part_03_19|Arm_Part_03_15|Arm_Part_03_14"
+                       ObjectType="T|M|M|M|M|M|M|M|M|M|M" ObjectName="扳手|旋转臂螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02"
+                       TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="7.6">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="5-2" Name="前旋转臂" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="前旋转臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前旋转臂" TriggerObject="1|Arm_Part_QXZB" ObjectType="T|M" ObjectName="扳手|前旋转臂"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前旋转臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="5-3" Name="旋转臂底座" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="旋转臂底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转臂底座" TriggerObject="1|Arm_Part_03_03" ObjectType="T|M"
+                       ObjectName="扳手|旋转臂底座" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转臂底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6" Name="前置管道连接器" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="前置管道连接器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objMidle_Part_QZGDLJQ#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前置管道连接器#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="前置管道连接器" TriggerObject="1|Midle_Part_QZGDLJQ" ObjectType="T|M"
+                       ObjectName="扳手|前置管道连接器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objMidle_Part_QZGDLJQ#obj"/>
+                <Event Content="AssembledExtend_PlayModel_#objJXB,20#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前置管道连接器#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前置管道连接器#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="前置管道连接器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par前置管道连接器#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par前置管道连接器#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="6-1" Name="副装置增压器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="副装置增压器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="副装置增压器" TriggerObject="1|Midle_Part_FZZZYQ" ObjectType="T|M"
+                       ObjectName="扳手|副装置增压器" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="副装置增压器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6-2" Name="增压固定板" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="增压固定板" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压固定板" TriggerObject="1|Midle_Part_ZYGDB" ObjectType="T|M"
+                       ObjectName="扳手|增压固定板" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压固定板" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="6-3" Name="增压器" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="增压器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压器" TriggerObject="1|Midle_Part_ZYQ" ObjectType="T|M" ObjectName="扳手|增压器"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压器" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6-4" Name="增压器固定装置" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="增压器固定装置" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压器固定装置" TriggerObject="1|Midle_Part_02" ObjectType="T|M"
+                       ObjectName="扳手|增压器固定装置" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压器固定装置" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6-5" Name="增压固定器链接" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="增压固定器链接" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压固定器链接" TriggerObject="1|Midle_Part_08" ObjectType="T|M"
+                       ObjectName="扳手|增压固定器链接" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压固定器链接" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6-6" Name="增压器底座螺丝" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="增压器底座螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压器底座螺丝"
+                       TriggerObject="5|Midle_Part_04_04|Midle_Part_04_06|Midle_Part_04_08|Midle_Part_04_05|Midle_Part_04_07|Midle_Part_04_10|Midle_Part_04_09|Midle_Part_04_03|Midle_Part_04_02|Midle_Part_04_01"
+                       ObjectType="T|M|M|M|M|M|M|M|M|M|M" ObjectName="扳手|增压器底座螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02"
+                       TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="4.6">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压器底座螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="6-7" Name="增压器底板" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="增压器底板" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objMidle_Part_04#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par增压器底板#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="增压器底板" TriggerObject="1|Midle_Part_04" ObjectType="T|M"
+                       ObjectName="扳手|增压器底板" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objMidle_Part_04#obj"/>
+                <Event Content="AssembledExtend_PlayModel_#objJXB,27#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par增压器底板#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par增压器底板#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="增压器底板" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par增压器底板#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par增压器底板#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+    <ProcessInfo Index="7" Name="旋转臂螺丝" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="旋转臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_07#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_08#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_04#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_05#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_02#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_06#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_03#obj"/>
+                <Event Content="Object_OpenFlash_#objArm_Part_01_01#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转臂螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转臂螺丝"
+                       TriggerObject="6|Arm_Part_01_07|Arm_Part_01_08|Arm_Part_01_04|Arm_Part_01_05|Arm_Part_01_02|Arm_Part_01_06|Arm_Part_01_03|Arm_Part_01_01"
+                       ObjectType="T|M|M|M|M|M|M|M|M" ObjectName="扳手|旋转臂螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02"
+                       TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="4.6">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_07#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_08#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_04#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_05#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_02#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_06#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_03#obj"/>
+                <Event Content="Object_CloseFlash_#objArm_Part_01_01#obj"/>
+                <Event Content="AssembledExtend_PlayModel_#objJXB,28#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转臂螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par旋转臂螺丝#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转臂螺丝#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par旋转臂螺丝#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="7-1" Name="旋转臂" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="旋转臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转臂" TriggerObject="1|Arm_Part_XZB" ObjectType="T|M" ObjectName="扳手|旋转臂"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="7-2" Name="大臂螺丝" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="大臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="大臂螺丝"
+                       TriggerObject="6|Arm_Part_010_02|Arm_Part_010_03|Arm_Part_010_01|Arm_Part_010_04"
+                       ObjectType="T|M|M|M|M" ObjectName="扳手|大臂螺丝" OperationPerson="1"
+                       ColliderMode="mesh|mesh|mesh|mesh|mesh"
+                       ColliderScale="1,1,1|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02|0.02,0.02,0.02" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="4.2">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="大臂螺丝" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="7-3" Name="大臂盖" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="大臂盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="大臂盖" TriggerObject="1|Arm_Part_010_05" ObjectType="T|M" ObjectName="扳手|大臂盖"
+                       OperationPerson="1" ColliderMode="mesh|mesh" ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0"
+                       ShowMode="dotween" ShowModeTime="4.4" MaskColliderObject="null" NextDelay="2.8">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="大臂盖" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="7-4" Name="机械大臂" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="机械大臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="机械大臂" TriggerObject="1|Arm_Part_01_DB" ObjectType="T|M"
+                       ObjectName="扳手|机械大臂" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="5">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="机械大臂" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="2">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+
+    <ProcessInfo Index="8" Name="旋转底座掉环" AutoPlay="0">
+        <StartEventInfo Index="1" AnimaIndex="旋转底座掉环" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="Object_OpenFlash_#objBase_Part_03_01#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转底座掉环#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par选择手套进行拆除#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转底座掉环" TriggerObject="1|Base_Part_03_01" ObjectType="T|M"
+                       ObjectName="扳手|旋转底座掉环" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="4">
+            <EventList>
+                <Event Content="Object_CloseFlash_#objBase_Part_03_01#obj"/>
+                <Event Content="AssembledExtend_PlayModel_#objJXB,33#obj"/>
+
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转底座掉环#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par旋转底座掉环#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转底座掉环" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par旋转底座掉环#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par旋转底座掉环#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+
+    <ProcessInfo Index="8-1" Name="旋转底座" AutoPlay="1">
+        <StartEventInfo Index="1" AnimaIndex="旋转底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                        OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                        ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StartEventInfo>
+        <StepEventInfo Index="2" AnimaIndex="旋转底座" TriggerObject="1|Base_Part_03_XZDZ" ObjectType="T|M"
+                       ObjectName="扳手|旋转底座" OperationPerson="1" ColliderMode="mesh|mesh"
+                       ColliderScale="1,1,1|0.2,0.2,0.2" TriggerMode="0" ShowMode="dotween" ShowModeTime="4.4"
+                       MaskColliderObject="null" NextDelay="7">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </StepEventInfo>
+        <EndEventInfo Index="3" AnimaIndex="旋转底座" TriggerObject="螺钉1|螺钉2|螺钉3" ObjectType="触发对象类型" ObjectName="扳手"
+                      OperationPerson="1" ColliderMode="mesh|mesh|mesh" ColliderScale="1,1,1" TriggerMode="0"
+                      ShowMode="dotween" ShowModeTime="1" MaskColliderObject="null" NextDelay="1">
+            <EventList>
+                <Event Content="AssembledMessage_UpdateMiniStepTip_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdateMiniStepInfo_#par等待其它号位#par"/>
+                <Event Content="AssembledMessage_UpdatePersonNum_#par3#par"/>
+            </EventList>
+        </EndEventInfo>
+    </ProcessInfo>
+</ProcessConfigure>

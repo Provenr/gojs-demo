@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 被2013 sp1 () 使用XMLSpy v编辑的 (http://www.altova.com) by -->
+<AnimationConfigureMain Name="测发场景Demo" SceneName="Natural_Woods">
+	<Path Index="1" ConfigName="AnimaCongfig_1.xml"/>
+  <Path Index="2" ConfigName="AnimaCongfig_2.xml"/>
+  <Path Index="3" ConfigName="AnimaCongfig_3.xml"/>
+</AnimationConfigureMain>

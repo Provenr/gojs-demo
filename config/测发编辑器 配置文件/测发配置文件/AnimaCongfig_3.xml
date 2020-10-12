@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AnimationConfigure xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="Take 001" Version="1.0">
+  <ModelObject AnimationName="Chai" CameraName="Camera001" />
+  <AnimationClip ID="1" Name="拿起扳手" ClipFrame="0_80" Speed="1" TriggerObject="Tool_01" TriggerObjectMove="Chai|-1.271848,0.04230393,0.02177051|-1.271848,0.04230393,0.02177051|270,0,0|270,0,0~Chai|0.1810998,0.5168084,0.1040202|0.1810998,0.5168084,0.1040202|270,0,0|270,0,0" />
+  <AnimationClip ID="2" Name="拧下" ClipFrame="80_120" Speed="1" TriggerObject="Tool_01" TriggerObjectMove="Chai|0.1810998,0.5168084,0.1040202|0.1810998,0.5168084,0.1040202|270,0,0|270,0,0~Chai|0.2925041,0.9192752,-0.008531008|0.2925041,0.9192752,-0.008531008|270,264.7645,0|270,264.7645,0" />
+  <AnimationClip ID="3" Name="取出来" ClipFrame="120_201" Speed="1" TriggerObject="Screw_01" TriggerObjectMove="Chai|0.3003325,0.8672965,0.09730824|0.3003325,0.8672965,0.09730824|270,0,0|270,0,0~Chai|0.3003325,0.8672965,0.09730824|0.3003325,0.8672965,0.09730824|270,0,0|270,0,0" />
+  <AnimationStage>
+    <Sort Index="1" ClipFrame="0_80" GroupName="大动画片段001" TriggerObject="button" />
+    <Sort Index="2" ClipFrame="80_120" GroupName="大动画片段002" TriggerObject="button" />
+    <Sort Index="3" ClipFrame="120_201" GroupName="大动画片段003" TriggerObject="button" />
+  </AnimationStage>
+  <AnimationInit>
+    <Information Name="Chai" Content="False|0,0,0|0,0,0" />
+    <Information Name="Camera001" Content="False|18.16078,12.04979,8.878566|328.955,65.62055,0" />
+    <Information Name="Camera001.Target" Content="False|-0.1450485,-0.0477685,0.5825879|270,0,0" />
+    <Information Name="Cylinder002" Content="True|0.3003325,0.2389673,0.09730824|270,0,0" />
+    <Information Name="Screw_01" Content="True|0.3003325,0.4521356,0.09730824|270,0,0" />
+    <Information Name="Tool_01" Content="True|-1.271848,0.04230393,0.02177051|270,0,0" />
+  </AnimationInit>
+</AnimationConfigure>

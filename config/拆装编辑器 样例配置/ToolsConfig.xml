@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- ToolMode="鼠标模式 - 0 || 模型模式 - 1" -->
+<ToolsConfigure ToolMode="0">
+  <ToolPartsList>
+<!--    TODO:组合工具配置-->
+    <!--<ToolParts Index="1" Name="选择拆卸方向" ToolType="工具类别:常规 - 0 |组合 - 1" ToolFinal="最终的工具ID" Tool1="工具1ID" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>-->
+    <ToolParts Index="1" Name="扳手" ToolType="0" ToolFinal="1" Tool1="1" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="2" Name="TorqueWrench" ToolType="0" ToolFinal="2" Tool1="2" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="3" Name="Nipper" ToolType="0" ToolFinal="3" Tool1="3" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="4" Name="CirclipPlier" ToolType="0" ToolFinal="4" Tool1="4" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="5" Name="OpenSpanner" ToolType="0" ToolFinal="5" Tool1="5" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="6" Name="Screwdriver" ToolType="0" ToolFinal="6" Tool1="6" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="7" Name="OilCan" ToolType="0" ToolFinal="7" Tool1="7" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="8" Name="WindCannonMachine" ToolType="0" ToolFinal="8" Tool1="8" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="9" Name="AlcoholCotton" ToolType="0" ToolFinal="9" Tool1="9" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="10" Name="InternalHexagonalWrench" ToolType="0" ToolFinal="10" Tool1="10" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+    <ToolParts Index="11" Name="GearOilFiller" ToolType="0" ToolFinal="11" Tool1="11" Tool2="工具2ID" Tool3="工具3ID" Tool4="工具4ID"/>
+
+   </ToolPartsList>
+<!--
+    <ToolParts Index="6" Name="扳手6" ToolType="1" ToolFinal="1" Tool1="1" Tool2="" Tool3="" Tool4=""/>
+    <ToolParts Index="7" Name="扳手7" ToolType="1" ToolFinal="2" Tool1="2" Tool2="1" Tool3="4" Tool4=""/>
+    <ToolParts Index="8" Name="扳手8" ToolType="1" ToolFinal="3" Tool1="3" Tool2="5" Tool3="" Tool4=""/>
+    <ToolParts Index="9" Name="扳手9" ToolType="1" ToolFinal="4" Tool1="4" Tool2="1" Tool3="4" Tool4="3"/>
+    <ToolParts Index="10" Name="扳手10" ToolType="1" ToolFinal="5" Tool1="5" Tool2="4" Tool3="3" Tool4="2"/>
+
+  </ToolPartsList>-->
+
+  <ToolInfoList>
+<!--    TODO:基础工具配置-->
+    <!--<ToolInfo ID="1" Name="选择拆卸方向" Icon="图标" Modle="模型" Tips="描述"/> -->
+    <ToolInfo ID="1" Name="手" Icon="Tools_BanShou_Icon" MouseIcon="Tools_BanShou_MouseIcon" Modle="Tools_Ban_modle" Tips="这是一个扳手1"/>
+    <ToolInfo ID="2" Name="扭力扳手" Icon="Tool_TorqueWrench_Icon" MouseIcon="Tool_TorqueWrench_MouseIcon" Modle="Tools_Ban_modle" Tips="扭力扳手"/>
+    <ToolInfo ID="3" Name="尖嘴钳" Icon="Tool_Nipper_Icon" MouseIcon="Tool_Nipper_MouseIcon" Modle="Tools_Ban_modle" Tips="尖嘴钳"/>
+    <ToolInfo ID="4" Name="卡簧钳" Icon="Tool_CirclipPlier_Icon" MouseIcon="Tool_CirclipPlier_MouseIcon" Modle="Tools_Ban_modle" Tips="卡簧钳"/>
+    <ToolInfo ID="5" Name="开口扳手" Icon="Tool_OpenSpanner_Icon" MouseIcon="Tool_OpenSpanner_MouseIcon" Modle="Tools_Ban_modle" Tips="开口扳手"/>
+    <ToolInfo ID="6" Name="螺丝刀（一字）" Icon="Tool_Screwdriver_Icon" MouseIcon="Tool_Screwdriver_IconMouseIcon" Modle="Tools_Ban_modle" Tips="螺丝刀（一字）"/>
+    <ToolInfo ID="7" Name="加油壶" Icon="Tool_OilCan_Icon" MouseIcon="Tool_OilCan_MouseIcon" Modle="Tools_Ban_modle" Tips="加油壶1"/>
+    <ToolInfo ID="8" Name="风炮机" Icon="Tool_WindCannonMachine_Icon" MouseIcon="Tool_WindCannonMachine_MouseIcon" Modle="Tools_Ban_modle" Tips="风炮机"/>
+    <ToolInfo ID="9" Name="酒精棉布" Icon="Tool_AlcoholCotton_Icon" MouseIcon="Tool_AlcoholCotton_MouseIcon" Modle="Tools_Ban_modle" Tips="酒精棉布"/>
+    <ToolInfo ID="10" Name="内六角扳手" Icon="Tool_InternalHexagonalWrench_Icon" MouseIcon="Tool_InternalHexagonalWrench_MouseIcon" Modle="Tools_Ban_modle" Tips="内六角扳手"/>
+    <ToolInfo ID="11" Name="齿轮油加注器" Icon="Tool_GearOilFiller_Icon" MouseIcon="Tool_GearOilFiller_MouseIcon" Modle="Tools_Ban_modle" Tips="齿轮油加注器"/>
+  </ToolInfoList>
+
+</ToolsConfigure>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<InitModelScene  CongfigName="modelName" Version="1.0">
+<!--模型初始化-->
+  <Events Content="Object_ChildHide_#objHq_Ltgh#obj" />
+  <Events Content="Object_ChildShow_#objHq_Ltgh_Dh+HQ_Jss_01+Tool_Car_2_shib_1+ACC_Wooden_Pallet_shib_1+ACC_Wooden_Pallet_shib_2+ACC_Wooden_Pallet_shib_4+Tool_jack_2_1+Tool_jack_2_2#obj" />
+  
+  <Events Content="Camera_SetCameraRotate_#obj-52,21,4#obj#par2,20,2#par" />
+  <Events Content="Camera_SetLimitBound_#obj18,11,40#obj#par-0.5,6.3,-0.7#par" />
+  <Events Content="Camera_SetMoveTarget_#objJXB#obj#par-0.6,0.9,0.5#par" />
+</InitModelScene>
